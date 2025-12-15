@@ -1,7 +1,7 @@
 import express from "express";
 import { createNews, getAllNews, getNewsById, updateNews, deleteNews } from "../controllers/Newscontroller.js";
 
-import { upload } from "../middlewares/upload.js";
+import upload from "../middlewares/upload.js";
 
 const router = express.Router();
 

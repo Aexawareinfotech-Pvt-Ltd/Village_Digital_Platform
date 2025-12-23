@@ -1,5 +1,15 @@
 @import "tailwindcss";
+@config "../tailwind.config.js";
 
+/* Register font in Tailwind v4 theme */
+@theme {
+  --font-sans: "Poppins", sans-serif;
+}
+
+/* Apply globally */
+html, body {
+  font-family: var(--font-sans);
+}
 
 
 /* :root {

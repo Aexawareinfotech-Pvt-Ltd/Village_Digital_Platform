@@ -8,7 +8,7 @@ const jobSchema = new mongoose.Schema({
   salary: String,
   location: String,
   jobType: String,
-  postedDate: Date,
+  postedDate: { type: Date, default: Date.now },
   deadlineDate: Date,
 
   createdBy: {

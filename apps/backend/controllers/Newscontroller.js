@@ -19,7 +19,7 @@ export const createNews = async (req, res) => {
       title: req.body.title,
       description: req.body.description,
       category: req.body.category,
-      status: req.body.status || "published",   // NEW FIELD
+      status: req.body.status || "published",
       publishDate: req.body.publishDate,
       expiryDate: req.body.expiryDate,
       featured: req.body.featured || false,
@@ -32,13 +32,16 @@ export const createNews = async (req, res) => {
   }
 };
 
-
-// -----------------------------------------
-// GET ALL NEWS
-// -----------------------------------------
 export const getAllNews = async (req, res) => {
   try {
-    const news = await News.find().sort({
+    const { status } = req.query;
+    
+    let query = {};
+    if (status) {
+      query.status = status;
+    }
+
+    const news = await News.find(query).sort({
       featured: -1,
       publishDate: -1,
     });
@@ -73,28 +76,28 @@ export const updateNews = async (req, res) => {
   try {
     const id = req.params.id;
 
-    let attachments = [];
+    let updateData = {
+      title: req.body.title,
+      description: req.body.description,
+      category: req.body.category,
+      status: req.body.status, // FIXED: Now properly updates status
+      publishDate: req.body.publishDate,
+      expiryDate: req.body.expiryDate,
+      featured: req.body.featured,
+    };
 
     // If new files uploaded → replace old
     if (req.files && req.files.length > 0) {
-      attachments = req.files.map((file) => ({
+      updateData.attachments = req.files.map((file) => ({
         fileName: file.originalname,
-        fileUrl: `/uploads/news/${file.filename}`,
+        fileUrl: file.path, // Cloudinary URL
         fileType: file.mimetype.includes("image") ? "image" : "pdf",
       }));
     }
 
     const updated = await News.findByIdAndUpdate(
       id,
-      {
-        title: req.body.title,
-        description: req.body.description,
-        category: req.body.category,
-        publishDate: req.body.publishDate,
-        expiryDate: req.body.expiryDate,
-        featured: req.body.featured,
-        ...(attachments.length > 0 && { attachments }),
-      },
+      updateData,
       { new: true }
     );
 

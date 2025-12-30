@@ -42,7 +42,7 @@ const AppRouter = () => {
 
       {/* ================= ADMIN ROUTE (NO HEADER, ONLY SIDEBAR) ================= */}
       <Route element={<AdminLayout />}>
-       {/* <Route path="/AdminDashboard" element={<JobAdminPage />} /> */}
+       <Route path="/AdminDashboard" element={<JobAdminPage />} />
        <Route path="/AdminDashboard/JobManagement" element={<JobAdminPage />} />
        <Route path="/AdminDashboard/NewsManagement" element={<NewsAdminPage />} />
       </Route>

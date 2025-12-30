@@ -12,7 +12,7 @@ const newsSchema = new mongoose.Schema(
     description: { type: String, required: true },
     category: {
       type: String,
-      enum: ["Administrative", "Event", "Emergency"],
+      enum: ["Administrative", "Event", "Emergency", "Health", "Education", "Infrastructure", "Agriculture"],
       required: true,
     },
 

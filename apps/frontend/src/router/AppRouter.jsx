@@ -19,7 +19,9 @@ import Register from "../pages/User/Register/Register";
 
 
 import JobAdminPage from "../pages/Admin/Job/JobAdminPage";
-import NewsAdminPage from "../pages/Admin/News/NewsAdminPage";
+import GrievanceAdminPage from "../pages/Admin/Grievance/GrievanceAdminPage";
+import VillageLogin from "../components/Login/VillageLogin";
+// import NewsAdminPage from "../pages/Admin/News/NewsAdminPage";
 
 const AppRouter = () => {
   return (
@@ -44,8 +46,10 @@ const AppRouter = () => {
       <Route element={<AdminLayout />}>
        <Route path="/AdminDashboard" element={<JobAdminPage />} />
        <Route path="/AdminDashboard/JobManagement" element={<JobAdminPage />} />
-       <Route path="/AdminDashboard/NewsManagement" element={<NewsAdminPage />} />
+       {<Route path="/AdminDashboard/NewsManagement" element={<NewsAdminPage />} />}
+       <Route path="/AdminDashboard/GrievanceManagement" element={<GrievanceAdminPage/>} />
       </Route>
+      
 
     </Routes>
   );

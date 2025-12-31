@@ -15,7 +15,14 @@ const newsSchema = new mongoose.Schema(
       enum: ["Administrative", "Event", "Emergency"],
       required: true,
     },
-    author: { type: String, default: "Admin" },
+
+    // NEW FIELD
+    status: {
+      type: String,
+      enum: ["draft", "published"],
+      default: "published",
+    },
+
     publishDate: { type: Date, default: Date.now },
     expiryDate: { type: Date },
     featured: { type: Boolean, default: false },

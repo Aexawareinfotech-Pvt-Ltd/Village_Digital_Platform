@@ -1,32 +1,13 @@
-import React, { useState } from "react";
+import { Outlet } from "react-router-dom";
 import Header from "../components/Common/Header";
 
-const MainLayout = ({ children }) => {
-  const [currentModule, setCurrentModule] = useState('dashboard');
-  const [language, setLanguage] = useState('en');
-
-  const handleNavigate = (module) => {
-    setCurrentModule(module);
-  };
-
-  const handleLanguageChange = (lang) => {
-    setLanguage(lang);
-  };
-
+const MainLayout = () => {
   return (
     <>
-      <Header 
-        currentModule={currentModule}
-        onNavigate={handleNavigate}
-        language={language}
-        onLanguageChange={handleLanguageChange}
-      />
-
-      <main className="min-h-screen px-4 py-6 bg-gray-50 mt-16">
-        {children}
+      <Header />
+      <main className="px-4 py-6 bg-gray-50">
+        <Outlet />   {/* 🔥 REQUIRED FOR ROUTER V6 */}
       </main>
-
-      {/* <Footer /> */}
     </>
   );
 };

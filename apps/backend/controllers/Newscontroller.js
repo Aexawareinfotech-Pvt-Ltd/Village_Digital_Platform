@@ -7,11 +7,10 @@ export const createNews = async (req, res) => {
   try {
     let attachments = [];
 
-    // If admin uploads files
-    if (req.files) {
+    if (req.files && req.files.length > 0) {
       attachments = req.files.map((file) => ({
         fileName: file.originalname,
-        fileUrl: `/uploads/news/${file.filename}`,
+        fileUrl: file.path, // Cloudinary URL
         fileType: file.mimetype.includes("image") ? "image" : "pdf",
       }));
     }
@@ -20,7 +19,7 @@ export const createNews = async (req, res) => {
       title: req.body.title,
       description: req.body.description,
       category: req.body.category,
-      author: req.body.author,
+      status: req.body.status || "published",   // NEW FIELD
       publishDate: req.body.publishDate,
       expiryDate: req.body.expiryDate,
       featured: req.body.featured || false,
@@ -32,6 +31,7 @@ export const createNews = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
 
 // -----------------------------------------
 // GET ALL NEWS

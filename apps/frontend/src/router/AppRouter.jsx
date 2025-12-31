@@ -19,8 +19,6 @@ import Register from "../pages/User/Register/Register";
 
 
 import JobAdminPage from "../pages/Admin/Job/JobAdminPage";
-import GrievanceAdminPage from "../pages/Admin/Grievance/GrievanceAdminPage";
-import VillageLogin from "../components/Login/VillageLogin";
 import NewsAdminPage from "../pages/Admin/News/NewsAdminPage";
 
 const AppRouter = () => {
@@ -44,24 +42,14 @@ const AppRouter = () => {
 
       {/* ================= ADMIN ROUTE (NO HEADER, ONLY SIDEBAR) ================= */}
       <Route element={<AdminLayout />}>
-       {/* <Route path="/AdminDashboard" element={<JobAdminPage />} /> */}
-       // AppRouter.jsx
-      <Route
-        path="/AdminDashboard"
-        element={
-          localStorage.getItem("token") ? <AdminLayout /> : <VillageLogin/>
-        }
-      />
-
-       
+       <Route path="/AdminDashboard" element={<JobAdminPage />} />
        <Route path="/AdminDashboard/JobManagement" element={<JobAdminPage />} />
        <Route path="/AdminDashboard/NewsManagement" element={<NewsAdminPage />} />
-       <Route path="/AdminDashboard/GrievanceManagement" element={<GrievanceAdminPage/>} />
       </Route>
-      
 
     </Routes>
   );
 };
 
 export default AppRouter;
+

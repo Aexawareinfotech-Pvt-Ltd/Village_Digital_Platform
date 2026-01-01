@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Calendar, Pin, Pencil, Trash, Eye, Image as ImageIcon, FileText } from "lucide-react";
+import { Calendar, Pin, Pencil, Trash, Eye, Image, FileText } from "lucide-react";
 
-const API_BASE_URL = 'http://localhost:3000/api/news'; // Update with your backend URL
+const API_BASE_URL = 'http://localhost:3000/api/news';
 
 const categoryColors = {
   Administrative: "#1e66f5",
@@ -18,16 +18,17 @@ export function NewsCard({ news, onEdit, onDelete, onUpdate }) {
   const [expanded, setExpanded] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // Publish News (Update status to published)
   const handlePublish = async () => {
     try {
       setLoading(true);
+      
+      const token = localStorage.getItem("tokens");
       
       const formData = new FormData();
       formData.append('title', news.title);
       formData.append('description', news.description);
       formData.append('category', news.category);
-      formData.append('status', 'published'); // FIXED: Set status to published
+      formData.append('status', 'published');
       formData.append('featured', news.featured);
       if (news.expiryDate) {
         formData.append('expiryDate', news.expiryDate);
@@ -38,6 +39,9 @@ export function NewsCard({ news, onEdit, onDelete, onUpdate }) {
 
       const response = await fetch(`${API_BASE_URL}/update/${news._id}`, {
         method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
         body: formData,
       });
 
@@ -56,16 +60,17 @@ export function NewsCard({ news, onEdit, onDelete, onUpdate }) {
     }
   };
 
-  // Unpublish News (Update status to draft)
   const handleUnpublish = async () => {
     try {
       setLoading(true);
+      
+      const token = localStorage.getItem("tokens");
       
       const formData = new FormData();
       formData.append('title', news.title);
       formData.append('description', news.description);
       formData.append('category', news.category);
-      formData.append('status', 'draft'); // FIXED: Set status to draft
+      formData.append('status', 'draft');
       formData.append('featured', news.featured);
       if (news.expiryDate) {
         formData.append('expiryDate', news.expiryDate);
@@ -76,6 +81,9 @@ export function NewsCard({ news, onEdit, onDelete, onUpdate }) {
 
       const response = await fetch(`${API_BASE_URL}/update/${news._id}`, {
         method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
         body: formData,
       });
 
@@ -94,12 +102,17 @@ export function NewsCard({ news, onEdit, onDelete, onUpdate }) {
     }
   };
 
-  // Delete News
   const handleDelete = async () => {
     try {
       setLoading(true);
+      
+      const token = localStorage.getItem("tokens");
+      
       const response = await fetch(`${API_BASE_URL}/delete/${news._id}`, {
         method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
       });
 
       const data = await response.json();
@@ -120,10 +133,9 @@ export function NewsCard({ news, onEdit, onDelete, onUpdate }) {
 
   const categoryColor = categoryColors[news.category] || "#7c7f93";
 
-  // Get file icon based on type
   const getFileIcon = (fileType) => {
     if (fileType === 'image' || fileType?.includes('image')) {
-      return <ImageIcon className="w-4 h-4" />;
+      return <Image className="w-4 h-4" />;
     }
     return <FileText className="w-4 h-4" />;
   };
@@ -134,7 +146,6 @@ export function NewsCard({ news, onEdit, onDelete, onUpdate }) {
         <div className="p-6">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1">
-              {/* Badges Row */}
               <div className="flex items-center gap-3 mb-3 flex-wrap">
                 {news.featured && (
                   <div className="flex items-center gap-1 px-3 py-1 bg-[#fef3c7] text-[#df8e1d] rounded-full">
@@ -161,12 +172,10 @@ export function NewsCard({ news, onEdit, onDelete, onUpdate }) {
                 </div>
               </div>
 
-              {/* Title */}
               <h3 className="text-[#4c4f69] text-lg font-semibold mb-2 text-left">
                 {news.title}
               </h3>
 
-              {/* Description */}
               <p className="text-[#6c6f85] text-left mb-4 leading-relaxed">
                 {expanded
                   ? news.description
@@ -175,7 +184,6 @@ export function NewsCard({ news, onEdit, onDelete, onUpdate }) {
                     }`}
               </p>
 
-              {/* Read More/Less Button */}
               {news.description.length > 150 && (
                 <button
                   onClick={() => setExpanded(!expanded)}
@@ -186,7 +194,6 @@ export function NewsCard({ news, onEdit, onDelete, onUpdate }) {
                 </button>
               )}
 
-              {/* Attachments */}
               {news.attachments && news.attachments.length > 0 && (
                 <div className="mb-4">
                   <div className="flex flex-wrap gap-2">
@@ -209,7 +216,6 @@ export function NewsCard({ news, onEdit, onDelete, onUpdate }) {
                 </div>
               )}
 
-              {/* Dates */}
               <div className="flex items-center gap-4 text-[#9ca0b0] text-sm flex-wrap">
                 {news.expiryDate && (
                   <div className="flex items-center gap-1">
@@ -238,7 +244,6 @@ export function NewsCard({ news, onEdit, onDelete, onUpdate }) {
               </div>
             </div>
 
-            {/* Action Buttons */}
             <div className="flex flex-col gap-2">
               <button
                 onClick={() => onEdit(news)}
@@ -260,7 +265,6 @@ export function NewsCard({ news, onEdit, onDelete, onUpdate }) {
             </div>
           </div>
 
-          {/* Publish/Unpublish Button */}
           {news.status === "draft" && (
             <div className="mt-4 pt-4 border-t border-[#e6e9ef]">
               <button
@@ -301,7 +305,6 @@ export function NewsCard({ news, onEdit, onDelete, onUpdate }) {
         </div>
       </div>
 
-      {/* Delete Confirmation Dialog */}
       {showDeleteDialog && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div

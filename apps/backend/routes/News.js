@@ -7,7 +7,7 @@ import adminMiddleware from "../middlewares/adminMiddleware.js";
 const router = express.Router();
 
 // CREATE NEWS
-router.post("/create", adminMiddleware, upload.array("attachments", 5), createNews);
+router.post("/create",adminMiddleware, upload.array("attachments", 5), createNews);
 
 // GET ALL NEWS
 router.get("/list", getAllNews);

@@ -1,9 +1,9 @@
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import User from "../models/Users.js";
+import User from "../../models/User/Users.js";
 import crypto from "crypto";
-import sendEmail from "../utils/sendemail.js";
+import sendEmail from "../../utils/sendemail.js";
 
 dotenv.config();
 

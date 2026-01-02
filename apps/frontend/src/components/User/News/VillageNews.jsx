@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Bell, AlertCircle, Megaphone, Search, FileText, Download, Pin } from 'lucide-react';
-import { ImageWithFallback } from '../Common/ImageWithFallback';
+import { ImageWithFallback } from '../../Common/ImageWithFallback';
 
 const API_BASE_URL = 'http://localhost:3000/api/news';
 

@@ -1,4 +1,4 @@
-import News from "../models/News.js"
+import News from "../../models/News/News.js"
 
 // -----------------------------------------
 // CREATE NEWS

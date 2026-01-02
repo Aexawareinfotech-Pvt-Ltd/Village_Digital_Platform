@@ -1,4 +1,4 @@
-import Job from "../models/Job.js";
+import Job from "../../models/Job/Job.js";
 
 // USER: Create Job
 export const createJob = async (req, res) => {
@@ -6,9 +6,11 @@ export const createJob = async (req, res) => {
     title: req.body.title,
     ownerName: req.body.ownerName,
     ownerContact: req.body.ownerContact,
+    description: req.body.description,
     category: req.body.category,
     salary: req.body.salary,
     location: req.body.location,
+    experience: req.body.experience,
     jobType: req.body.jobType,
     postedDate: req.body.postedDate,
     deadlineDate: req.body.deadlineDate,

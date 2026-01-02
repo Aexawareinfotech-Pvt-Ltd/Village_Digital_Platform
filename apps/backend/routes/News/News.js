@@ -1,8 +1,8 @@
 import express from "express";
-import { createNews, getAllNews, getNewsById, updateNews, deleteNews } from "../controllers/Newscontroller.js";
+import { createNews, getAllNews, getNewsById, updateNews, deleteNews } from "../../controllers/news/Newscontroller.js";
 
-import upload from "../middlewares/upload.js";
-import adminMiddleware from "../middlewares/adminMiddleware.js";
+import upload from "../../middlewares/upload.js";
+import adminMiddleware from "../../middlewares/adminMiddleware.js";
 
 const router = express.Router();
 

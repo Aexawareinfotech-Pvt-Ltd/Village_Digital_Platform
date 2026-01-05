@@ -1,11 +1,10 @@
-
+import Agricultures from "../../../components/User/Agriculture/Agricultures";
 const Agriculture = () => {
-  return (
-    <div className="text-center">
-        <h1 className="text-23xl font-bold mb-4">Welcome to the Agriculture Page</h1>
-        <p className="text-lg text-gray-700">This is the agriculture section of the application.</p>
-    </div>
-  );
+return (
+     <div className="min-h-screen px-4 py-6 bg-gray-50">
+       <Agricultures language="en" /> 
+     </div>
+   );
 }
 
 export default Agriculture;

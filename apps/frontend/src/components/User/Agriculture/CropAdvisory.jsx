@@ -1,62 +1,47 @@
-import { useState } from "react";
-const cropAdvisories = [
-  {
-    id: "1",
-    cropName: "Cotton",
-    season: "kharif",
-    sowingTime: "June to July is best for cotton sowing",
-    seedGuidance: "Use certified cotton seeds for better yield",
-    fertilizerAdvice: "Apply urea after 20 days. Avoid overuse",
-    irrigationAdvice: "Irrigate every 7 days. Stop irrigation if rain is expected",
-    pestControl: "Use recommended pesticide for bollworm",
-    weatherPrecaution: "Avoid sowing during heavy monsoon period",
-    harvesting: "Harvest after 120 days. Avoid rainy days",
-    dosAndDonts:
-      "• Do use drip irrigation\n• Don't overwater\n• Do spray pesticide in evening",
-  },
-  {
-    id: "2",
-    cropName: "Wheat",
-    season: "rabi",
-    sowingTime: "November to December is ideal for wheat sowing",
-    seedGuidance: "Use disease-resistant wheat varieties",
-    fertilizerAdvice:
-      "Use fertilizer after 20 days. Apply NPK in recommended ratio",
-    irrigationAdvice:
-      "Irrigate at critical growth stages - Crown root, tillering, flowering",
-    pestControl: "Monitor for aphids and apply neem-based pesticides",
-    weatherPrecaution: "Protect from frost during early growth stage",
-    harvesting: "Harvest when grain moisture is 20-25%. Avoid delay",
-    dosAndDonts:
-      "• Do maintain proper spacing\n• Don't spray before rain\n• Do ensure proper drainage",
-  },
-  {
-    id: "3",
-    cropName: "Rice",
-    season: "kharif",
-    sowingTime: "June to July, with onset of monsoon",
-    seedGuidance:
-      "Use high-yielding certified varieties suitable for your region",
-    fertilizerAdvice:
-      "Apply urea in 3 splits - basal, tillering, and panicle initiation",
-    irrigationAdvice:
-      "Maintain 2-3 inches water level. Drain before harvesting",
-    pestControl:
-      "Watch for stem borer and leaf folder. Use IPM methods",
-    weatherPrecaution:
-      "Ensure good drainage during heavy rainfall",
-    harvesting:
-      "Harvest when 80% grains turn golden yellow",
-    dosAndDonts:
-      "• Do transplant at 21-25 days\n• Don't let field dry completely\n• Do practice SRI method for better yield",
-  },
-];
+import { useState, useEffect } from "react";
+import { Loader2, AlertCircle , Eye } from "lucide-react";
+
+const API_BASE_URL = 'http://localhost:3000/api/agriculture/crop-advisory';
 
 export default function CropAdvisoryTab() {
   const [expandedSections, setExpandedSections] = useState({});
+  const [cropAdvisories, setCropAdvisories] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchCropAdvisories();
+  }, []);
+
+  const fetchCropAdvisories = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const token = localStorage.getItem("tokens");
+      const response = await fetch(`${API_BASE_URL}/list`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      
+      const data = await response.json();
+      
+      if (data.success || response.ok) {
+        setCropAdvisories(data.data || []);
+      } else {
+        setError(data.message || 'Failed to load advisories');
+      }
+    } catch (err) {
+      console.error('Error fetching crop advisories:', err);
+      setError('Failed to load crop advisories');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const truncateText = (text, maxLength = 100) => {
-    if (text.length <= maxLength) return text;
+    if (!text || text.length <= maxLength) return text;
     return text.substring(0, maxLength) + "...";
   };
 
@@ -67,22 +52,49 @@ export default function CropAdvisoryTab() {
     }));
   };
 
+  if (loading) {
+    return (
+      <div className="p-8 text-center">
+        <Loader2 className="w-8 h-8 text-[#fe640b] animate-spin mx-auto mb-4" />
+        <p className="text-gray-500">Loading crop advisories...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-6">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-2 text-red-800">
+          <AlertCircle className="w-5 h-5" />
+          <span>{error}</span>
+        </div>
+      </div>
+    );
+  }
+
+  if (cropAdvisories.length === 0) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-[#6c6f85]">No crop advisories available at the moment.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       {cropAdvisories.map((crop) => (
         <div
-          key={crop.id}
+          key={crop._id}
           className="bg-white rounded-xl shadow-md overflow-hidden"
         >
           {/* Header */}
-          <div className="bg-gradient-to-r from-[#fe640b] to-[#f97316] text-white p-6">
+          <div className="bg-gradient-to-br from-[#fe640b]/5 to-transparent text-white p-6">
             <div className="flex items-center gap-3 mb-2">
-              {/* <Sprout className="w-8 h-8" /> */}
               <div>
-                <h2 className="text-white text-2xl font-bold text-left ">
-                  {crop.cropName} Crop Advisory
-                </h2>
-                <p className="text-white/90 text-left mt-1">
+                 <h2 className="text-[#fe640b] font-semibold text-left text-xl mb-2" style={{ wordBreak: "break-word", overflowWrap: "break-word" }}>
+                    {crop.cropName} Crop Advisory
+                  </h2>
+                <p className="text-[#fe640b] text-left mt-1">
                   {crop.season.charAt(0).toUpperCase() +
                     crop.season.slice(1)}{" "}
                   Season
@@ -92,7 +104,7 @@ export default function CropAdvisoryTab() {
           </div>
 
           {/* Content */}
-          <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-left rounded-b-xl bg-[#fff7f0]">
+          <div className="p-6 grid grid-cols-1 md:grid-cols-2 gap-4 text-left rounded-b-xl bg-gradient-to-br from-[#fe640b]/5 to-transparent]">
             {[
               ["", "Best Sowing Time", "sowing", crop.sowingTime],
               ["", "Seed Selection", "seed", crop.seedGuidance],
@@ -103,7 +115,7 @@ export default function CropAdvisoryTab() {
               ["", "Harvesting", "harvest", crop.harvesting],
               ["", "Do's & Don'ts", "dos", crop.dosAndDonts],
             ].map(([icon, title, key, value]) => {
-              const sectionKey = `${crop.id}-${key}`;
+              const sectionKey = `${crop._id}-${key}`;
               const isExpanded = expandedSections[sectionKey];
 
               return (
@@ -117,16 +129,17 @@ export default function CropAdvisoryTab() {
                   </div>
 
                   <p className="text-[#4c4f69] whitespace-pre-line break-words">
-                    {isExpanded || value.length <= 100
+                    {isExpanded || !value || value.length <= 100
                       ? value
                       : truncateText(value)}
                   </p>
 
-                  {value.length > 100 && (
+                  {value && value.length > 100 && (
                     <button
                       onClick={() => toggleSection(sectionKey)}
-                      className="text-[#fe640b] text-sm font-semibold mt-2 hover:underline"
+                      className="flex items-center gap-2 text-[#fe640b] text-sm font-semibold mt-2 hover:underline"
                     >
+                      <Eye className="w-4 h-4 text-[#fe640b]" />
                       {isExpanded ? "Read Less" : "Read More"}
                     </button>
                   )}

@@ -22,16 +22,21 @@ app.use(cors({
 app.use(express.json());
 
 // Routes imports
-import userRoutes from "./routes/User.js";
-import adminRoutes from "./routes/Admin.js";
-import jobRoutes from "./routes/Job.js";
-import newsRoutes from "./routes/News.js";
+import userRoutes from "./routes/User/User.js";
+import adminRoutes from "./routes/Admin/Admin.js";
+import jobRoutes from "./routes/Job/Job.js";
+import newsRoutes from "./routes/News/News.js";
+import cropAdvisoryRoutes from "./routes/Agriculture/CropAdvisory.js";
+import governmentSchemesRoutes from "./routes/Agriculture/GovernmentSchemes.js";  
 
 // Routes usage
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/news", newsRoutes);
+app.use("/api/agriculture/crop-advisory", cropAdvisoryRoutes);
+app.use("/api/agriculture/government-schemes", governmentSchemesRoutes);
+
 
 // Test route
 app.get("/", (req, res) => {

@@ -1,9 +1,6 @@
 import { useState } from "react";
-import MandiPrices from "./MandiPrices";
-import WeatherTab from "./Weather";
-import CropAdvisory from "./CropAdvisory";
-import GovernmentSchemes from "./GovernmentSchemes";
-
+import AdminCropAdvisory from "./AdminCropAdvisory";
+import AdminGovernmentSchemes from "./AdminGovernmentSchemes";
 
 export default function Agricultures() {
   const [activeTab, setActiveTab] = useState("mandi");
@@ -14,19 +11,9 @@ export default function Agricultures() {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <div className="p-8 bg-gray-50 min-h-screen">
+    <div className="p-8 bg-gray-50 min-h-screen ">
       {/* Tabs */}
-      <div className="flex gap-2 mb-6 mt-8 flex-wrap">
-        <button
-          onClick={() => setActiveTab("mandi")}
-          className={`px-4 py-2 rounded-2xl font-medium transition-all ${
-            activeTab === "mandi"
-              ? "bg-latte-peach text-white shadow-md"
-              : "bg-white text-gray-500 hover:bg-gray-100"
-          }`}
-        >
-           Mandi Prices
-        </button>
+      <div className="flex gap-2 mb-6 mt-0 flex-wrap">
         <button
           onClick={() => setActiveTab("weather")}
           className={`px-4 py-2 rounded-2xl font-medium transition-all ${
@@ -89,23 +76,11 @@ export default function Agricultures() {
         </button>
       </div>
 
-      {/* Tab Content */}
-      {activeTab === "mandi" && (
-        <MandiPrices
-          selectedState={selectedState}
-          setSelectedState={setSelectedState}
-          selectedDistrict={selectedDistrict}
-          setSelectedDistrict={setSelectedDistrict}
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-        />
-      )}
-
       {activeTab === "weather" && <WeatherTab />}
 
-      {activeTab === "crop" && <CropAdvisory />}
+      {activeTab === "crop" && <AdminCropAdvisory />}
 
-      {activeTab === "schemes" && <GovernmentSchemes />}
+      {activeTab === "schemes" && <AdminGovernmentSchemes />}
 
       {activeTab === "soil" && <SoilTestingTab />}
 

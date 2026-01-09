@@ -62,7 +62,9 @@ app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/news", newsRoutes);
-app.use("/api/grievances", grievanceRoutes);
+app.use("/api/agriculture/crop-advisory", cropAdvisoryRoutes);
+app.use("/api/agriculture/government-schemes", governmentSchemesRoutes);
+
 
 // Test route
 app.get("/", (req, res) => {

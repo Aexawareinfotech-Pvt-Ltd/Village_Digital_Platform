@@ -1,6 +1,8 @@
 import { useState } from "react";
 import AdminCropAdvisory from "./AdminCropAdvisory";
 import AdminGovernmentSchemes from "./AdminGovernmentSchemes";
+import AdminSoilTesting from "./AdminSoilTesting";
+import AdminIrrigation from "./AdminIrrigation";
 
 export default function Agricultures() {
   const [activeTab, setActiveTab] = useState("mandi");
@@ -13,7 +15,7 @@ export default function Agricultures() {
   return (
     <div className="p-8 bg-gray-50 min-h-screen ">
       {/* Tabs */}
-      <div className="flex gap-2 mb-6 mt-0 flex-wrap">
+      <div className="flex gap-19 mb-6 mt-0 flex-wrap">
         <button
           onClick={() => setActiveTab("weather")}
           className={`px-4 py-2 rounded-2xl font-medium transition-all ${
@@ -22,7 +24,7 @@ export default function Agricultures() {
               : "bg-white text-gray-500 hover:bg-gray-100"
           }`}
         >
-          🌦️ Weather Updates
+           Weather Updates
         </button>
         <button
           onClick={() => setActiveTab("crop")}
@@ -32,7 +34,7 @@ export default function Agricultures() {
               : "bg-white text-gray-500 hover:bg-gray-100"
           }`}
         >
-          🌱 Crop Advisory
+           Crop Advisory
         </button>
         <button
           onClick={() => setActiveTab("schemes")}
@@ -42,7 +44,7 @@ export default function Agricultures() {
               : "bg-white text-gray-500 hover:bg-gray-100"
           }`}
         >
-          🏛️ Government Schemes
+           Government Schemes
         </button>
         <button
           onClick={() => setActiveTab("soil")}
@@ -52,7 +54,7 @@ export default function Agricultures() {
               : "bg-white text-gray-500 hover:bg-gray-100"
           }`}
         >
-          🌍 Soil Testing
+           Soil Testing
         </button>
         <button
           onClick={() => setActiveTab("irrigation")}
@@ -62,17 +64,7 @@ export default function Agricultures() {
               : "bg-white text-gray-500 hover:bg-gray-100"
           }`}
         >
-          💧 Irrigation Guide
-        </button>
-        <button
-          onClick={() => setActiveTab("resources")}
-          className={`px-4 py-2 rounded-2xl font-medium transition-all ${
-            activeTab === "resources"
-              ? "bg-latte-peach text-white shadow-md"
-              : "bg-white text-gray-500 hover:bg-gray-100"
-          }`}
-        >
-          🏪 Resources
+           Irrigation Guide
         </button>
       </div>
 
@@ -82,11 +74,10 @@ export default function Agricultures() {
 
       {activeTab === "schemes" && <AdminGovernmentSchemes />}
 
-      {activeTab === "soil" && <SoilTestingTab />}
+      {activeTab === "soil" && <AdminSoilTesting />}
 
-      {activeTab === "irrigation" && <IrrigationTab />}
+      {activeTab === "irrigation" && <AdminIrrigation />}
 
-      {activeTab === "resources" && <ResourcesTab />}
     </div>
   );
 }

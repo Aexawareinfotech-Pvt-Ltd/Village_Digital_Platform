@@ -22,6 +22,9 @@ import JobAdminPage from "../pages/Admin/Job/JobAdminPage";
 import GrievanceAdminPage from "../pages/Admin/Grievance/GrievanceAdminPage";
 import VillageLogin from "../components/Login/VillageLogin";
 import NewsAdminPage from "../pages/Admin/News/NewsAdminPage";
+import AdminDashboard from "../pages/Admin/AdminDashboard/Admin";
+import MarketplaceAdminPage from "../pages/Admin/Marketplace/MarketplaceAdminPage";
+import LocalServicesAdminPage from "../pages/Admin/LocalServices/LocalServicesAdminPage";
 
 const AppRouter = () => {
   return (
@@ -43,21 +46,18 @@ const AppRouter = () => {
       </Route>
 
       {/* ================= ADMIN ROUTE (NO HEADER, ONLY SIDEBAR) ================= */}
-      <Route element={<AdminLayout />}>
-       {/* <Route path="/AdminDashboard" element={<JobAdminPage />} /> */}
-       // AppRouter.jsx
       <Route
         path="/AdminDashboard"
-        element={
-          localStorage.getItem("token") ? <AdminLayout /> : <VillageLogin/>
-        }
-      />
-
-       
-       <Route path="/AdminDashboard/JobManagement" element={<JobAdminPage />} />
-       <Route path="/AdminDashboard/NewsManagement" element={<NewsAdminPage />} />
-       <Route path="/AdminDashboard/GrievanceManagement" element={<GrievanceAdminPage/>} />
+        element={localStorage.getItem("token") ? <AdminLayout /> : <VillageLogin />}
+      >
+        <Route index element={<AdminDashboard/>} />
+        <Route path="JobManagement" element={<JobAdminPage />} />
+        <Route path="NewsManagement" element={<NewsAdminPage />} />
+        <Route path="GrievanceManagement" element={<GrievanceAdminPage />} />
+        <Route path="MarketplaceManagement" element={<MarketplaceAdminPage />} />
+        <Route path="ServiceManagement" element={<LocalServicesAdminPage />} />
       </Route>
+      
       
 
     </Routes>
@@ -65,3 +65,5 @@ const AppRouter = () => {
 };
 
 export default AppRouter;
+
+localStorage.getItem("token")

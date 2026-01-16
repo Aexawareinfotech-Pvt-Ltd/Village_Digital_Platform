@@ -17,8 +17,8 @@ const server = http.createServer(app);
 // Socket.IO setup
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",
-    credentials: true,
+    origin: "*",
+    //credentials: true,
   },
 });
 
@@ -28,6 +28,11 @@ app.set("io", io);
 // Socket events
 io.on("connection", (socket) => {
   console.log("🟢 Admin connected:", socket.id);
+
+  socket.on("join-receipt", (receiptId) => {
+    socket.join(receiptId);
+    console.log(`📦 Joined receipt room: ${receiptId}`);
+  });
 
   socket.on("disconnect", () => {
     console.log("🔴 Admin disconnected:", socket.id);
@@ -56,6 +61,10 @@ import adminRoutes from "./routes/Admin.js";
 import jobRoutes from "./routes/Job.js";
 import newsRoutes from "./routes/News.js";
 import grievanceRoutes from "./routes/Grievance.js";
+import marketplaceRoutes from "./routes/Marketplace.js";
+import paymentRoutes from "./routes/Payment.js";
+import localServiceRoutes from "./routes/LocalServices.js";
+
 
 // API routes
 app.use("/api/users", userRoutes);
@@ -63,6 +72,11 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/news", newsRoutes);
 app.use("/api/grievances", grievanceRoutes);
+app.use("/api/marketplace", marketplaceRoutes);
+app.use("/api/marketplace", marketplaceRoutes);
+app.use("/api/payment", paymentRoutes);
+app.use("/api/local-services", localServiceRoutes);
+
 
 // Test route
 app.get("/", (req, res) => {

@@ -57,4 +57,39 @@ async function loginAdmin(req, res) {
   }
 }
 
-export { registerAdmin, loginAdmin };
+// async function userStats(req, res) {
+//   try {
+//     const TEN_DAYS = 10 * 24 * 60 * 60 * 1000;
+//     const tenDaysAgo = new Date(Date.now() - TEN_DAYS);
+
+//     const totalUsers = await User.countDocuments();
+
+//     const activeUsers = await User.countDocuments({
+//       lastActive: { $gte: tenDaysAgo }
+//     });
+
+//     const inactiveUsers = totalUsers - activeUsers;
+
+//     res.json({
+//       totalUsers,
+//       activeUsers,
+//       inactiveUsers
+//     });
+//   } catch (err) {
+//     res.status(500).json({ message: err.message });
+//   }
+// }
+
+async function getUserCount(req, res) {
+  try {
+    const totalUsers = await User.countDocuments();
+    res.json({ totalUsers });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+
+
+
+export { registerAdmin, loginAdmin, getUserCount};

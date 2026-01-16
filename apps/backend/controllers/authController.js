@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import User from "../models/Users.js";
 import crypto from "crypto";
 import sendEmail from "../utils/sendemail.js";
+//import { getIO } from "../Socket/socket.js";
 
 dotenv.config();
 
@@ -26,8 +27,15 @@ async function registerUser(req, res) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = new User({ name, phone, email, passwordHash: hashedPassword,role: "User" });
+    const newUser = new User({ name, phone, email, passwordHash: hashedPassword,role: "User" ,createdAt: new Date() ,lastActive: new Date()});
     await newUser.save();
+
+    // const io = getIO();
+    // io.to("admins").emit("user:new", {
+    //   id: newUser._id,
+    //   name: newUser.name,
+    //   email: newUser.email,
+    // });
 
     res.status(201).json({ message: "User registered successfully!" });
   } catch (err) {
@@ -59,11 +67,19 @@ async function loginUser(req, res) {
     token,
     role: user.role,
     });
+    
+    // user.lastActive = new Date();
+    // await user.save();
+
 
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 }
+
+async function logoutUser(req, res) { 
+    return res.json({ message: "Logged out successfully" });
+};
 
 
 export const forgotPassword = async (req, res) => {
@@ -147,4 +163,4 @@ export const resetPassword = async (req, res) => {
 };
 
 
-export { registerUser, loginUser };
+export { registerUser, loginUser, logoutUser };

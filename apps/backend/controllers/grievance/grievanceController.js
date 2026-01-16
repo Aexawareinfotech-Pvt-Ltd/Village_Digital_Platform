@@ -1,4 +1,4 @@
-import Grievance from "../models/Grievances.js";
+import Grievance from "../../models/Grievance/Grievances.js";
 import crypto from "crypto";
 
 /* ---------------- CREATE GRIEVANCE ---------------- */
@@ -15,16 +15,27 @@ export const createGrievance = async (req, res) => {
 
     const grievanceId = "GRV" + crypto.randomBytes(4).toString("hex").toUpperCase();
 
+    let attachments = [];
+
+    if (req.files && req.files.length > 0) {
+    attachments = req.files.map((file) => ({
+        fileName: file.originalname,
+        fileUrl: file.path, // Cloudinary URL
+        fileType: file.mimetype.includes("image") ? "image" : "pdf",
+    }));
+    }
+
     const grievance = await Grievance.create({
-      grievanceId,
-      userId: req.user.userId,
-      category,
-      subject,
-      description,
-      isAnonymous,
-      contactInfo: isAnonymous ? {} : { name, phone },
-      attachments: [], // add Cloudinary later
+    grievanceId,
+    userId: req.user.userId,
+    category,
+    subject,
+    description,
+    isAnonymous,
+    contactInfo: isAnonymous ? {} : { name, phone },
+    attachments,
     });
+
 
     const io = req.app.get("io");
     io.emit("grievance:count:update");
@@ -144,15 +155,17 @@ export const rejectGrievance = async (req, res) => {
 };
 
 export const getGrievanceCounts = async (req, res) => {
+  try{  
   const total = await Grievance.countDocuments({});
   const rejected = await Grievance.countDocuments({ status: "rejected" });
   const pending = await Grievance.countDocuments({ status: "pending" });
   const inProgress = await Grievance.countDocuments({ status: "inProgress" });
   const resolved = await Grievance.countDocuments({ status: "resolved" });
-  
-
-
   res.json({ total, pending, inProgress, resolved, rejected });
+  } catch (error) {
+    console.error("Error fetching Grievance count:", error);
+    res.status(500).json({ message: "Failed to fetch grievance count" });
+  }
 };
 
 export const getCategoryAnalytics = async (req, res) => {

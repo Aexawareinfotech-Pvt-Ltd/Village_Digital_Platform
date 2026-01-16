@@ -62,14 +62,14 @@ const VillageLogin = () => {
               <div className="w-12 h-12 bg-latte-peach rounded-xl flex items-center justify-center">
                 <span className="text-white text-2xl">V</span>
               </div>
-              <h1 className="text-gray-900 text-xl font-semibold">
+              <h1 className="text-gray-900 text-xl ">
                 Village Digital
               </h1>
               
             </div>
 
             {/* Form Title */}
-            <h2 className="text-gray-900 text-2xl font-semibold mb-2">
+            <h2 className="text-gray-900 text-2xl  mb-2">
               User Login
             </h2>
             <p className="text-gray-600 mb-6">
@@ -137,7 +137,7 @@ const VillageLogin = () => {
               
               <a
                 href="/forgot-password"
-                className="text-orange-400 hover:text-latte-peach text-sm"
+                className="text-latte-peach hover:text-orange-600 text-sm"
               >
                 Forgot password?
               </a>
@@ -146,7 +146,7 @@ const VillageLogin = () => {
             {/* Submit */}
             <button
               type="submit"
-              className="w-full bg-latte-peach text-white py-3 rounded-xl hover:bg-orange-400 transition-colors"
+              className="w-full bg-latte-peach hover:bg-orange-600 text-white py-3 rounded-xl  transition-colors"
             >
               {userType === "user" ? "Sign In" : "Access Admin Portal"}
             </button>
@@ -159,7 +159,7 @@ const VillageLogin = () => {
                 Don&apos;t have an account?{" "}
                 <button
                   onClick={() => (window.location.href = "/VillageRegister")}
-                  className="text-orange-400 hover:text-latte-peach font-medium"
+                  className="text-latte-peach hover:text-orange-600 font-medium"
                 >
                   Register here
                 </button>

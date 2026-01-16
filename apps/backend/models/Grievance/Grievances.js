@@ -1,5 +1,11 @@
 import mongoose from "mongoose";
 
+const attachmentSchema= new mongoose.Schema({
+  fileName: String,
+  fileUrl: String,
+  fileType: String,
+});
+
 const grievanceSchema = new mongoose.Schema(
   {
     grievanceId: {
@@ -30,9 +36,7 @@ const grievanceSchema = new mongoose.Schema(
     },
 
     attachments: [
-      {
-        type: String, // Cloudinary URLs later
-      },
+        attachmentSchema
     ],
 
     isAnonymous: {

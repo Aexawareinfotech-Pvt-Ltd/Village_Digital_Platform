@@ -5,21 +5,20 @@ import {
   Eye, Edit, Trash2, CheckCircle, XCircle, Clock,
   Plus, Download, Search, X, Upload, MapPin,
   Feather, MessageSquare,
-  Droplet
+  Droplet,
+  Paperclip
 } from "lucide-react";
 import { socket } from "../../../Socket/socket.js";
 import GrievanceCategoryChart from "./GrievanceCategoryChart.jsx";
+import Stat from "../../Common/Stat.jsx";
+
 
 
 
 const GrievanceAdminModule = () => {
     const [searchQuery, setSearchQuery] = useState("");
-    const [filterStatus, setFilterStatus] = useState("all");
-    
   
-    const [files, setFiles] = useState([]);
-  
-  
+    const [loading, setLoading] = useState(true);
     const [grievances, setGrievances] = useState([]);
     const [statusFilter, setStatusFilter] = useState("all");
     const [selectedGrievance, setSelectedGrievance] = useState(null);
@@ -39,142 +38,8 @@ const GrievanceAdminModule = () => {
 
   });
   
-    // const fetchPendingCount = async () => {
-    //     const res = await fetch(
-    //         "http://localhost:3000/api/grievances/list?status=pending",
-    //         {
-    //         headers: {
-    //             Authorization: `Bearer ${localStorage.getItem("token")}`,
-    //         },
-    //         }
-    //     );
-    //     const data = await res.json();
-    //     setPendingCount(data.length);
-    //     };
-    
-    //     useEffect(() => {
-    //     fetchPendingCount();
-    //     fetchGrievances();
-    
-    //     socket.on("grievance:new", () => {
-    //         fetchPendingCount();
-    //         fetchGrievances();
-    //     });
-    
-    //     socket.on("grievance:update", () => {
-    //         fetchPendingCount();
-    //         fetchGrievances();
-    //     });
+   
 
-    //     return () => {
-    //     socket.off("grievance:new");
-    //     socket.off("grievance:update");
-    // };
-    // }, []);
-
-    // const fetchRejectedCount = async () => {
-    //     const res = await fetch(
-    //         "http://localhost:3000/api/grievances/list?isRejected=true",
-    //         {
-    //         headers: {
-    //             Authorization: `Bearer ${localStorage.getItem("token")}`,
-    //         },
-    //         }
-    //     );
-    //     const data = await res.json();
-    //     setRejectedCount(data.length);
-    //     };
-    
-    //     useEffect(() => {
-    //     fetchRejectedCount();
-    //     fetchGrievances();
-    
-    //     socket.on("grievance:new", () => {
-    //         fetchRejectedCount();
-    //         fetchGrievances();
-    //     });
-    
-    //     socket.on("grievance:update", () => {
-    //         fetchRejectedCount();
-    //         fetchGrievances();
-    //     });
-
-    //     return () => {
-    //     socket.off("grievance:new");
-    //     socket.off("grievance:update");
-    // };
-    // }, []);
-
-    // const fetchInProgressCount = async () => {
-    //     const res = await fetch(
-    //         "http://localhost:3000/api/grievances/list?status=inProgress",
-    //         {
-    //         headers: {
-    //             Authorization: `Bearer ${localStorage.getItem("token")}`,
-    //         },
-    //         }
-    //     );
-    //     const data = await res.json();
-    //     setInProgressCount(data.length);
-    //     };
-    
-    //     useEffect(() => {
-    //     fetchInProgressCount();
-    //     fetchGrievances();
-    
-    //     socket.on("grievance:new", () => {
-    //         fetchInProgressCount();
-    //         fetchGrievances();
-    //     });
-    
-    //     socket.on("grievance:update", () => {
-    //         fetchInProgressCount();
-    //         fetchGrievances();
-    //     });
-
-    //     return () => {
-    //     socket.off("grievance:new");
-    //     socket.off("grievance:update");
-    // };
-    // }, []);
-
-    // const fetchGrievanceCount = async () => {
-    //   try {
-    //     const res = await fetch(
-    //       "http://localhost:3000/api/grievances/count",
-    //       {
-    //         headers: {
-    //           Authorization: `Bearer ${localStorage.getItem("token")}`,
-    //         },
-    //       }
-    //     );
-
-    //     if (!res.ok) {
-    //       throw new Error(`HTTP error! status: ${res.status}`);
-    //     }
-
-    //     const data = await res.json();
-    //     setGrievanceCount(data.count);
-    //   } catch (err) {
-    //     console.error("Failed to fetch grievance count:", err);
-    //   }
-    // };
-
-    // useEffect(() => {
-    //   fetchGrievanceCount();
-    //   fetchGrievances();
-
-    //   socket.on("grievance:new", fetchGrievanceCount);
-    //   socket.on("grievance:update", fetchGrievanceCount);
-
-    //   return () => {
-    //     socket.off("grievance:new", fetchGrievanceCount);
-    //     socket.off("grievance:update", fetchGrievanceCount);
-    //   };
-    // }, []);
-
-    
-  
 
   const fetchCounts = async () => {
     const res = await fetch("http://localhost:3000/api/grievances/count", {
@@ -212,6 +77,8 @@ const GrievanceAdminModule = () => {
     );
   
     const data = await res.json();
+    setLoading(false);
+    
     if (Array.isArray(data)) {
       setGrievances(data);
     } else {
@@ -294,20 +161,6 @@ const GrievanceAdminModule = () => {
 };
 
 
-    // const deleteGrievance = async (id) => {
-    //   await fetch(
-    //       `http://localhost:3000/api/grievances/delete/${id}`,
-    //       {
-    //       method: "DELETE",
-    //       headers: {
-    //           Authorization: `Bearer ${localStorage.getItem("token")}`,
-    //       },
-    //       }
-    //   );
-    //   fetchGrievances();
-    // };
-
-
 return (
     <div className="p-0">
         <div className="text-left mb-6 px-6 pt-6">  {/* Added px-6 pt-6 here */}
@@ -318,6 +171,18 @@ return (
           Review, update, and resolve grievances submitted by village users
         </p>
         </div>
+        {loading ? (
+          <div className="p-8">
+            <div className="flex items-center justify-center h-64">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#fe640b] mx-auto mb-4"></div>
+                <p className="text-[#6c6f85]">Loading grievances...</p>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <>
+
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Stat title="Total Grievances" value={counts.total} icon={<FileText />} />
         <Stat title="Pending Grievances" value={counts.pending} icon={<MessageSquare />} />
@@ -326,7 +191,7 @@ return (
         <Stat title="Resolved Grievances" value={counts.resolved} icon={<CheckCircle/>}/>
         
       </div>
-      <div className="mt-6 "><GrievanceCategoryChart/></div>
+      
         
         <div className="bg-white rounded-xl shadow-sm border border-orange-100 p-6 mb-6 mt-6">
         {/* Search and Filter Bar */}
@@ -371,7 +236,9 @@ return (
               </tr>
             </thead>
             <tbody>
-          {filteredGrievances.length > 0 ? (filteredGrievances.map((g) => (
+          {filteredGrievances.length > 0 ? (filteredGrievances.map((g) =>{const isPending = g.status === "pending";
+              const isInProgress = g.status === "inProgress";
+              const isResolved = g.status === "resolved"; return (
               <tr
               key={g._id}
               className="border-b border-latte-surface0 hover:bg-latte-mantle text-left text-latte-subtext0"
@@ -398,56 +265,85 @@ return (
               <td className="p-4">
                   <div className="flex gap-2">
                   
-
-                  <button
-                      title="In Progress"
-                      onClick={() => {
-                        setSelectedGrievance(g);
-                        setActionStatus("inProgress");
-                        setShowViewModal(true);
-                      }}
-
-                      className="p-2 text-latte-yellow hover:bg-latte-yellow/10 rounded-xl"
-                  >
-                      <AlertCircle className="w-4 h-4" />
-                  </button>
-
-                  <button
-                      title="Resolved"
-                      onClick={() => {
-                      setSelectedGrievance(g);
-                      setActionStatus("resolved");
-                      setShowViewModal(true);
-                    }}
-
-                      className="p-2 text-latte-green hover:bg-latte-green/10 rounded-xl"
-                  >
-                      <CheckCircle className="w-4 h-4" />
-                  </button>
-
-                  <button
-                    title="Reject"
+                    <button
+                    title="View"
                     onClick={() => {
                       setSelectedGrievance(g);
-                      setActionStatus("rejected");
+                      setActionStatus(null); // 👈 no action, view only
                       setShowViewModal(true);
                     }}
-                    className="p-2 text-red-600 hover:bg-red-100 rounded-xl"
+                    className="p-2 text-indigo-600 hover:bg-indigo-50 rounded-xl"
                   >
-                    <XCircle className="w-4 h-4" />
+                    <Eye className="w-4 h-4" />
                   </button>
+                    {/* ▶ IN PROGRESS */}
+                    {isPending && (
+                      <button
+                        title="Mark In Progress"
+                        onClick={() => {
+                          setSelectedGrievance(g);
+                          setActionStatus("inProgress");
+                          setShowViewModal(true);
+                        }}
+                        className="p-2 text-blue-600 hover:bg-blue-50 rounded-xl"
+                      >
+                        <AlertCircle className="w-4 h-4" />
+                      </button>
+                    )}
+
+                    {/* ✅ RESOLVE */}
+                    {(isPending || isInProgress) && (
+                      <button
+                        title="Resolve"
+                        onClick={() => {
+                          setSelectedGrievance(g);
+                          setActionStatus("resolved");
+                          setShowViewModal(true);
+                        }}
+                        className="p-2 text-green-600 hover:bg-green-50 rounded-xl"
+                      >
+                        <CheckCircle className="w-4 h-4" />
+                      </button>
+                    )}
+
+                    {/* ❌ REJECT */}
+                    {isPending && (
+                      <button
+                        title="Reject"
+                        onClick={() => {
+                          setSelectedGrievance(g);
+                          setActionStatus("rejected");
+                          setShowViewModal(true);
+                        }}
+                        className="p-2 text-red-600 hover:bg-red-50 rounded-xl"
+                      >
+                        <XCircle className="w-4 h-4" />
+                      </button>
+                    )}
+
+                    {/* 🔒 DISABLED REJECT (In Progress / Resolved) */}
+                    {/* {!isPending && (
+                      <button
+                        title="Reject disabled"
+                        disabled
+                        className="p-2 text-gray-400 cursor-not-allowed"
+                      >
+                        <XCircle className="w-4 h-4" />
+                      </button>
+                    )} */}
 
                   </div>
-              </td>
+                </td>
+
               </tr>
-                ))
+          )})
                 ) : (
                   <tr>
                     <td colSpan="6" className="p-6 text-center text-gray-500">
                       No grievances found
                     </td>
                   </tr>
-                )}
+          )}
           </tbody>
 
           </table>
@@ -466,6 +362,8 @@ return (
           </div>
         </div>
       </div>
+      </>
+    )}
 
         {showViewModal && selectedGrievance && (
         <div
@@ -513,16 +411,40 @@ return (
                 </p>
               </div>
 
-              <div>
-                <p className="text-sm text-gray-500 mb-1">Admin Message</p>
-                <textarea
-                  rows={4}
-                  value={adminMessage}
-                  onChange={(e) => setAdminMessage(e.target.value)}
-                  placeholder="Write a message for the user..."
-                  className="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-latte-peach"
-                />
-              </div>
+              {selectedGrievance.attachments?.length > 0 && (
+                <div>
+                  <p className="text-sm text-gray-500 mb-2">Attachments</p>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedGrievance.attachments.map((file, index) => (
+                      <a
+                        key={index}
+                        href={file.fileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 px-3 py-2 bg-orange-50 rounded-xl text-sm hover:bg-orange-100"
+                      >
+                        <Paperclip className="w-4 h-4" />
+                        {file.fileName}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              
+              {actionStatus && (
+                <div>
+                  <p className="text-sm text-gray-500 mb-1">Admin Message</p>
+                  <textarea
+                    rows={4}
+                    value={adminMessage}
+                    onChange={(e) => setAdminMessage(e.target.value)}
+                    placeholder="Write a message for the user..."
+                    className="w-full px-4 py-2 border rounded-xl focus:ring-2 focus:ring-latte-peach"
+                  />
+                </div>
+              )}
+
 
 
               <div className="flex gap-4">
@@ -548,6 +470,7 @@ return (
             </div>
 
             {/* Footer */}
+            {actionStatus && (
             <button
               onClick={async () => {
                 await updateStatus(
@@ -563,6 +486,7 @@ return (
             >
               Update & Notify User
             </button>
+            )}
 
           </div>
         </div>
@@ -574,19 +498,6 @@ return (
 
 }
 
-function Stat({ title, value, icon }) {
-  return (
-    <div className="bg-white rounded-xl shadow-sm border flex justify-between border-orange-100 p-6">
-      <div className="flex items-center mb-4 space-x-4">
-        <div className="text-orange-500">{icon}</div>
-      </div>
-      <div className="text-right">
-       <p className="text-gray-500">{title}</p>
-       <h2 className="text-3xl">{value}</h2>
-      </div>
-    </div>
-  );
-}
 
 
 export default GrievanceAdminModule;

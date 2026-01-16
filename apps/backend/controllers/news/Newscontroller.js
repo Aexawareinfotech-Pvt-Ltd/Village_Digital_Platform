@@ -25,7 +25,7 @@ export const createNews = async (req, res) => {
       featured: req.body.featured || false,
       attachments,
     });
-
+    io.emit("news:count:update");
     res.status(201).json({ success: true, data: news });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -123,9 +123,47 @@ export const deleteNews = async (req, res) => {
     if (!deleted) {
       return res.status(404).json({ success: false, message: "News not found" });
     }
-
+    io.emit("news:count:update");
     res.json({ success: true, message: "News deleted successfully" });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+export const getNewsCount = async (req,res) => {
+  try {
+    const totalN = await News.countDocuments({});
+    res.json({ totalN });
+  } catch (error) {
+    console.error("Error fetching news count:", error);
+    res.status(500).json({ message: "Failed to fetch news count" });
+  }
+
+};
+
+
+export const getCategoryAnalytics = async (req, res) => {
+  try {
+    const data = await News.aggregate([
+      {
+        $group: {
+          _id: "$category",
+          count: { $sum: 1 }
+        }
+      },
+      {
+        $project: {
+          category: "$_id",
+          count: 1,
+          _id: 0
+        }
+      }
+    ]);
+
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+

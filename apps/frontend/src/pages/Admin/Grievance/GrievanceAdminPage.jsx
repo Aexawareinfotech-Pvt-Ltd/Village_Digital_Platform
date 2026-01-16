@@ -1,5 +1,4 @@
 import GrievanceAdminModule from "../../../components/Admin/Grievance/GrievanceAdminModule";
-import Grievance from "../../User/Grievance/Grievance";
 
 const GrievanceAdminPage = () => {
     return (

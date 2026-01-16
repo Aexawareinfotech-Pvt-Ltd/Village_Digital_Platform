@@ -10,13 +10,14 @@ import {
   getGrievanceCounts,
   getCategoryAnalytics
  
-} from "../controllers/grievanceController.js";
-import authMiddleware from "../middlewares/authMiddleware.js";
-import adminMiddleware from "../middlewares/adminMiddleware.js";
+} from "../../controllers/grievance/grievanceController.js";
+import authMiddleware from "../../middlewares/authMiddleware.js";
+import adminMiddleware from "../../middlewares/adminMiddleware.js";
+import grievanceUpload from "../../middlewares/grievanceUpload.js";
 
 const router = express.Router();
 
-router.post("/create",authMiddleware, createGrievance);
+router.post("/create",authMiddleware, grievanceUpload.array("attachments", 5), createGrievance);
 
 router.get("/track/:grievanceId",authMiddleware, trackGrievance);
 

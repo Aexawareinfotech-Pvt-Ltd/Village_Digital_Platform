@@ -1,18 +1,21 @@
 import { useState } from 'react';
 import { X } from 'lucide-react';
 
-export function RegistrationFormModal({ event, isOpen, onClose, onRegister }) {
+export function RegistrationFormModal({ event, isOpen, onClose, onRegister, loading }) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [additionalDetails, setAdditionalDetails] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!event) return;
+
+    setSubmitting(true);
 
     const registrationData = {
       eventId: event.id,
@@ -22,14 +25,21 @@ export function RegistrationFormModal({ event, isOpen, onClose, onRegister }) {
       additionalDetails
     };
 
-    onRegister(registrationData);
-    
-    setName('');
-    setEmail('');
-    setPhone('');
-    setAdditionalDetails('');
-    
-    onClose();
+    try {
+      await onRegister(registrationData);
+      
+      // Clear fields
+      setName('');
+      setEmail('');
+      setPhone('');
+      setAdditionalDetails('');
+      
+      onClose();
+    } catch (error) {
+      console.error('Registration error:', error);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleClose = () => {
@@ -48,7 +58,8 @@ export function RegistrationFormModal({ event, isOpen, onClose, onRegister }) {
           <h2 className="text-xl text-gray-900">Register for Event</h2>
           <button
             onClick={handleClose}
-            className="p-2 rounded-2xl transition-colors"
+            disabled={submitting}
+            className="p-2 rounded-2xl transition-colors hover:bg-gray-100"
           >
             <X className="w-5 h-5 text-gray-500" />
           </button>
@@ -62,8 +73,8 @@ export function RegistrationFormModal({ event, isOpen, onClose, onRegister }) {
           </div>
         )}
 
-        {/* Form */}
-        <form onSubmit={handleSubmit} className="p-6 space-y-4">
+        {/* Fields */}
+        <div className="p-6 space-y-4">
           <div>
             <label htmlFor="name" className="block text-sm text-gray-700 mb-1.5 text-left">
               Full Name *
@@ -75,7 +86,8 @@ export function RegistrationFormModal({ event, isOpen, onClose, onRegister }) {
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              disabled={submitting}
+              className="w-full px-3 py-2 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent disabled:bg-gray-100"
             />
           </div>
 
@@ -90,7 +102,8 @@ export function RegistrationFormModal({ event, isOpen, onClose, onRegister }) {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              disabled={submitting}
+              className="w-full px-3 py-2 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent disabled:bg-gray-100"
             />
           </div>
 
@@ -105,7 +118,8 @@ export function RegistrationFormModal({ event, isOpen, onClose, onRegister }) {
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              disabled={submitting}
+              className="w-full px-3 py-2 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent disabled:bg-gray-100"
             />
           </div>
 
@@ -119,7 +133,8 @@ export function RegistrationFormModal({ event, isOpen, onClose, onRegister }) {
               value={additionalDetails}
               onChange={(e) => setAdditionalDetails(e.target.value)}
               rows={3}
-              className="w-full px-3 py-2 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"
+              disabled={submitting}
+              className="w-full px-3 py-2 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none disabled:bg-gray-100"
             />
           </div>
 
@@ -127,18 +142,27 @@ export function RegistrationFormModal({ event, isOpen, onClose, onRegister }) {
             <button
               type="button"
               onClick={handleClose}
-              className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-2xl hover:bg-gray-50 transition-colors"
+              disabled={submitting}
+              className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-2xl hover:bg-gray-50 transition-colors disabled:bg-gray-100 disabled:cursor-not-allowed"
             >
               Cancel
             </button>
             <button
-              type="submit"
-              className="flex-1 px-4 py-2 bg-[#fe640b] text-white rounded-2xl transition-colors"
+              onClick={handleSubmit}
+              disabled={submitting || !name || !email || !phone}
+              className="flex-1 px-4 py-2 bg-[#fe640b] text-white rounded-2xl transition-colors hover:bg-[#e55a0a] disabled:bg-gray-400 disabled:cursor-not-allowed flex items-center justify-center"
             >
-              Complete Registration
+              {submitting ? (
+                <>
+                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></div>
+                  Registering...
+                </>
+              ) : (
+                'Complete Registration'
+              )}
             </button>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );

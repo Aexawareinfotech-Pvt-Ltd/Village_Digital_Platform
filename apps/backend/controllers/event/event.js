@@ -48,9 +48,10 @@ export const updateEvent = async (req, res) => {
     const event = await Event.findByIdAndUpdate(
       req.params.id,
       {
-        title: req.body.title,
+        eventName: req.body.eventName, 
         description: req.body.description,
         venue: req.body.venue,
+        category: req.body.category,
         startDate: req.body.startDate,
         endDate: req.body.endDate,
         isRegistrationRequired: req.body.isRegistrationRequired,
@@ -82,9 +83,9 @@ export const updateEvent = async (req, res) => {
 
 export const deleteEvent = async (req, res) => {
   try {
-    const { eventId } = req.params;
+    const { id } = req.params;   // ✅ FIX HERE
 
-    const event = await Event.findById(eventId);
+    const event = await Event.findById(id);
 
     if (!event) {
       return res.status(404).json({
@@ -93,9 +94,9 @@ export const deleteEvent = async (req, res) => {
       });
     }
 
-    await Event.findByIdAndDelete(eventId);
-    await EventRegistration.deleteMany({ eventId });
-    await Ticket.deleteMany({ eventId });
+    await Event.findByIdAndDelete(id);
+    await EventRegistration.deleteMany({ eventId: id });
+    await Ticket.deleteMany({ eventId: id });
 
     res.status(200).json({
       success: true,
@@ -108,6 +109,7 @@ export const deleteEvent = async (req, res) => {
     });
   }
 };
+
 
 // GET ATTENDEES FOR EVENT
 export const getEventAttendees = async (req, res) => {

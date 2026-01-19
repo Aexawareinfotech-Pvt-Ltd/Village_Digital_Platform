@@ -1,115 +1,115 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CommunityCalendar } from './CommunityCalendar';
-import { RegistrationFormModal } from './RegistrationFormModal ';
 import { UserEventsListing } from './UserEventsListing';
 import { EventDetailsPage } from './EventDetailsPage';
-// Mock data
-const initialEvents = [
-  {
-    id: '1',
-    name: 'Diwali Festival Celebration',
-    date: '2026-02-15',
-    time: '18:00',
-    venue: 'Village Community Hall',
-    category: 'festival',
-    description: 'Join us for a grand Diwali celebration with traditional performances, games, and feast.',
-    registrationRequired: true,
-    maxAttendees: 150,
-    currentAttendees: 45
-  },
-  {
-    id: '2',
-    name: 'Free Health Checkup Camp',
-    date: '2026-02-20',
-    time: '09:00',
-    venue: 'Primary Health Center',
-    category: 'health',
-    description: 'Free health screening and consultation by visiting doctors.',
-    registrationRequired: true,
-    maxAttendees: 100,
-    currentAttendees: 67
-  },
-  {
-    id: '3',
-    name: 'Agricultural Training Workshop',
-    date: '2026-02-25',
-    time: '10:00',
-    venue: 'Farmer Training Center',
-    category: 'agriculture',
-    description: 'Learn about modern farming techniques and sustainable agriculture practices.',
-    registrationRequired: true,
-    maxAttendees: 50,
-    currentAttendees: 28
-  },
-  {
-    id: '4',
-    name: 'Village Cricket Tournament',
-    date: '2026-02-28',
-    time: '14:00',
-    venue: 'Village Sports Ground',
-    category: 'sports',
-    description: 'Annual inter-village cricket tournament. All teams welcome!',
-    registrationRequired: false
-  }
-];
-
-const mockRegistrations = [
-  {
-    id: 'r1',
-    eventId: '1',
-    name: 'Rajesh Kumar',
-    email: 'rajesh.kumar@example.com',
-    phone: '+91 98765 43210',
-    additionalDetails: 'Vegetarian meal preference',
-    registeredAt: '2026-02-01T10:30:00'
-  },
-  {
-    id: 'r2',
-    eventId: '1',
-    name: 'Priya Sharma',
-    email: 'priya.sharma@example.com',
-    phone: '+91 98765 43211',
-    registeredAt: '2026-02-02T14:20:00'
-  },
-  {
-    id: 'r3',
-    eventId: '2',
-    name: 'Amit Patel',
-    email: 'amit.patel@example.com',
-    phone: '+91 98765 43212',
-    additionalDetails: 'Bringing elderly parents',
-    registeredAt: '2026-02-03T09:15:00'
-  }
-];
+import { RegistrationFormModal } from './RegistrationFormModal ';
 
 export default function Events({ onSwitchToAdmin }) {
   const [currentPage, setCurrentPage] = useState('user-events');
-  const [events, setEvents] = useState(initialEvents);
-  const [registrations, setRegistrations] = useState(mockRegistrations);
+  const [events, setEvents] = useState([]);
+  const [registrations, setRegistrations] = useState([]);
   const [selectedEventForRegistration, setSelectedEventForRegistration] = useState(null);
   const [isRegistrationModalOpen, setIsRegistrationModalOpen] = useState(false);
   const [viewingEventDetails, setViewingEventDetails] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const API_BASE_URL = 'http://localhost:3000/api'; // Change to your backend URL
+
+  useEffect(() => {
+    fetchAllEvents();
+  }, []);
+
+  // Fetch all events
+  const fetchAllEvents = async () => {
+    setLoading(true);
+    setError('');
+    try {
+      const response = await fetch(`${API_BASE_URL}/event-registrations/list`, {
+        method: 'GET',
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'Failed to fetch events');
+
+      // Transform backend data to match frontend format
+      const transformedEvents = (data.data || []).map(event => {
+        const startDate = new Date(event.startDate);
+        return {
+          id: event._id,
+          name: event.eventName,
+          date: event.startDate?.split('T')[0],
+          time: startDate.toTimeString().substring(0, 5),
+          venue: event.venue,
+          category: event.category,
+          description: event.description,
+          registrationRequired: event.isRegistrationRequired,
+          maxAttendees: event.maxAttendees,
+          currentAttendees: 0, // Will be updated when we have registration count
+        };
+      });
+
+      setEvents(transformedEvents);
+    } catch (err) {
+      setError(err.message);
+      console.error('Error fetching events:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleNavigate = (page) => {
     setCurrentPage(page);
     setViewingEventDetails(null);
   };
 
-  const handleRegister = (registrationData) => {
-    const newRegistration = {
-      id: `reg-${Date.now()}`,
-      ...registrationData,
-      registeredAt: new Date().toISOString()
-    };
-    
-    setRegistrations([...registrations, newRegistration]);
-    
-    // Update event attendee count
-    setEvents(events.map(e => 
-      e.id === registrationData.eventId 
-        ? { ...e, currentAttendees: (e.currentAttendees || 0) + 1 }
-        : e
-    ));
+  const handleRegister = async (registrationData) => {
+    setLoading(true);
+    setError('');
+
+    try {
+      const token = localStorage.getItem('token');
+
+      const response = await fetch(`${API_BASE_URL}/event-registrations/${registrationData.eventId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          name: registrationData.name,
+          email: registrationData.email,
+          phone: registrationData.phone,
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || 'Failed to register for event');
+
+      // Update local state
+      const newRegistration = {
+        id: data.ticket?.ticketId || `reg-${Date.now()}`,
+        ...registrationData,
+        registeredAt: new Date().toISOString()
+      };
+      
+      setRegistrations([...registrations, newRegistration]);
+      
+      // Update event attendee count
+      setEvents(events.map(e => 
+        e.id === registrationData.eventId 
+          ? { ...e, currentAttendees: (e.currentAttendees || 0) + 1 }
+          : e
+      ));
+
+      alert('Registration successful! Check your email for the ticket.');
+    } catch (err) {
+      setError(err.message);
+      console.error('Error registering for event:', err);
+      alert('Failed to register: ' + err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleRegisterClick = (event) => {
@@ -122,9 +122,19 @@ export default function Events({ onSwitchToAdmin }) {
     setCurrentPage('user-event-details');
   };
 
+  if (loading && events.length === 0) {
+    return (
+      <div className="size-full flex items-center justify-center bg-gray-50">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading events...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="size-full flex bg-gray-50">
-
       {currentPage === 'user-calendar' ? (
         <CommunityCalendar 
           events={events}
@@ -154,6 +164,7 @@ export default function Events({ onSwitchToAdmin }) {
           setSelectedEventForRegistration(null);
         }}
         onRegister={handleRegister}
+        loading={loading}
       />
     </div>
   );

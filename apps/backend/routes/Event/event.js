@@ -11,9 +11,9 @@ import adminMiddleware from "../../middlewares/adminMiddleware.js";
 const router = express.Router();
 
 router.post("/create", adminMiddleware, createEvent);
-router.put("/:eventId", adminMiddleware, updateEvent);
-router.delete("/:eventId", adminMiddleware, deleteEvent);
+router.put("/:id", adminMiddleware, updateEvent);
+router.delete("/:id", adminMiddleware, deleteEvent);
 router.get("/list", getAllEvents);
-router.get("/:eventId/attendees", adminMiddleware, getEventAttendees);
+router.get("/:id/attendees", adminMiddleware, getEventAttendees);
 
 export default router;

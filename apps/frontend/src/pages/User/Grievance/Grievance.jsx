@@ -1,9 +1,9 @@
+import VillageGrievance from '../../../components/User/Grievance/VillageGrievance';
 
 const Grievance = () => {
   return (
-    <div className="text-center">
-        <h1 className="text-5xl font-bold mb-4">Welcome to the Grievance Page</h1>
-        <p className="text-lg text-gray-700">This is the grievance section of the application.</p>
+    <div className="min-h-screen px-4 py-6 bg-gray-50">
+      <VillageGrievance/> 
     </div>
   );
 }

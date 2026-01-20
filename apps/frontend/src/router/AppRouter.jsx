@@ -3,7 +3,7 @@ import React from "react";
 
 import MainLayout from "../layouts/Mainlayout";
 import AdminLayout from "../layouts/AdminLayout";
-
+import Login from "../pages/User/Login/Login";
 import HomePage from "../pages/User/Home/HomePage";
 import Marketplace from "../pages/User/Marketplace/Marketplace";
 import News from "../pages/User/News/News";
@@ -12,14 +12,16 @@ import Job from "../pages/User/Job/Job";
 import Event from "../pages/User/Events/Event";
 import Grievance from "../pages/User/Grievance/Grievance";
 import Agriculture from "../pages/User/Agriculture/Agriculture";
-import Login from "../pages/User/Login/Login";
 import ForgotPassword from "../pages/User/ForgotReset/ForgotPassword";
 import ResetPassword from "../pages/User/ForgotReset/ResetPassword";
 import Register from "../pages/User/Register/Register";
 
-
+import GrievanceAdminPage from "../pages/Admin/Grievance/GrievanceAdminPage";
 import JobAdminPage from "../pages/Admin/Job/JobAdminPage";
 import NewsAdminPage from "../pages/Admin/News/NewsAdminPage";
+import AdminDashboard from "../pages/Admin/AdminDashboard/Admin";
+import MarketplaceAdminPage from "../pages/Admin/Marketplace/MarketplaceAdminPage";
+import LocalServicesAdminPage from "../pages/Admin/LocalServices/LocalServicesAdminPage";
 import AgricultureAdminPage from "../pages/Admin/Agriculture/AgrlicultureAdminPage";
 import EventAdminPage from "../pages/Admin/Event/EventAdminPage";
 
@@ -43,6 +45,19 @@ const AppRouter = () => {
       </Route>
 
       {/* ================= ADMIN ROUTE (NO HEADER, ONLY SIDEBAR) ================= */}
+      <Route
+        path="/AdminDashboard"
+        element={localStorage.getItem("token") ? <AdminLayout /> : <Login />}
+      >
+        <Route index element={<AdminDashboard/>} />
+        <Route path="JobManagement" element={<JobAdminPage />} />
+        <Route path="NewsManagement" element={<NewsAdminPage />} />
+        <Route path="GrievanceManagement" element={<GrievanceAdminPage />} />
+        <Route path="MarketplaceManagement" element={<MarketplaceAdminPage />} />
+        <Route path="ServiceManagement" element={<LocalServicesAdminPage />} />
+      </Route>
+      
+      
       <Route element={<AdminLayout />}>
        <Route path="/AdminDashboard" element={<JobAdminPage />} />
        <Route path="/AdminDashboard/JobManagement" element={<JobAdminPage />} />
@@ -57,3 +72,4 @@ const AppRouter = () => {
 
 export default AppRouter;
 
+localStorage.getItem("token")

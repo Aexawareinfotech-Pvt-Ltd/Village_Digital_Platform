@@ -237,7 +237,7 @@ const VillageRegister = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-latte-peach text-white py-3 rounded-xl hover:bg-orange-400 transition-colors"
+              className="w-full bg-latte-peach text-white py-3 rounded-xl hover:bg-orange-600 transition-colors"
             >
               {loading ? "Creating Account..." : "Create Account"}
             </button>

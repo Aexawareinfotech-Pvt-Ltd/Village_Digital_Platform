@@ -8,22 +8,22 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-// 🎨 Fixed colors by grievance category
+// 🎨 Fixed colors by category
 const CATEGORY_COLORS = {
-  water: "#0ea5e9",
-  electricity: "#facc15",
-  roads: "#f97316",
-  sanitation: "#22c55e",
-  education: "#3b82f6",
+  administrative: "#3b82f6",
   health: "#ef4444",
-  other: "#9ca3af",
+  education: "#22c55e",
+  infrastructure: "#f97316",
+  agriculture: "#84cc16",
+  event: "#a855f7",
+  emergency: "#dc2626",
 };
 
-export default function GrievanceCategoryChart() {
+export default function NewsCategoryChart() {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3000/api/grievances/analytics/category", {
+    fetch("http://localhost:3000/api/news/analytics/category", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -36,7 +36,7 @@ export default function GrievanceCategoryChart() {
   return (
     <div className="bg-white rounded-xl shadow-sm border border-orange-100 p-6">
       <h2 className="text-lg text-latte-peach mb-4">
-        Grievances by Category
+        News by Category
       </h2>
 
       {data.length > 0 ? (
@@ -54,7 +54,7 @@ export default function GrievanceCategoryChart() {
                   key={index}
                   fill={
                     CATEGORY_COLORS[entry.category?.toLowerCase()] ||
-                    "#9ca3af" // fallback
+                    "#9ca3af" // fallback gray
                   }
                 />
               ))}

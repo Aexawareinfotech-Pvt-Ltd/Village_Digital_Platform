@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   MessageSquare,
   Upload,
@@ -8,6 +8,8 @@ import {
   Clock,
   AlertCircle,
   XCircle,
+  Paperclip,
+  X,
 } from "lucide-react";
 
 const getStatusIcon = (status) => {
@@ -98,48 +100,120 @@ const GrievanceSystem = ({ language = "en" }) => {
   const [activeTab, setActiveTab] = useState("submit");
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("");
-
+  const [files, setFiles] = useState([]);
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
-
+  const [attachments, setAttachments] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [dragActive, setDragActive] = useState(false);
+  const fileInputRef = useRef(null);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [selectedGrievance, setSelectedGrievance] = useState(null);
+
 
   const [myGrievances, setMyGrievances] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const submitGrievance = async (e) => {
+    const submitGrievance = async (e) => {
   e.preventDefault();
+  setLoading(true);
 
   try {
+    const formData = new FormData();
+    formData.append("category", selectedCategory);
+    formData.append("subject", subject);
+    formData.append("description", description);
+    formData.append("isAnonymous", isAnonymous);
+    formData.append("name", name);
+    formData.append("phone", phone);
+
+    files.forEach((file) => {
+      formData.append("attachments", file);
+    });
+
     const res = await fetch("http://localhost:3000/api/grievances/create", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-      body: JSON.stringify({
-        category: selectedCategory,
-        subject,
-        description,
-        isAnonymous,
-        name,
-        phone,
-      }),
+      body: formData,
     });
 
     const data = await res.json();
 
+    if (!res.ok) {
+      throw new Error(data.message || "Failed to submit grievance");
+    }
+
     alert(`Grievance submitted! ID: ${data.grievanceId}`);
+
+    // reset form
+    setSelectedCategory("");
+    setSubject("");
+    setDescription("");
+    setFiles([]);
+    setAttachments([]);
+    setIsAnonymous(false);
+    setName("");
+    setPhone("");
     setActiveTab("track");
-    fetchMyGrievances();
-    }
-   catch (err) {
-    alert("Failed to submit grievance");
-    }
+  } catch (error) {
+    console.error("Submit grievance error:", error);
+    alert(error.message);
+  } finally {
+    setLoading(false);
+  }
+};
+
+
+
+    const handleFileUpload = (files) => {
+    if (!files) return;
+
+    const filesArray = Array.from(files);
+    setFiles((prev) => [...prev, ...filesArray]);
+
+    // Preview only (no DB meaning)
+    setAttachments((prev) =>
+      prev.concat(
+        filesArray.map((file) => ({
+          name: file.fileName,
+          preview: URL.createObjectURL(file),
+          }))
+        )
+      );
+    };
+
+
+    const handleDrag = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (e.type === "dragenter" || e.type === "dragover") {
+        setDragActive(true);
+      } else if (e.type === "dragleave") {
+        setDragActive(false);
+      }
+    };
+
+    const handleDrop = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      setDragActive(false);
+
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        handleFileUpload(e.dataTransfer.files);
+      }
+    };
+
+    const removeAttachment = (index) => {
+    setAttachments((prev) => prev.filter((_, i) => i !== index));
+    setFiles((prev) => prev.filter((_, i) => i !== index));
   };
+
+
 
   
 
@@ -286,20 +360,63 @@ const GrievanceSystem = ({ language = "en" }) => {
               />
             </div>
 
-            {/* Attachments */}
-            <div>
-              <label className="block text-gray-700 mb-2">{t.attachments}</label>
-              <div className="border-2 border-dashed border-orange-200 rounded-xl p-6 text-center hover:border-orange-400 transition-colors cursor-pointer">
-                <Upload className="w-8 h-8 text-orange-400 mx-auto mb-2" />
-                <p className="text-gray-600 text-sm">
-                  {language === 'en'
-                    ? 'Click to upload or drag and drop'
-                    : language === 'hi'
-                    ? 'अपलोड करने के लिए क्लिक करें या ड्रैग और ड्रॉप करें'
-                    : 'અપલોડ કરવા માટે ક્લિક કરો અથવા ડ્રેગ અને ડ્રોપ કરો'}
-                </p>
-              </div>
+            {/* ATTACHMENTS */}
+          <div>
+            <label className="block text-[#4c4f69] text-left mb-2">
+              Attachments (Images / PDFs)
+            </label>
+
+            <div
+              onDragEnter={handleDrag}
+              onDragLeave={handleDrag}
+              onDragOver={handleDrag}
+              onDrop={handleDrop}
+              onClick={() => fileInputRef.current?.click()}
+              className={`border-2 border-dashed rounded-2xl p-8 cursor-pointer ${
+                dragActive
+                  ? "border-[#d20f39] bg-[#fce6e6]"
+                  : "border-[#ccd0da] hover:border-[#d20f39]"
+              }`}
+            >
+              <Upload className="mx-auto w-8 h-8 text-[#d20f39]" />
+              <p className="text-center mt-2 text-[#6c6f85]">
+                Click to upload or drag & drop
+              </p>
             </div>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              accept="image/*,.pdf"
+              onChange={(e) => handleFileUpload(e.target.files)}
+              className="hidden"
+            />
+
+            {attachments.length > 0 && (
+              <div className="mt-4 space-y-2">
+                {attachments.map((file, index) => (
+                  <div
+                    key={index}
+                    className="flex justify-between items-center bg-[#e6e9ef] p-3 rounded-lg"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Paperclip className="w-4 h-4 text-[#4c4f69]" />
+                      <span className="text-[#4c4f69] text-sm">{file.fileName}</span>
+                    </div>
+                    <button 
+                      type="button" 
+                      onClick={() => removeAttachment(index)}
+                      className="text-[#d20f39] hover:text-[#e64553]"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
 
             {/* Anonymous Checkbox */}
             <div className="flex items-center gap-3">
@@ -394,18 +511,33 @@ const GrievanceSystem = ({ language = "en" }) => {
               {filteredGrievances.length > 0 ? (filteredGrievances.map((grievance) => (
                 <div key={grievance._id} className="border border-latte-peach rounded-xl p-4">
                     <div className="flex justify-between items-start mb-3">
-                        <div>
+                        <div >
                         <h3 className="text-gray-900 mb-1">{grievance.subject}</h3>
                         <p className="text-sm text-gray-600">{grievance.category}</p>
                         </div>
+                        <div className="flex">
                         <div
-                        className={`flex items-center gap-2 px-3 py-1 rounded-full border ${getStatusColor(
+                        className={`flex items-center gap-2 px-3 py-1 mr-2 rounded-full border ${getStatusColor(
                             grievance.status
                         )}`}
                         >
                         {getStatusIcon(grievance.status)}
                         <span className="text-sm">{t.status[grievance.status] || grievance.status}</span>
                         </div>
+                        <div>
+                          <button
+                          onClick={() => {
+                            setSelectedGrievance(grievance);
+                            setShowViewModal(true);
+                          }}
+                          
+                        >
+                         <Eye className="w-5 h-5 text-latte-peach hover:text-orange-600" />
+                         
+                        </button>
+                        
+                      </div>
+                      </div>
                     </div>
                     <div className="bg-gray-50 rounded-lg p-3 mb-3">
                     <p className="text-sm text-gray-700">{grievance.adminResponse || "No update yet"}</p>
@@ -427,6 +559,99 @@ const GrievanceSystem = ({ language = "en" }) => {
           </div>
         </div>
       )}
+      {showViewModal && selectedGrievance && (
+              <div
+                className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4"
+                onClick={() => setShowViewModal(false)}
+              >
+                <div
+                  className="bg-white rounded-2xl max-w-xl w-full p-6 shadow-xl"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {/* Header */}
+                  <div className="flex justify-between items-center mb-4">
+                    <h2 className="text-xl font-semibold text-latte-peach">
+                      Grievance Details
+                    </h2>
+                    <button
+                      onClick={() => setShowViewModal(false)}
+                      className="p-2 hover:bg-gray-100 rounded-xl"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+      
+                  {/* Content */}
+                  <div className="space-y-4 text-left">
+                    <div>
+                      <p className="text-sm text-gray-500">Grievance ID</p>
+                      <p className="font-medium">#{selectedGrievance.grievanceId}</p>
+                    </div>
+      
+                    <div>
+                      <p className="text-sm text-gray-500">Subject</p>
+                      <p className="font-medium">{selectedGrievance.subject}</p>
+                    </div>
+      
+                    <div>
+                      <p className="text-sm text-gray-500">Category</p>
+                      <p className="font-medium">{selectedGrievance.category}</p>
+                    </div>
+      
+                    <div>
+                      <p className="text-sm text-gray-500">Description</p>
+                      <p className="bg-gray-50 p-3 rounded-xl text-sm">
+                        {selectedGrievance.description}
+                      </p>
+                    </div>
+      
+                    {selectedGrievance.attachments?.length > 0 && (
+                      <div>
+                        <p className="text-sm text-gray-500 mb-2">Attachments</p>
+                        <div className="flex flex-wrap gap-2">
+                          {selectedGrievance.attachments.map((file, index) => (
+                            <a
+                              key={index}
+                              href={file.fileUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-2 px-3 py-2 bg-orange-50 rounded-xl text-sm hover:bg-orange-100"
+                            >
+                              <Paperclip className="w-4 h-4" />
+                              {file.fileName}
+                            </a>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+    
+                    <div className="flex gap-4">
+                      <div>
+                        <p className="text-sm text-gray-500">Status</p>
+                        <span
+                          className={`flex items-center mt-1 px-3 py-1 rounded-full text-sm border ${getStatusColor(
+                            selectedGrievance.status
+                          )}`}
+                        >
+                          {getStatusIcon(selectedGrievance.status)}
+                              <span className="text-sm ml-1">{selectedGrievance.status}</span>
+                        </span>
+                      </div>
+      
+                      <div>
+                        <p className="text-sm text-gray-500">Submitted On</p>
+                        <p className="text-sm">
+                          {new Date(selectedGrievance.createdAt).toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+      
+                </div>
+              </div>
+            )}
+
+                
     </div>
   );
 };

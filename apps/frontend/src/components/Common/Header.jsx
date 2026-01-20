@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Home, Newspaper, Building2, Sprout, Briefcase, MessageSquare,
-  ShoppingBag, Calendar, FileText, Images, Phone, Menu, X
+  ShoppingBag, Calendar, Phone, Menu, X
 } from 'lucide-react';
 
 export default function Header({ currentModule, onNavigate }) {
@@ -17,11 +17,10 @@ export default function Header({ currentModule, onNavigate }) {
     { id: 'services', icon: Building2, label: 'Services', path: '/Services' },
     { id: 'agriculture', icon: Sprout, label: 'Agriculture', path: '/Agriculture' },
     { id: 'jobs', icon: Briefcase, label: 'Jobs', path: '/Jobs' },
-    { id: 'grievance', icon: MessageSquare, label: 'Grievances', path: '/Grievances' },
+    { id: 'grievance', icon: MessageSquare, label: 'Grievances', path: '/Grievance' },
     { id: 'marketplace', icon: ShoppingBag, label: 'Marketplace', path: '/Marketplace' },
-    { id: 'events', icon: Calendar, label: 'Events', path: '/Events' },
-    { id: 'certificates', icon: FileText, label: 'Certificates', path: '/Certificates' },
-    { id: 'gallery', icon: Images, label: 'Gallery', path: '/Gallery' },
+    { id: 'events', icon: Calendar, label: 'Events', path: '/events' },
+
   ];
 
   const handleNavigate = (item) => {
@@ -46,8 +45,8 @@ export default function Header({ currentModule, onNavigate }) {
             </div>
 
             {/* DESKTOP MENU */}
-            <nav className="hidden xl:flex items-center gap-1">
-              {menuItems.slice(0, 6).map((item) => {
+            <nav className="hidden xl:flex items-center gap-3">
+              {menuItems.slice(0, 10).map((item) => {
                 const Icon = item.icon;
                 const isActive = location.pathname === item.path; // ✅ FIX
                 return (
@@ -69,15 +68,6 @@ export default function Header({ currentModule, onNavigate }) {
 
             {/* ACTIONS */}
             <div className="flex items-center gap-2 sm:gap-3">
-
-              {/* EMERGENCY BUTTON */}
-              <button
-                onClick={() => setEmergencyOpen(!emergencyOpen)}
-                className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-red-500 text-white rounded-2xl hover:bg-red-600 transition-colors"
-              >
-                <Phone className="w-4 h-4" />
-                <span className="hidden sm:inline text-sm">Emergency</span>
-              </button>
 
               {/* MOBILE TOGGLE */}
               <button

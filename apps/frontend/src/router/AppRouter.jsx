@@ -23,6 +23,7 @@ import AdminDashboard from "../pages/Admin/AdminDashboard/Admin";
 import MarketplaceAdminPage from "../pages/Admin/Marketplace/MarketplaceAdminPage";
 import LocalServicesAdminPage from "../pages/Admin/LocalServices/LocalServicesAdminPage";
 import AgricultureAdminPage from "../pages/Admin/Agriculture/AgrlicultureAdminPage";
+import EventAdminPage from "../pages/Admin/Event/EventAdminPage";
 
 const AppRouter = () => {
   return (
@@ -62,6 +63,7 @@ const AppRouter = () => {
        <Route path="/AdminDashboard/JobManagement" element={<JobAdminPage />} />
        <Route path="/AdminDashboard/NewsManagement" element={<NewsAdminPage />} />
         <Route path="/AdminDashboard/AgricultureManagement" element={<AgricultureAdminPage />} />
+        <Route path="/AdminDashboard/EventManagement" element={<EventAdminPage />} />
       </Route>
 
     </Routes>

@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react';
 import { CalendarIcon, MapPin, Users, Save, X, Loader2 } from 'lucide-react';
 
-
-export function AdminEventCreate({ editingEvent, isModal = false, onEventCreated, onCancel }) {
+export function AdminEventCreate({ editingEvent, isModal = false, onEventCreated, onCancel, loading }) {
   const [eventName, setEventName] = useState('');
   const [category, setCategory] = useState('');
   const [description, setDescription] = useState('');
@@ -11,37 +10,35 @@ export function AdminEventCreate({ editingEvent, isModal = false, onEventCreated
   const [venue, setVenue] = useState('');
   const [registrationRequired, setRegistrationRequired] = useState(false);
   const [maxAttendees, setMaxAttendees] = useState('');
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (editingEvent) {
-      setEventName(editingEvent.name);
-      setCategory(editingEvent.category);
+      setEventName(editingEvent.name || '');
+      setCategory(editingEvent.category || '');
       setDescription(editingEvent.description || '');
+      
       // Combine date and time for datetime-local input
-      const dateTimeStr = `${editingEvent.date}T${editingEvent.time}`;
-      setStartDate(dateTimeStr);
-      setEndDate(dateTimeStr);
-      setVenue(editingEvent.venue);
-      setRegistrationRequired(editingEvent.registrationRequired);
+      if (editingEvent.date && editingEvent.time) {
+        const dateTimeStr = `${editingEvent.date}T${editingEvent.time}`;
+        setStartDate(dateTimeStr);
+        setEndDate(dateTimeStr);
+      }
+      
+      setVenue(editingEvent.venue || '');
+      setRegistrationRequired(editingEvent.registrationRequired || false);
       setMaxAttendees(editingEvent.maxAttendees ? String(editingEvent.maxAttendees) : '');
     }
   }, [editingEvent]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true);
-    
-    const startDateTime = new Date(startDate);
-    const dateStr = startDateTime.toISOString().split('T')[0];
-    const timeStr = startDateTime.toTimeString().substring(0, 5);
     
     const eventData = {
       name: eventName,
       category,
       description,
-      date: dateStr,
-      time: timeStr,
+      startDate: startDate,
+      endDate: endDate,
       venue,
       registrationRequired,
       maxAttendees: maxAttendees ? parseInt(maxAttendees) : undefined
@@ -49,12 +46,9 @@ export function AdminEventCreate({ editingEvent, isModal = false, onEventCreated
     
     onEventCreated(eventData);
     
-    toast.success(editingEvent ? 'Event updated successfully!' : 'Event created successfully!', {
-      description: `${eventName} has been ${editingEvent ? 'updated' : 'added to the calendar'}.`
-    });
-    
-    resetForm();
-    setLoading(false);
+    if (!editingEvent) {
+      resetForm();
+    }
   };
 
   const resetForm = () => {
@@ -91,7 +85,7 @@ export function AdminEventCreate({ editingEvent, isModal = false, onEventCreated
               value={eventName}
               onChange={(e) => setEventName(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             />
           </div>
 
@@ -104,7 +98,7 @@ export function AdminEventCreate({ editingEvent, isModal = false, onEventCreated
               value={category}
               onChange={(e) => setCategory(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
+              className="w-full px-3 py-2 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
             >
               <option value="">Select a category</option>
               <option value="festival">Festival</option>
@@ -128,7 +122,7 @@ export function AdminEventCreate({ editingEvent, isModal = false, onEventCreated
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={4}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"
+              className="w-full px-3 py-2 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"
             />
           </div>
 
@@ -145,7 +139,7 @@ export function AdminEventCreate({ editingEvent, isModal = false, onEventCreated
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
 
@@ -161,7 +155,7 @@ export function AdminEventCreate({ editingEvent, isModal = false, onEventCreated
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
                 required
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
             </div>
           </div>
@@ -179,7 +173,7 @@ export function AdminEventCreate({ editingEvent, isModal = false, onEventCreated
               value={venue}
               onChange={(e) => setVenue(e.target.value)}
               required
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             />
           </div>
         </div>
@@ -195,7 +189,7 @@ export function AdminEventCreate({ editingEvent, isModal = false, onEventCreated
               <p className="text-sm text-gray-900 mb-1 text-left">
                 Registration Required
               </p>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 text-left">
                 {registrationRequired 
                   ? 'Users must register to attend this event' 
                   : 'No registration needed for this event'}
@@ -231,7 +225,7 @@ export function AdminEventCreate({ editingEvent, isModal = false, onEventCreated
                 value={maxAttendees}
                 onChange={(e) => setMaxAttendees(e.target.value)}
                 min="1"
-                className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-2xl"
+                className="w-full max-w-xs px-3 py-2 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
               />
               <p className="text-sm text-gray-500 mt-1">
                 Leave empty for unlimited attendees
@@ -254,7 +248,7 @@ export function AdminEventCreate({ editingEvent, isModal = false, onEventCreated
         <button
           type="submit"
           disabled={loading}
-          className="flex items-center gap-2 px-4 py-2 bg-[#fe640b] text-white rounded-2xl transition-colors disabled:opacity-50"
+          className="flex items-center gap-2 px-4 py-2 bg-[#fe640b] text-white rounded-2xl hover:bg-[#e55a0a] transition-colors disabled:opacity-50"
         >
           {loading && <Loader2 className="w-4 h-4 animate-spin" />}
           <Save className="w-4 h-4" />
@@ -272,7 +266,11 @@ export function AdminEventCreate({ editingEvent, isModal = false, onEventCreated
             <h2 className="text-xl text-gray-900">
               {editingEvent ? 'Edit Event' : 'Create Event'}
             </h2>
-            <button onClick={handleCancelClick} className="text-gray-500 hover:text-gray-700">
+            <button 
+              onClick={handleCancelClick} 
+              className="text-gray-500 hover:text-gray-700"
+              disabled={loading}
+            >
               <X className="w-6 h-6" />
             </button>
           </div>
@@ -288,6 +286,12 @@ export function AdminEventCreate({ editingEvent, isModal = false, onEventCreated
     <div className="flex-1 bg-gray-50 overflow-auto">
       <div className="p-6">
         <div className="mb-6">
+          <h1 className="text-2xl text-[#fe640b] font-bold text-left mb-2">
+            Create New Event
+          </h1>
+          <p className="text-gray-600 text-left">
+            Fill in the details to create a community event
+          </p>
         </div>
         {formContent}
       </div>

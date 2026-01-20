@@ -135,6 +135,7 @@ app.use(
 );
 
 app.use(express.json());
+console.log("MONGO_URI USED =", process.env.MONGO_URI);
 
 // Database
 import connectDB from "./config/db.js";

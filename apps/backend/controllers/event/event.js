@@ -114,9 +114,9 @@ export const deleteEvent = async (req, res) => {
 // GET ATTENDEES FOR EVENT
 export const getEventAttendees = async (req, res) => {
   try {
-    const { eventId } = req.params;
+    const { id } = req.params;
 
-    const registrations = await EventRegistration.find({ eventId });
+    const registrations = await EventRegistration.find({ eventId: id });
 
     const attendees = await Promise.all(
       registrations.map(async (reg) => {

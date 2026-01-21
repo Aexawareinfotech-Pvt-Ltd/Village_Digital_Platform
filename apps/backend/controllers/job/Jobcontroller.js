@@ -14,7 +14,7 @@ export const createJob = async (req, res) => {
     jobType: req.body.jobType,
     postedDate: req.body.postedDate,
     deadlineDate: req.body.deadlineDate,
-    createdBy: req.userId
+    createdBy: req.user.id,
   });
 
   res.json({ message: "Job submitted for approval" });

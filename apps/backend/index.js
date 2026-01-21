@@ -163,7 +163,9 @@ import soilTestingRoutes from "./routes/Agriculture/SoilTesting.js";
 import irrigationRoutes from "./routes/Agriculture/Irrigation.js";
 import eventRoutes from "./routes/Event/event.js";
 import eventRegistrationRoutes from "./routes/Event/registration.js";
-
+import profileRoutes from "./routes/User/UserProfile.js";
+import path from "path";
+import { fileURLToPath } from "url";
 
 // Routes usage
 app.use("/api/users", userRoutes);
@@ -181,6 +183,11 @@ app.use("/api/agriculture/soil-testing", soilTestingRoutes);
 app.use("/api/agriculture/irrigation", irrigationRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/event-registrations", eventRegistrationRoutes);
+app.use("/api/profile", profileRoutes);
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 
 // Test route

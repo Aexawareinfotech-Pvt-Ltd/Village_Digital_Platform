@@ -3,6 +3,7 @@ import {
   Home, Newspaper, Building2, Sprout, Briefcase, MessageSquare,
   ShoppingBag, Calendar, FileText, Images, Phone, Menu, X
 } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 
 const translations = {
   en: {
@@ -79,10 +80,30 @@ export default function Header({ currentModule, onNavigate, language, onLanguage
     { id: 'gallery', icon: Images, label: t.gallery },
   ];
 
-  const handleNavigate = (module) => {
-    onNavigate(module);
-    setMobileMenuOpen(false);
+    const handleNavigate = (module) => {
+      onNavigate(module);
+      setMobileMenuOpen(false);
+    };
+
+    const handleLogout = async () => {
+    try {
+      await fetch("http://localhost:3000/api/users/logout", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+    } catch (err) {
+      console.error("Logout error:", err);
+    } finally {
+      localStorage.removeItem("token");
+      localStorage.removeItem("role");
+
+      // redirect (adjust if you use router)
+      window.location.href = "/VillageLogin";
+    }
   };
+
 
   return (
     <>
@@ -148,6 +169,18 @@ export default function Header({ currentModule, onNavigate, language, onLanguage
                 <span className="hidden sm:inline text-sm">{t.emergency}</span>
               </button>
 
+              <button
+               onClick={handleLogout}
+               className="flex items-center gap-2 px-3 sm:px-4 py-2 
+                        bg-latte-overlay0 text-latte-text 
+                        rounded-2xl hover:bg-latte-peach hover:text-white 
+                        transition-colors"
+               >
+               <LogOut className="w-4 h-4" />
+               <span className="hidden sm:inline text-sm">Logout</span>
+              </button>
+
+
               {/* MOBILE TOGGLE */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -181,6 +214,15 @@ export default function Header({ currentModule, onNavigate, language, onLanguage
                   </button>
                 );
               })}
+              <button
+                onClick={handleLogout}
+                className="col-span-full flex items-center justify-center gap-2
+                          px-4 py-3 bg-latte-red text-white
+                          rounded-lg hover:bg-latte-maroon transition-colors"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Logout</span>
+              </button>
             </nav>
           </div>
         )}

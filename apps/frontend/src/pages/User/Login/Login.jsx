@@ -1,5 +1,4 @@
-
-import VillageLogin from "../../../components/Login/VillageLogin.jsx";
+import VillageLogin from "../../../components/User/Login/VillageLogin.jsx";
 
 const Login = () => {
   return (

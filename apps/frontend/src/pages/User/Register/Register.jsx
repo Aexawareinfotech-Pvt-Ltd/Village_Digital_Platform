@@ -1,4 +1,4 @@
-import VillageRegister from "../../../components/Register/VillageRegister.jsx";
+import VillageRegister from "../../../components/User/Register/VillageRegister.jsx";
 
 const Register = () => {
   return (

@@ -153,6 +153,8 @@ connectDB();
 import userRoutes from "./routes/User/User.js";
 import adminRoutes from "./routes/Admin/Admin.js";
 import jobRoutes from "./routes/Job/Job.js";
+import jobApplicationRoutes from "./routes/Job/JobApplication.js";
+import governmentJobRoutes from "./routes/Job/GovernmentJob.js";
 import grievanceRoutes from "./routes/Grievance/Grievance.js";
 import marketplaceRoutes from "./routes/Marketplace/Marketplace.js";
 import paymentRoutes from "./routes/Payment/Payment.js";
@@ -164,7 +166,6 @@ import soilTestingRoutes from "./routes/Agriculture/SoilTesting.js";
 import irrigationRoutes from "./routes/Agriculture/Irrigation.js";
 import eventRoutes from "./routes/Event/event.js";
 import eventRegistrationRoutes from "./routes/Event/registration.js";
-import profileRoutes from "./routes/User/UserProfile.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -172,6 +173,9 @@ import { fileURLToPath } from "url";
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/jobs", jobRoutes);
+app.use("/api/job-applications", jobApplicationRoutes);
+app.use("/api/government-jobs", governmentJobRoutes);
+
 app.use("/api/news", newsRoutes);
 app.use("/api/grievances", grievanceRoutes);
 app.use("/api/marketplace", marketplaceRoutes);
@@ -184,7 +188,8 @@ app.use("/api/agriculture/soil-testing", soilTestingRoutes);
 app.use("/api/agriculture/irrigation", irrigationRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/event-registrations", eventRegistrationRoutes);
-app.use("/api/profile", profileRoutes);
+
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

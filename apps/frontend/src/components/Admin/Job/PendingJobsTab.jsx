@@ -101,17 +101,17 @@ export function PendingJobsTab() {
   const getCategoryColor = (category) => {
     switch (category) {
       case "Retail":
-        return "bg-orange-100 text-orange-600";
+        return "bg-orange-100 text-orange-700 border-orange-200";
       case "Agriculture":
-        return "bg-green-100 text-green-600";
+        return "bg-orange-100 text-orange-700 border-orange-200";
       case "Education":
-        return "bg-blue-100 text-blue-600";
+        return "bg-orange-100 text-orange-700 border-orange-200";
       case "Healthcare":
-        return "bg-pink-100 text-pink-600";
+        return "bg-orange-100 text-orange-700 border-orange-200";
       case "Government":
-        return "bg-purple-100 text-purple-600";
+        return "bg-orange-100 text-orange-700 border-orange-200";
       default:
-        return "bg-gray-100 text-gray-600";
+        return "bg-orange-100 text-orange-700 border-orange-200";
     }
   };
 
@@ -154,7 +154,7 @@ export function PendingJobsTab() {
           <div className="flex items-start justify-between mb-4">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-2">
-                <h3 className="text-lg font-semibold text-gray-800">{job.title}</h3>
+                <h3 className="text-lg font-semibold text-gray-800 text-left " style={{ wordBreak: "break-word", overflowWrap: "break-word" }}>{job.title}</h3>
                 <span
                   className={`px-3 py-1 rounded-full text-sm font-medium ${getCategoryColor(
                     job.category
@@ -163,20 +163,20 @@ export function PendingJobsTab() {
                   {job.category}
                 </span>
               </div>
-              <div className="text-sm text-gray-600 space-y-1">
+              <div className="text-sm text-gray-600 space-y-1 text-left">
                 <p>
-                  <strong>Posted by:</strong> {job.ownerName} ({job.ownerContact})
+                  <strong>Posted by:</strong> {job.ownerName} 
                 </p>
                 {job.createdBy && (
                   <p>
-                    <strong>User:</strong> {job.createdBy.name} ({job.createdBy.email})
+                    <strong>Contact No:</strong> {job.ownerContact} 
                   </p>
                 )}
               </div>
             </div>
           </div>
 
-          <p className="text-gray-600 text-left mb-4 text-sm leading-relaxed">
+          <p className="text-gray-600 text-left mb-4 text-sm leading-relaxed" style={{ wordBreak: "break-word", overflowWrap: "break-word" }}>
             {job.description}
           </p>
 
@@ -208,14 +208,14 @@ export function PendingJobsTab() {
           <div className="flex gap-3 pt-4 border-t border-gray-200">
             <button
               onClick={() => handleApprove(job._id)}
-              className="flex items-center gap-2 px-6 py-2 bg-green-500 text-white rounded-2xl hover:bg-green-600 transition-colors"
+              className="flex items-center gap-2 px-6 py-2 bg-green-500 text-white rounded-2xl "
             >
               <Check className="w-4 h-4" />
               Approve
             </button>
             <button
               onClick={() => handleReject(job._id)}
-              className="flex items-center gap-2 px-6 py-2 bg-red-500 text-white rounded-2xl hover:bg-red-600 transition-colors"
+              className="flex items-center gap-2 px-6 py-2 bg-red-500 text-white rounded-2xl"
             >
               <X className="w-4 h-4" />
               Reject

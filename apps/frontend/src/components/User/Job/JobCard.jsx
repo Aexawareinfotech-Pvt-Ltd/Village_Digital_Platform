@@ -7,15 +7,15 @@ const getCategoryColor = (category) => {
     case "Retail":
       return "bg-orange-100 text-orange-700 border-orange-200";
     case "Agriculture":
-      return "bg-green-100 text-green-700 border-green-200";
+      return "bg-orange-100 text-orange-500 border-orange-200";
     case "Education":
-      return "bg-blue-100 text-blue-700 border-blue-200";
+      return "bg-orange-100 text-orange-700 border-orange-200";
     case "Healthcare":
-      return "bg-pink-100 text-pink-700 border-pink-200";
+      return "bg-orange-100 text-orange-700 border-orange-200";
     case "Government":
-      return "bg-purple-100 text-purple-700 border-purple-200";
+      return "bg-orange-100 text-orange-700 border-orange-200";
     default:
-      return "bg-gray-100 text-gray-700 border-gray-200";
+      return "bg-orange-100 text-orange-700 border-orange-200";
   }
 };
 
@@ -29,17 +29,24 @@ export default function JobCard({ job, isOwnJob = false, onViewApplicants }) {
         {/* Header */}
         <div className="flex items-start justify-between mb-5">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-latte-peach rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-latte-peach rounded-xl flex items-center justify-center flex-shrink-0">
               <Briefcase className="w-5 h-5 text-white" />
             </div>
 
             <div>
-              <h3 className="text-xl font-semibold text-gray-900 text-left">
+              <h3 className="text-xl font-semibold text-gray-900 text-left" style={{ wordBreak: "break-word", overflowWrap: "break-word" }}>
                 {job.title}
               </h3>
-              <p className="text-sm text-gray-600 text-left">
-                {job.ownerName || "Local Employer"}
-              </p>
+             <p className="text-sm text-gray-600 text-left flex items-center gap-2">
+  <span className="font-medium">
+    {job.ownerName || "Local Employer"}
+  </span>
+  <span className="text-gray-400">•</span>
+  <span>
+    {job.ownerContact || "N/A"}
+  </span>
+</p>
+
             </div>
           </div>
 
@@ -55,7 +62,7 @@ export default function JobCard({ job, isOwnJob = false, onViewApplicants }) {
         </div>
 
         {/* Description */}
-        <p className="text-gray-700 text-sm leading-relaxed mb-5 text-left">
+        <p className="text-gray-700 text-sm leading-relaxed mb-5 text-left" style={{ wordBreak: "break-word", overflowWrap: "break-word" }}>
           {job.description || "No description provided."}
         </p>
 

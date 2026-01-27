@@ -1,11 +1,11 @@
-//import JobComponent from "../../User/Job/"
+import Job from "../../../components/User/Job/Job.jsx";
 
-const Job = () => {
+const JobPage = () => {
   return (
     <div className="min-h-screen px-4 py-6 bg-gray-50">
-      <JobComponent />
+      <Job />
     </div>
   );
 };
 
-export default Job;
+export default JobPage;

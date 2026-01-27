@@ -15,7 +15,6 @@ import Agriculture from "../pages/User/Agriculture/Agriculture";
 import ForgotPassword from "../pages/User/ForgotReset/ForgotPassword";
 import ResetPassword from "../pages/User/ForgotReset/ResetPassword";
 import Register from "../pages/User/Register/Register";
-
 import GrievanceAdminPage from "../pages/Admin/Grievance/GrievanceAdminPage";
 import JobAdminPage from "../pages/Admin/Job/JobAdminPage";
 import NewsAdminPage from "../pages/Admin/News/NewsAdminPage";

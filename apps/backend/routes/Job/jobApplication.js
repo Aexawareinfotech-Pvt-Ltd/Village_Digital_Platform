@@ -5,7 +5,7 @@ import {
   getApplicationsByJob
 } from "../../controllers/job/jobApplicationController.js";
 
-import adminMiddleware from "../../middlewares/adminMiddleware.js";
+
 import authMiddleware from "../../middlewares/authMiddleware.js";
 
 const router = express.Router();

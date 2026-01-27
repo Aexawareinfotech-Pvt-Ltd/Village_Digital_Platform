@@ -11,7 +11,7 @@ export function PendingJobsTab() {
     setLoading(true);
     setError("");
     try {
-      const token = localStorage.getItem("tokens");
+      const token = localStorage.getItem("token");
       const response = await fetch("http://localhost:3000/api/jobs/pending", {
         headers: {
           Authorization: `Bearer ${token}`
@@ -39,7 +39,7 @@ export function PendingJobsTab() {
 
   const handleApprove = async (jobId) => {
     try {
-      const token = localStorage.getItem("tokens");
+      const token = localStorage.getItem("token");
       const response = await fetch(`http://localhost:3000/api/jobs/approve/${jobId}`, {
         method: "PUT",
         headers: {
@@ -67,7 +67,7 @@ export function PendingJobsTab() {
     }
 
     try {
-      const token = localStorage.getItem("tokens");
+      const token = localStorage.getItem("token");
       const response = await fetch(`http://localhost:3000/api/jobs/reject/${jobId}`, {
         method: "PUT",
         headers: {

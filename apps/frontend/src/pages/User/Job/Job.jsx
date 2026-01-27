@@ -1,4 +1,4 @@
-import JobComponent from "../../../components/Job/Job";
+//import JobComponent from "../../User/Job/"
 
 const Job = () => {
   return (

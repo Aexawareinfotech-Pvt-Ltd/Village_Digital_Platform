@@ -1,136 +1,64 @@
 import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Home, Newspaper, Building2, Sprout, Briefcase, MessageSquare,
-  ShoppingBag, Calendar, FileText, Images, Phone, Menu, X
+  ShoppingBag, Calendar, Phone, Menu, X, User
 } from 'lucide-react';
 import { LogOut } from 'lucide-react';
 
-const translations = {
-  en: {
-    title: 'Village Management',
-    dashboard: 'Dashboard',
-    news: 'News',
-    services: 'Services',
-    agriculture: 'Agriculture',
-    jobs: 'Jobs',
-    grievance: 'Grievances',
-    marketplace: 'Marketplace',
-    events: 'Events',
-    certificates: 'Certificates',
-    gallery: 'Gallery',
-    emergency: 'Emergency',
-    police: 'Police',
-    ambulance: 'Ambulance',
-    fire: 'Fire',
-  },
-  hi: {
-    title: 'ग्राम प्रबंधन',
-    dashboard: 'डैशबोर्ड',
-    news: 'समाचार',
-    services: 'सेवाएं',
-    agriculture: 'कृषि',
-    jobs: 'रोजगार',
-    grievance: 'शिकायतें',
-    marketplace: 'बाज़ार',
-    events: 'कार्यक्रम',
-    certificates: 'प्रमाणपत्र',
-    gallery: 'गैलरी',
-    emergency: 'आपातकाल',
-    police: 'पुलिस',
-    ambulance: 'एम्बुलेंस',
-    fire: 'दमकल',
-  },
-  gu: {
-    title: 'ગ્રામ્ય વ્યવસ્થાપન',
-    dashboard: 'ડેશબોર્ડ',
-    news: 'સમાચાર',
-    services: 'સેવાઓ',
-    agriculture: 'કૃષિ',
-    jobs: 'નોકરી',
-    grievance: 'ફરિયાદો',
-    marketplace: 'બજાર',
-    events: 'ઇવેન્ટ્સ',
-    certificates: 'પ્રમાણપત્રો',
-    gallery: 'ગેલેરી',
-    emergency: 'કટોકટી',
-    police: 'પોલીસ',
-    ambulance: 'એમ્બ્યુલન્સ',
-    fire: 'ફાયર',
-  },
-};
-
-export default function Header({ currentModule, onNavigate, language, onLanguageChange }) {
+export default function Header({ currentModule, onNavigate }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [emergencyOpen, setEmergencyOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation(); 
 
-  // FIX — Prevent undefined language crash
-  const t = translations[language] || translations.en;
-
-  // IMPORTANT FIX — Home is NOT a module anymore
   const menuItems = [
-    { id: 'dashboard', icon: Newspaper, label: t.dashboard },
-    { id: 'news', icon: Newspaper, label: t.news },
-    { id: 'services', icon: Building2, label: t.services },
-    { id: 'agriculture', icon: Sprout, label: t.agriculture },
-    { id: 'jobs', icon: Briefcase, label: t.jobs },
-    { id: 'grievance', icon: MessageSquare, label: t.grievance },
-    { id: 'marketplace', icon: ShoppingBag, label: t.marketplace },
-    { id: 'events', icon: Calendar, label: t.events },
-    { id: 'certificates', icon: FileText, label: t.certificates },
-    { id: 'gallery', icon: Images, label: t.gallery },
+    { id: 'dashboard', icon: Home, label: 'Dashboard', path: '/Dashboard' },
+    { id: 'news', icon: Newspaper, label: 'News', path: '/News' },
+    { id: 'services', icon: Building2, label: 'Services', path: '/Services' },
+    { id: 'agriculture', icon: Sprout, label: 'Agriculture', path: '/Agriculture' },
+    { id: 'jobs', icon: Briefcase, label: 'Jobs', path: '/Jobs' },
+    { id: 'grievance', icon: MessageSquare, label: 'Grievances', path: '/Grievance' },
+    { id: 'marketplace', icon: ShoppingBag, label: 'Marketplace', path: '/Marketplace' },
+    { id: 'events', icon: Calendar, label: 'Events', path: '/events' },
+
   ];
 
-    const handleNavigate = (module) => {
-      onNavigate(module);
-      setMobileMenuOpen(false);
-    };
-
-    const handleLogout = async () => {
-    try {
-      await fetch("http://localhost:3000/api/users/logout", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-    } catch (err) {
-      console.error("Logout error:", err);
-    } finally {
-      localStorage.removeItem("token");
-      localStorage.removeItem("role");
-
-      // redirect (adjust if you use router)
-      window.location.href = "/VillageLogin";
-    }
+  const handleNavigate = (item) => {
+    onNavigate?.(item.id); // safe call (kept for backward compatibility)
+    navigate(item.path);   // 🔥 navigation
+    setMobileMenuOpen(false);
   };
 
 
   return (
     <>
       {/* HEADER */}
-      <header className="fixed top-0 left-0 right-0 bg-white border-b border-latte-surface0 shadow-sm z-50">
+      <header className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 shadow-sm z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
 
             {/* LEFT — Static Home Icon + Title */}
             <div className="flex items-center gap-3">
-              <div className="bg-latte-peach p-2 rounded-2xl">
+              <div className="bg-orange-500 p-2 rounded-2xl">
                 <Home className="w-6 h-6 text-white" />
               </div>
-              <h1 className="text-latte-text hidden sm:block">{t.title}</h1>
+              <h1 className="text-latte-text hidden sm:block">Village Management</h1>
             </div>
 
             {/* DESKTOP MENU */}
-            <nav className="hidden xl:flex items-center gap-1">
-              {menuItems.slice(0, 6).map((item) => {
+            <nav className="hidden xl:flex items-center gap-3">
+              {menuItems.slice(0, 10).map((item) => {
                 const Icon = item.icon;
-                const isActive = currentModule === item.id;
+                const isActive = location.pathname === item.path; // ✅ FIX
                 return (
                   <button
                     key={item.id}
-                    onClick={() => handleNavigate(item.id)}
+                    onClick={() => handleNavigate(item)}
                     className={`flex items-center gap-2 px-3 py-2 rounded-2xl transition-all text-sm ${
-                      isActive ? 'bg-latte-peach text-white' : 'text-latte-text hover:bg-latte-peach hover:text-white'
+                      isActive 
+                        ? 'bg-orange-500 text-white shadow-md' 
+                        : 'text-gray-700 hover:bg-orange-500 hover:text-white'
                     }`}
                   >
                     <Icon className="w-4 h-4" />
@@ -143,48 +71,18 @@ export default function Header({ currentModule, onNavigate, language, onLanguage
             {/* ACTIONS */}
             <div className="flex items-center gap-2 sm:gap-3">
 
-              {/* LANGUAGE BUTTONS */}
-              <div className="flex gap-1 bg-latte-surface0 rounded-2xl p-1">
-                {['en', 'hi', 'gu'].map((lang) => (
-                  <button
-                    key={lang}
-                    onClick={() => onLanguageChange(lang)}
-                    className={`px-2 sm:px-3 py-1 rounded-2xl text-xs sm:text-sm transition-colors ${
-                      language === lang
-                        ? 'bg-latte-peach text-white'
-                        : 'text-latte-text hover:bg-latte-peach hover:text-white'
-                    }`}
-                  >
-                    {lang === 'en' ? 'EN' : lang === 'hi' ? 'हि' : 'ગુ'}
-                  </button>
-                ))}
-              </div>
-
-              {/* EMERGENCY BUTTON */}
+              {/* Profile Button */}
               <button
-                onClick={() => setEmergencyOpen(!emergencyOpen)}
-                className="flex items-center gap-2 px-3 sm:px-4 py-2 bg-latte-red text-white rounded-2xl hover:bg-latte-maroon transition-colors"
+                onClick={() => navigate('/UserProfile')}
+                className="p-2 rounded-full text-gray-700 hover:bg-gray-100"
               >
-                <Phone className="w-4 h-4" />
-                <span className="hidden sm:inline text-sm">{t.emergency}</span>
+                <User className="w-6 h-6" />
               </button>
-
-              <button
-               onClick={handleLogout}
-               className="flex items-center gap-2 px-3 sm:px-4 py-2 
-                        bg-latte-overlay0 text-latte-text 
-                        rounded-2xl hover:bg-latte-peach hover:text-white 
-                        transition-colors"
-               >
-               <LogOut className="w-4 h-4" />
-               <span className="hidden sm:inline text-sm">Logout</span>
-              </button>
-
 
               {/* MOBILE TOGGLE */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="xl:hidden p-2 text-latte-text hover:bg-latte-surface0 rounded-lg"
+                className="xl:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-lg"
               >
                 {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
               </button>
@@ -194,19 +92,19 @@ export default function Header({ currentModule, onNavigate, language, onLanguage
 
         {/* MOBILE MENU */}
         {mobileMenuOpen && (
-          <div className="xl:hidden border-t border-latte-surface0 bg-white max-h-[calc(100vh-4rem)] overflow-y-auto">
+          <div className="xl:hidden border-t border-gray-200 bg-white max-h-[calc(100vh-4rem)] overflow-y-auto">
             <nav className="max-w-7xl mx-auto px-4 py-4 grid grid-cols-2 sm:grid-cols-3 gap-2">
               {menuItems.map((item) => {
                 const Icon = item.icon;
-                const isActive = currentModule === item.id;
+                const isActive = location.pathname === item.path; // ✅ FIX
                 return (
                   <button
                     key={item.id}
-                    onClick={() => handleNavigate(item.id)}
+                    onClick={() => handleNavigate(item)}
                     className={`flex items-center gap-2 px-3 py-3 rounded-lg transition-all ${
                       isActive
-                        ? 'bg-latte-peach text-white'
-                        : 'text-latte-text bg-latte-surface0 hover:bg-latte-surface1'
+                        ? 'bg-orange-500 text-white shadow-md'
+                        : 'text-gray-700 bg-gray-100 hover:bg-gray-200'
                     }`}
                   >
                     <Icon className="w-4 h-4" />
@@ -231,7 +129,7 @@ export default function Header({ currentModule, onNavigate, language, onLanguage
       {/* EMERGENCY MODAL */}
       {emergencyOpen && (
         <div
-          className="fixed inset-0 bg-latte-crust bg-opacity-50 z-50 flex items-center justify-center p-4"
+          className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4"
           onClick={() => setEmergencyOpen(false)}
         >
           <div
@@ -240,30 +138,42 @@ export default function Header({ currentModule, onNavigate, language, onLanguage
           >
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2">
-                <div className="bg-latte-red p-2 rounded-lg">
+                <div className="bg-red-500 p-2 rounded-lg">
                   <Phone className="w-5 h-5 text-white" />
                 </div>
-                <h2 className="text-latte-text">{t.emergency}</h2>
+                <h2 className="text-xl font-semibold text-gray-800">Emergency</h2>
               </div>
-              <button className="p-1 hover:bg-latte-surface0 rounded transition-colors">
-                <X className="w-5 h-5 text-latte-text" onClick={() => setEmergencyOpen(false)} />
+              <button 
+                onClick={() => setEmergencyOpen(false)}
+                className="p-1 hover:bg-gray-100 rounded transition-colors"
+              >
+                <X className="w-5 h-5 text-gray-600" />
               </button>
             </div>
 
             <div className="space-y-3">
-              <a href="tel:100" className="flex items-center justify-between p-4 bg-latte-red bg-opacity-10 rounded-lg border border-latte-red hover:bg-latte-red hover:bg-opacity-20 transition-colors">
-                <span className="text-latte-text">{t.police}</span>
-                <span className="text-latte-red">100</span>
+              <a 
+                href="tel:100" 
+                className="flex items-center justify-between p-4 bg-red-50 rounded-lg border border-red-200 hover:bg-red-100 transition-colors"
+              >
+                <span className="font-medium text-gray-800">Police</span>
+                <span className="font-bold text-red-600 text-lg">100</span>
               </a>
 
-              <a href="tel:108" className="flex items-center justify-between p-4 bg-latte-red bg-opacity-10 rounded-lg border border-latte-red hover:bg-latte-red hover:bg-opacity-20 transition-colors">
-                <span className="text-latte-text">{t.ambulance}</span>
-                <span className="text-latte-red">108</span>
+              <a 
+                href="tel:108" 
+                className="flex items-center justify-between p-4 bg-red-50 rounded-lg border border-red-200 hover:bg-red-100 transition-colors"
+              >
+                <span className="font-medium text-gray-800">Ambulance</span>
+                <span className="font-bold text-red-600 text-lg">108</span>
               </a>
 
-              <a href="tel:101" className="flex items-center justify-between p-4 bg-latte-red bg-opacity-10 rounded-lg border border-latte-red hover:bg-latte-red hover:bg-opacity-20 transition-colors">
-                <span className="text-latte-text">{t.fire}</span>
-                <span className="text-latte-red">101</span>
+              <a 
+                href="tel:101" 
+                className="flex items-center justify-between p-4 bg-red-50 rounded-lg border border-red-200 hover:bg-red-100 transition-colors"
+              >
+                <span className="font-medium text-gray-800">Fire</span>
+                <span className="font-bold text-red-600 text-lg">101</span>
               </a>
             </div>
           </div>

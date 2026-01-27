@@ -7,7 +7,8 @@ import sendEmail from "../../utils/sendemail.js";
 export const registerForEvent = async (req, res) => {
   try {
     const { eventId } = req.params;
-    const { userId, name, email, phone } = req.body;
+    const userId = req.user.id;
+    const { name, email, phone } = req.body;
 
     const event = await Event.findById(eventId);
     if (!event || !event.registrationOpen) {

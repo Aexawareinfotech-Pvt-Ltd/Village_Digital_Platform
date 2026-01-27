@@ -24,6 +24,7 @@ import MarketplaceAdminPage from "../pages/Admin/Marketplace/MarketplaceAdminPag
 import LocalServicesAdminPage from "../pages/Admin/LocalServices/LocalServicesAdminPage";
 import AgricultureAdminPage from "../pages/Admin/Agriculture/AgrlicultureAdminPage";
 import UserProfile from "../pages/User/Profile/UserProfile";
+import EventAdminPage from "../pages/Admin/Event/EventAdminPage";
 
 const AppRouter = () => {
   return (
@@ -37,8 +38,8 @@ const AppRouter = () => {
         <Route path="/" element={<HomePage />} />
         <Route path="/marketplace" element={<Marketplace />} />
         <Route path="/news" element={<News />} />
-        <Route path="/service" element={<Service />} />
-        <Route path="/job" element={<Job />} />
+        <Route path="/Services" element={<Service />} />
+        <Route path="/jobs" element={<Job />} />
         <Route path="/events" element={<Event />} />
         <Route path="/Grievance" element={<Grievance />} />
         <Route path="/Agriculture" element={<Agriculture />} />
@@ -65,6 +66,7 @@ const AppRouter = () => {
        <Route path="/AdminDashboard/JobManagement" element={<JobAdminPage />} />
        <Route path="/AdminDashboard/NewsManagement" element={<NewsAdminPage />} />
         <Route path="/AdminDashboard/AgricultureManagement" element={<AgricultureAdminPage />} />
+        <Route path="/AdminDashboard/EventManagement" element={<EventAdminPage />} />
       </Route>
 
     </Routes>

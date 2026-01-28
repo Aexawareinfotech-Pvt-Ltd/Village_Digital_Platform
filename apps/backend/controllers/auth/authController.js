@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../../models/User/Users.js";
 import crypto from "crypto";
-import sendEmail from "../../utils/sendemail.js";
+import sendResetEmail from "../../utils/sendResetEmail.js";
 
 dotenv.config();
 
@@ -15,7 +15,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key";
 
 async function registerUser(req, res) {
   try {
-    const { name, phone, email, password} = req.body;
+    const { name, phone, email,address , password} = req.body;
 
    
 
@@ -26,7 +26,19 @@ async function registerUser(req, res) {
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = new User({ name, phone, email, passwordHash: hashedPassword,role: "User" ,createdAt: new Date() ,lastActive: new Date()});
+    const newUser = new User({
+      name,
+      email,
+      phone,
+      address: address || "",
+      village: "",
+      pincode: "",
+      bio: "",
+      passwordHash: hashedPassword,
+      role: "User",
+      lastActive: new Date()
+    });
+
     await newUser.save();
 
     // const io = getIO();
@@ -81,6 +93,8 @@ async function logoutUser(req, res) {
 };
 
 
+
+
 export const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -89,7 +103,6 @@ export const forgotPassword = async (req, res) => {
     if (!user)
       return res.status(404).json({ message: "User not found" });
 
-    // Generate token
     const resetToken = crypto.randomBytes(32).toString("hex");
 
     user.resetPasswordToken = crypto
@@ -97,39 +110,23 @@ export const forgotPassword = async (req, res) => {
       .update(resetToken)
       .digest("hex");
 
-    // set as a Date object so Mongoose stores it as a Date
-    user.resetPasswordExpire = new Date(Date.now() + 15 * 60 * 1000); // 15 min
-
+    user.resetPasswordExpire = new Date(Date.now() + 15 * 60 * 1000);
     await user.save();
 
     const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
-    let emailResult;
-    try {
-      emailResult = await sendEmail({
-        to: user.email,
-        subject: "Reset Your Password",
-        html: `
-      <p>You requested a password reset.</p>
-      <a href="${resetUrl}">${resetUrl}</a>
-    `
-      });
+    await sendResetEmail({
+      to: user.email,
+      resetUrl,
+    });
 
-      if (emailResult?.dev) {
-        return res.json({
-          message: "Reset link generated (DEV)",
-          resetUrl
-        });
-      }
+    res.json({ message: "Reset link sent to email" });
 
-      return res.json({ message: "Reset link sent to email" });
-    } catch (err) {
-      return res.status(500).json({ error: err.message });
-    }
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
+
 
 export const resetPassword = async (req, res) => {
   try {

@@ -23,7 +23,7 @@ export default function Events({ onSwitchToUser }) {
     setLoading(true);
     setError('');
     try {
-      const token = localStorage.getItem('tokens');
+      const token = localStorage.getItem('token');
       const response = await fetch(`${API_BASE_URL}/events/list`, {
         method: 'GET',
         headers: {
@@ -63,7 +63,7 @@ export default function Events({ onSwitchToUser }) {
   // Fetch registrations for a specific event
   const fetchEventRegistrations = async (eventId) => {
     try {
-      const token = localStorage.getItem('tokens');
+      const token = localStorage.getItem('token');
       const response = await fetch(`${API_BASE_URL}/events/${eventId}/attendees`, {
         method: 'GET',
         headers: {
@@ -103,7 +103,7 @@ export default function Events({ onSwitchToUser }) {
     setError('');
 
     try {
-      const token = localStorage.getItem('tokens');
+      const token = localStorage.getItem('token');
       let response;
 
       // Prepare payload matching database schema
@@ -165,7 +165,7 @@ export default function Events({ onSwitchToUser }) {
     setError('');
 
     try {
-      const token = localStorage.getItem('tokens');
+      const token = localStorage.getItem('token');
       const response = await fetch(`${API_BASE_URL}/events/${eventId}`, {
         method: 'DELETE',
         headers: {

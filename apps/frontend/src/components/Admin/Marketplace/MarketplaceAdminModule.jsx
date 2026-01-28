@@ -234,7 +234,7 @@ const formatDelivery = (s) =>
       <Stat title="Rejected Product Posts" value={counts.rejected} icon={<XCircle />} />
       <Stat title="Sold Products" value={counts.sold} icon={<ShoppingBag />} />
       <Stat title="Rented Products" value={counts.rented} icon={<ShoppingBag />} />
-      <Stat title="Totoal Sellers" value={counts.seller} icon={<ShoppingBag />} />
+      <Stat title="Total Sellers" value={counts.seller} icon={<ShoppingBag />} />
       <Stat title="Total Buyers" value={counts.buyer} icon={<ShoppingBag />} />
       
       </div>
@@ -253,16 +253,48 @@ const formatDelivery = (s) =>
             />
           </div>
 
-          <select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="px-4 py-2 bg-latte-mantle border border-latte-surface0 rounded-xl text-latte-text focus:outline-none focus:ring-2 focus:ring-latte-peachl"
-          >
-            <option value="all">All Status</option>
-            <option value="pending">Pending</option>
-            <option value="approved">Approved</option>
-            <option value="rejected">Rejected</option>
-          </select>
+          <div className="flex gap-2 flex-wrap">
+            <button
+              onClick={() => setStatusFilter('all')}
+              className={`px-4 py-2 rounded-xl transition-colors ${
+                statusFilter === 'all'
+                  ? 'bg-orange-500 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              All Status
+            </button>
+            <button
+              onClick={() => setStatusFilter('pending')}
+              className={`px-4 py-2 rounded-xl transition-colors ${
+                statusFilter === 'pending'
+                  ? 'bg-orange-500 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              Pending
+            </button>
+            <button
+              onClick={() => setStatusFilter('approved')}
+              className={`px-4 py-2 rounded-xl transition-colors ${
+                statusFilter === 'approved'
+                  ? 'bg-orange-500 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              Approved
+            </button>
+            <button
+              onClick={() => setStatusFilter('rejected')}
+              className={`px-4 py-2 rounded-xl transition-colors ${
+                statusFilter === 'rejected'
+                  ? 'bg-orange-500 text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+              }`}
+            >
+              Rejected
+            </button>
+          </div>
         </div>
         </div>
 

@@ -1,4 +1,6 @@
+import { Mail } from "lucide-react";
 import { useState } from "react";
+
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState("");
@@ -55,7 +57,7 @@ const ForgotPassword = () => {
                   </label>
                   <div className="relative">
                     <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                      <email size={20} />
+                      <Mail size={20} />
                     </div>
                     <input
                     type="email"

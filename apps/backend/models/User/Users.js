@@ -64,6 +64,38 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
+
+    bio: {
+      type: String,
+      default: "",
+    },
+
+    village: {
+      type: String,
+      default: "",
+    },
+
+    address: {
+      type: String,
+      default: "",
+    },
+
+    pincode: {
+      type: String,
+      default: "",
+    },
+
+    profilePicture: {
+      type: String,
+      default: "",
+    },
+
+    notificationSettings: {
+      email: { type: Boolean, default: true },
+      sms: { type: Boolean, default: false },
+      push: { type: Boolean, default: true },
+    },
+
   },
   {
     timestamps: true, // createdAt + updatedAt

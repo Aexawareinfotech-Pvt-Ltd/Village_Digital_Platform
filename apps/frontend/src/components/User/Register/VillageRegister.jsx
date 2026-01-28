@@ -7,6 +7,7 @@ import {
   Eye,
   EyeOff,
   ArrowLeft,
+  LucideHome,
 } from "lucide-react";
 import axios from "axios";
 
@@ -20,6 +21,7 @@ const VillageRegister = () => {
     fullName: "",
     email: "",
     phone: "",
+    address: "",
     password: "",
     confirmPassword: "",
   });
@@ -42,6 +44,7 @@ const VillageRegister = () => {
         name: formData.fullName,
         email: formData.email,
         phone: formData.phone,
+        address: formData.address,
         password: formData.password,
         }
         );
@@ -128,6 +131,25 @@ const VillageRegister = () => {
                 </div>
               </div>
             </div>
+
+            {/* Address */}
+            <div>
+            <label className="block text-gray-700 mb-2">Address</label>
+            <div className="relative">
+              <LucideHome className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"/>
+            
+            <input
+              type="text"
+              value={formData.address}
+              onChange={(e) =>
+                setFormData({ ...formData, address: e.target.value })
+              }
+              placeholder="House no, Street, Area"
+              className="w-full pl-12 pr-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-latte-peach"
+              required
+            />
+            </div>
+          </div>
 
             {/* Email */}
             <div>

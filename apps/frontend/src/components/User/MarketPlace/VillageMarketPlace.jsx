@@ -36,6 +36,42 @@ const VillageMarketPlace = ({ language = "en" }) => {
   const [loading, setLoading] = useState(true);
   const [view, setView] = useState("all"); // all | my | track
   const [editItem, setEditItem] = useState(null);
+  const params = new URLSearchParams(window.location.search);
+  const editId = params.get("edit");
+
+
+
+  useEffect(() => {
+  if (!editId) return;
+
+  const loadEditProduct = async () => {
+      try {
+        const res = await fetch(
+          "http://localhost:3000/api/marketplace/list/my",
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
+
+        const data = await res.json();
+        const product = data.find((p) => p._id === editId);
+
+        if (product) {
+          setEditItem(product);
+          setSelectedType(product.type);
+          setView("my");
+          setShowSellModal(true);
+        }
+      } catch (err) {
+        console.error("Edit load failed", err);
+      }
+    };
+
+    loadEditProduct();
+  }, [editId]);
+
 
   /* ---------------- FETCH DATA ---------------- */
   const fetchData = async () => {
@@ -159,8 +195,10 @@ const VillageMarketPlace = ({ language = "en" }) => {
           <button
             key={v}
             onClick={() => setView(v)}
-            className={`px-4 py-2 rounded-xl ${
-              view === v ? "bg-orange-500 text-white" : "bg-gray-100"
+            className={`px-4 py-2 rounded-xl transition-colors ${
+              view === v
+                ? "bg-orange-500 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
             {v === "all" && "All Products"}

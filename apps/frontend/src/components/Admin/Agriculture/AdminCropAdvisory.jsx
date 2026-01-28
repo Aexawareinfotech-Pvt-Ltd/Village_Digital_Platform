@@ -33,7 +33,7 @@ export default function AdminCropAdvisory() {
     setLoading(true);
     setError("");
     try {
-      const token = localStorage.getItem("tokens");
+      const token = localStorage.getItem("token");
       const response = await fetch(`${API_BASE_URL}/list`, {
         method: "GET",
         headers: {
@@ -67,7 +67,7 @@ export default function AdminCropAdvisory() {
     setError("");
 
     try {
-      const token = localStorage.getItem("tokens");
+      const token = localStorage.getItem("token");
       let response;
 
       if (editingCrop) {
@@ -110,7 +110,7 @@ export default function AdminCropAdvisory() {
     setError("");
 
     try {
-      const token = localStorage.getItem("tokens");
+      const token = localStorage.getItem("token");
       const response = await fetch(`${API_BASE_URL}/delete/${cropToDelete._id}`, {
         method: "DELETE",
         headers: {

@@ -26,7 +26,7 @@ export default function AdminSoilTesting() {
     setLoading(true);
     setError("");
     try {
-      const token = localStorage.getItem("tokens");
+      const token = localStorage.getItem("token");
       const response = await fetch(`${API_BASE_URL}/list`, {
         method: "GET",
         headers: {
@@ -60,7 +60,7 @@ export default function AdminSoilTesting() {
     setError("");
 
     try {
-      const token = localStorage.getItem("tokens");
+      const token = localStorage.getItem("token");
       let response;
 
       if (editingSoilCenter) {
@@ -103,7 +103,7 @@ export default function AdminSoilTesting() {
     setError("");
 
     try {
-      const token = localStorage.getItem("tokens");
+      const token = localStorage.getItem("token");
       const response = await fetch(`${API_BASE_URL}/delete/${centerToDelete._id}`, {
         method: "DELETE",
         headers: {

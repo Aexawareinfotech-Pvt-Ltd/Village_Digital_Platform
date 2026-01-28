@@ -1,4 +1,3 @@
-
 import VillageLogin from "../../../components/User/Login/VillageLogin";
 
 const Login = () => {

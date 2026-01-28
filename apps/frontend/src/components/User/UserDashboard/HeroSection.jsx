@@ -2,7 +2,7 @@ import { Bell, Search, Users, FileText, Briefcase, ShoppingBag } from 'lucide-re
 
 export function HeroSection() {
   return (
-    <section className="relative bg-gradient-to-r from-[#ff6b35] via-[#ff8c42] to-[#ffab73] text-white py-16 overflow-hidden">
+    <section className="relative bg-gradient-to-r from-[#ff6b35] via-[#ff8c42] to-[#ffab73] text-white py-16 overflow-hidden ">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 left-0 w-64 h-64 bg-white rounded-full -translate-x-1/2 -translate-y-1/2"></div>

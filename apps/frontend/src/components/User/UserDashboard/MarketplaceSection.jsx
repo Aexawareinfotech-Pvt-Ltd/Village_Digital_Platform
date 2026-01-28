@@ -44,15 +44,37 @@ export function MarketplaceSection() {
     )
     .slice(0, 3);
    
-  const handleViewAllMarketplace = () => {
+const handleViewAllMarketplace = async () => {
   const token = localStorage.getItem("token");
 
-  if (token) {
-    navigate("/marketplace");
-  } else {
+  if (!token) {
+    navigate("/VillageLogin");
+    return;
+  }
+
+  try {
+    const res = await fetch("http://localhost:3000/api/users/me", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error("Unauthorized");
+    }
+
+    const data = await res.json();
+
+    if (data.success) {
+      navigate("/marketplace");
+    }
+  } catch (error) {
     navigate("/VillageLogin");
   }
 };
+
   return (
     <section className="py-16 bg-gray-50" id="marketplace">
       <div className="container mx-auto px-4">
@@ -152,9 +174,11 @@ export function MarketplaceSection() {
 
                   {/* FOOTER */}
                   <div className="flex justify-between items-center border-t pt-4">
-                    <span className="text-sm text-gray-500">
+                    <a
+                    onClick={handleViewAllMarketplace}
+                    className="text-sm text-gray-500">
                       By <b>{item.owner?.name || "User"}</b>
-                    </span>
+                    </a>
 
                     <div className="flex gap-2">
                       <a

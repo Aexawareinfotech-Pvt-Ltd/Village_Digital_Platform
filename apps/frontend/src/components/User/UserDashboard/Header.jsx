@@ -37,9 +37,6 @@ export function Header() {
 
             {/* DESKTOP NAVIGATION */}
             <nav className="flex items-center gap-6 text-sm ">
-              <button onClick={() => scrollToSection("home")} className="hover:text-orange-500 cursor-pointer">
-                Home
-              </button>
               <button onClick={() => scrollToSection("news")} className="hover:text-orange-500 cursor-pointer">
                 News
               </button>

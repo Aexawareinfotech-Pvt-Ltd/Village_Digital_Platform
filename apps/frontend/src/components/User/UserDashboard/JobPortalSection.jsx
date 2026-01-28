@@ -42,12 +42,33 @@ export function JobPortalSection() {
     });
   };
 
-  const handleViewAllJobs = () => {
+const handleViewAllJobs = async () => {
   const token = localStorage.getItem("token");
 
-  if (token) {
-    navigate("/job");
-  } else {
+  if (!token) {
+    navigate("/VillageLogin");
+    return;
+  }
+
+  try {
+    const res = await fetch("http://localhost:3000/api/users/me", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error("Unauthorized");
+    }
+
+    const data = await res.json();
+
+    if (data.success) {
+      navigate("/job");
+    }
+  } catch (error) {
     navigate("/VillageLogin");
   }
 };
@@ -117,7 +138,9 @@ export function JobPortalSection() {
                         </div>
                       </div>
 
-                      <button className="px-6 py-2 bg-[#ff6b35] text-white rounded-2xl hover:bg-[#ff8c42] transition-colors font-medium md:self-center">
+                      <button 
+                      onClick={handleViewAllJobs}
+                      className="px-6 py-2 bg-[#ff6b35] text-white rounded-2xl hover:bg-[#ff8c42] transition-colors font-medium md:self-center">
                         Apply Now
                       </button>
                     </div>

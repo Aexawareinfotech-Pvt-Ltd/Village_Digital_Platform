@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Home, Newspaper, Building2, Sprout, Briefcase, MessageSquare,
-  ShoppingBag, Calendar, Phone, Menu, X
+  ShoppingBag, Calendar, Phone, Menu, X, User
 } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 
 export default function Header({ currentModule, onNavigate }) {
   const navigate = useNavigate();
@@ -26,6 +27,7 @@ export default function Header({ currentModule, onNavigate }) {
     navigate(item.path);   // 🔥 navigation
     setMobileMenuOpen(false);
   };
+
 
   return (
     <>
@@ -66,6 +68,14 @@ export default function Header({ currentModule, onNavigate }) {
 
             {/* ACTIONS */}
             <div className="flex items-center gap-2 sm:gap-3">
+            
+            {/* Profile Button */}
+              <button
+                onClick={() => navigate('/UserProfile')}
+                className="p-2 rounded-full text-gray-700 hover:bg-gray-100"
+              >
+                <User className="w-6 h-6" />
+              </button>
             </div>
           </div>
         </div>

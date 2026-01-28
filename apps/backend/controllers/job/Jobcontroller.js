@@ -43,7 +43,7 @@ export const updateJob = async (req, res) => {
   const job = await Job.findById(req.params.id);
 
   if (
-    job.createdBy.toString() !== req.userId &&
+    job.createdBy.toString() !== req.user.id &&
     req.userRole !== "admin"
   ) {
     return res.status(403).json({ message: "Not allowed" });
@@ -62,7 +62,7 @@ export const deleteJob = async (req, res) => {
   const job = await Job.findById(req.params.id);
 
   if (
-    job.createdBy.toString() !== req.userId &&
+    job.createdBy.toString() !== req.user.id &&
     req.userRole !== "admin"
   ) {
     return res.status(403).json({ message: "Not allowed" });

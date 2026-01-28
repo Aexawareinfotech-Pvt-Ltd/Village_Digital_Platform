@@ -27,6 +27,7 @@ import GrievanceAdminPage from "../pages/Admin/Grievance/GrievanceAdminPage";
 import MarketplaceAdminPage from "../pages/Admin/Marketplace/MarketplaceAdminPage";
 import LocalServicesAdminPage from "../pages/Admin/LocalServices/LocalServicesAdminPage";
 import AgricultureAdminPage from "../pages/Admin/Agriculture/AgrlicultureAdminPage";
+import UserProfile from "../pages/User/Profile/UserProfile";
 import EventAdminPage from "../pages/Admin/Event/EventAdminPage";
 
 const AppRouter = () => {
@@ -51,7 +52,7 @@ const AppRouter = () => {
         <Route element={<MainLayout />}>
         <Route path="/marketplace" element={<Marketplace />} />
         <Route path="/news" element={<News />} />
-        <Route path="/service" element={<Service />} />
+        <Route path="/Service" element={<Service />} />
         <Route path="/job" element={<Job />} />
         <Route path="/events" element={<Event />} />
         <Route path="/agriculture" element={<Agriculture />} />

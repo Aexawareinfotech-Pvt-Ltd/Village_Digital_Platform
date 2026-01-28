@@ -61,14 +61,14 @@ export const verifyPayment = async (req, res) => {
 
     // ✅ UPDATE PRODUCT
     product.status = product.type === "rent" ? "rented" : "sold";
-    product.buyer = req.user.userId;
+    product.buyer = req.user.id;
     await product.save();
 
     // ✅ CREATE RECEIPT WITH ADDRESS
     const receipt = await Receipt.create({
       product: product._id,
       seller: product.owner,
-      buyer: req.user.userId,
+      buyer: req.user.id,
       amount,
       paymentId: razorpay_payment_id,
       orderId: razorpay_order_id,
@@ -89,8 +89,8 @@ export const verifyPayment = async (req, res) => {
 export const getReceipts = async (req, res) => {
   const receipts = await Receipt.find({
     $or: [
-      { buyer: req.user.userId },
-      { seller: req.user.userId },
+      { buyer: req.user.id },
+      { seller: req.user.id },
     ],
   })
     .populate("product", "title")
@@ -110,7 +110,7 @@ export const updateDeliveryStatus = async (req, res) => {
       return res.status(404).json({ message: "Receipt not found" });
     }
 
-    if (receipt.seller.toString() !== req.user.userId) {
+    if (receipt.seller.toString() !== req.user.id) {
       return res.status(403).json({
         message: "You are not allowed to update delivery status",
       });

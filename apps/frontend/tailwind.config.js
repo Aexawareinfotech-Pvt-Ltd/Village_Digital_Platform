@@ -4,7 +4,7 @@ export default {
   content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
   theme: {
     extend: {
-      colors: {
+      colors:{
         latte: {
           rosewater: "#dc8a78",
           flamingo: "#dd7878",

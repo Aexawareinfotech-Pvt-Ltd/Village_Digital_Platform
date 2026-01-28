@@ -435,8 +435,8 @@ const MarketplaceCard = ({
 
 
 
-                {item.status === "active" && (
-                <button
+                {item.status === "active" && item.approvalStatus === "panding" &&(
+                <button 
                   onClick={() => onEdit(item)}
                   className="px-3 py-2 bg-yellow-500 text-white rounded-xl text-sm"
                 >

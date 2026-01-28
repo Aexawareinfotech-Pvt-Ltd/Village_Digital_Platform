@@ -22,7 +22,7 @@ export function NewsCard({ news, onEdit, onDelete, onUpdate }) {
     try {
       setLoading(true);
       
-      const token = localStorage.getItem("tokens");
+      const token = localStorage.getItem("token");
       
       const formData = new FormData();
       formData.append('title', news.title);
@@ -64,7 +64,7 @@ export function NewsCard({ news, onEdit, onDelete, onUpdate }) {
     try {
       setLoading(true);
       
-      const token = localStorage.getItem("tokens");
+      const token = localStorage.getItem("token");
       
       const formData = new FormData();
       formData.append('title', news.title);
@@ -106,7 +106,7 @@ export function NewsCard({ news, onEdit, onDelete, onUpdate }) {
     try {
       setLoading(true);
       
-      const token = localStorage.getItem("tokens");
+      const token = localStorage.getItem("token");
       
       const response = await fetch(`${API_BASE_URL}/delete/${news._id}`, {
         method: 'DELETE',

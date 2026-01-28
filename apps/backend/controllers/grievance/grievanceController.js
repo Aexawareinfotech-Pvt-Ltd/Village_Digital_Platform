@@ -27,7 +27,7 @@ export const createGrievance = async (req, res) => {
 
     const grievance = await Grievance.create({
     grievanceId,
-    userId: req.user.userId,
+    userId: req.user.id,
     category,
     subject,
     description,
@@ -70,7 +70,7 @@ export const trackGrievance = async (req, res) => {
 export const getRecentGrievances = async (req, res) => {
   try {
     const grievances = await Grievance.find({
-      userId: req.user.userId,
+      userId: req.user.id,
     }).sort({ createdAt: -1 });
 
     res.json(grievances);

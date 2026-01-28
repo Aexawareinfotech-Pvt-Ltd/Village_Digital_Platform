@@ -1,4 +1,4 @@
-import { VillageNews } from "../../../components/User/News/VillageNews.jsx";
+import { VillageNews } from '../../../components/User/News/VillageNews';
 
 
 

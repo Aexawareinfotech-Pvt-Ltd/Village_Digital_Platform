@@ -133,7 +133,7 @@ export default function GovernmentSchemes() {
     try {
       setLoading(true);
       setError(null);
-      const token = localStorage.getItem("tokens");
+      const token = localStorage.getItem('token');
       const response = await fetch(`${API_BASE_URL}/list`, {
         method: "GET",
         headers: {

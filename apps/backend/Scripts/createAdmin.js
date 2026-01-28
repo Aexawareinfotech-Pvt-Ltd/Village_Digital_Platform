@@ -1,19 +1,20 @@
-require("dotenv").config();
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
+import User from "../models/Users.js";
 
-const User = require("../models/Users"); 
+dotenv.config();
 
-const MONGODB_URI = process.env.MONGO_URI;
+const MONGODB_URI = process.env.MONGO_URI; // ✅ FIXED
+
 if (!MONGODB_URI) {
-  console.error("Missing MONGODB_URI in .env");
+  console.error("Missing MONGO_URI in .env");
   process.exit(1);
 }
 
 async function run() {
   try {
-   await mongoose.connect(MONGODB_URI);
-
+    await mongoose.connect(MONGODB_URI);
     console.log("Connected to MongoDB");
 
     const name = process.env.ADMIN_NAME || "Super Admin";
@@ -26,46 +27,26 @@ async function run() {
       process.exit(1);
     }
 
-    // Check existing by email or phone
     const existing = await User.findOne({ $or: [{ email }, { phone }] });
+
     if (existing) {
-      console.log("An account with that email/phone already exists:");
-      console.log({
-        id: existing._id.toString(),
-        email: existing.email,
-        phone: existing.phone,
-        role: existing.role
-      });
-      // If it's already admin, exit gracefully
-      if (existing.role === "Admin" || existing.role === "SuperAdmin") {
-        console.log("Admin already exists — nothing to do.");
-        process.exit(0);
-      }
-      // Otherwise we can upgrade the existing user (optional)
-      console.log("Upgrading existing user to Admin...");
-      existing.role = "Admin";
-      existing.isVerified = true;
-      // set password if you'd like to reset it:
-      existing.passwordHash = await bcrypt.hash(password, 10);
-      await existing.save();
-      console.log("User upgraded to Admin:", existing._id.toString());
+      console.log("Admin already exists:", existing.email);
       process.exit(0);
     }
 
-    // Create new admin
     const hashed = await bcrypt.hash(password, 10);
+
     const admin = new User({
       name,
       email,
       phone,
       passwordHash: hashed,
       role: "Admin",
-      isVerified: true
+      isVerified: true,
     });
 
     await admin.save();
-    console.log("Admin created successfully:");
-    console.log({ id: admin._id.toString(), email: admin.email });
+    console.log("Admin created:", admin.email);
 
     await mongoose.disconnect();
     process.exit(0);

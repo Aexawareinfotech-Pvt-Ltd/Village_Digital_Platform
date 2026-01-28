@@ -26,7 +26,7 @@ export default function AdminIrrigation() {
     setLoading(true);
     setError("");
     try {
-      const token = localStorage.getItem("tokens");
+      const token = localStorage.getItem("token");
       const response = await fetch(`${API_BASE_URL}/list`, {
         method: "GET",
         headers: {
@@ -60,7 +60,7 @@ export default function AdminIrrigation() {
     setError("");
 
     try {
-      const token = localStorage.getItem("tokens");
+      const token = localStorage.getItem("token");
       let response;
 
       if (editingIrrigation) {
@@ -103,7 +103,7 @@ export default function AdminIrrigation() {
     setError("");
 
     try {
-      const token = localStorage.getItem("tokens");
+      const token = localStorage.getItem("token");
       const response = await fetch(`${API_BASE_URL}/delete/${scheduleToDelete._id}`, {
         method: "DELETE",
         headers: {

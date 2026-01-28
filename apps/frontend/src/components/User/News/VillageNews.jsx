@@ -63,13 +63,13 @@ export function VillageNews() {
   };
 
   const getTypeColor = (category) => {
-    if (category === 'Emergency') return 'bg-latte-red bg-opacity-10 text-latte-red border-latte-red';
-    return 'bg-latte-peach bg-opacity-10 text-latte-peach border-latte-peach';
+    if (category === 'Emergency') return 'news-card-emergency';
+    return 'news-card-default';
   };
 
   const getCategoryColor = (category) => {
-    if (category === 'Emergency') return 'bg-latte-red text-white';
-    return 'bg-latte-peach text-white';
+    if (category === 'Emergency') return 'news-category-emergency';
+    return 'news-category-default';
   };
 
   const formatDate = (dateString) => {

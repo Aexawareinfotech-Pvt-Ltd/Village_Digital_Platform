@@ -49,12 +49,33 @@ export function EventsSection() {
     fetchEvents();
   }, []);
 
-  const handleViewAllEvents = () => {
+ const handleViewAllEvents = async () => {
   const token = localStorage.getItem("token");
 
-  if (token) {
-    navigate("/events");
-  } else {
+  if (!token) {
+    navigate("/VillageLogin");
+    return;
+  }
+
+  try {
+    const res = await fetch("http://localhost:3000/api/users/me", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error("Unauthorized");
+    }
+
+    const data = await res.json();
+
+    if (data.success) {
+      navigate("/events");
+    }
+  } catch (error) {
     navigate("/VillageLogin");
   }
 };
@@ -122,7 +143,9 @@ export function EventsSection() {
                       </div>
                     </div>
 
-                    <button className="w-full px-4 py-2 border border-[#ff6b35] text-[#ff6b35] rounded-2xl hover:bg-[#fff3e0] transition-colors flex items-center justify-center gap-2">
+                    <button
+                    onClick={handleViewAllEvents}
+                    className="w-full px-4 py-2 border border-[#ff6b35] text-[#ff6b35] rounded-2xl hover:bg-[#fff3e0] transition-colors flex items-center justify-center gap-2">
                       Register / Learn More
                       <ArrowRight className="w-4 h-4" />
                     </button>

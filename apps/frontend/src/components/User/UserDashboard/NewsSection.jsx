@@ -76,12 +76,33 @@ export function NewsSection() {
     );
   }
 
-  const handleViewAllNews = () => {
+const handleViewAllNews = async () => {
   const token = localStorage.getItem("token");
 
-  if (token) {
-    navigate("/news");
-  } else {
+  if (!token) {
+    navigate("/VillageLogin");
+    return;
+  }
+
+  try {
+    const res = await fetch("http://localhost:3000/api/users/me", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error("Unauthorized");
+    }
+
+    const data = await res.json();
+
+    if (data.success) {
+      navigate("/news");
+    }
+  } catch (error) {
     navigate("/VillageLogin");
   }
 };

@@ -158,5 +158,16 @@ export const resetPassword = async (req, res) => {
   }
 };
 
+// controllers/authController.js
+const getMe = (req, res) => {
+  res.status(200).json({
+    success: true,
+    user: {
+      id: req.user.id,
+      role: req.user.role,
+    },
+  });
+};
 
-export { registerUser, loginUser, logoutUser};
+
+export { registerUser, loginUser, logoutUser, getMe };

@@ -41,7 +41,7 @@ const VillageLogin = () => {
       if (role === "Admin") {
         window.location.href = "/AdminDashboard";
       } else {
-        window.location.href = "/";
+        window.location.href = "/news";
       }
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");

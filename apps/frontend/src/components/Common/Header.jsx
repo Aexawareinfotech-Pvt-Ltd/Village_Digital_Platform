@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import {
   Home, Newspaper, Building2, Sprout, Briefcase, MessageSquare,
-  ShoppingBag, Calendar, Phone, Menu, X
+  ShoppingBag, Calendar, Phone, Menu, X, User
 } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 
 export default function Header({ currentModule, onNavigate }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -28,6 +29,7 @@ export default function Header({ currentModule, onNavigate }) {
     navigate(item.path);   // 🔥 navigation
     setMobileMenuOpen(false);
   };
+
 
   return (
     <>
@@ -69,6 +71,14 @@ export default function Header({ currentModule, onNavigate }) {
             {/* ACTIONS */}
             <div className="flex items-center gap-2 sm:gap-3">
 
+              {/* Profile Button */}
+              <button
+                onClick={() => navigate('/UserProfile')}
+                className="p-2 rounded-full text-gray-700 hover:bg-gray-100"
+              >
+                <User className="w-6 h-6" />
+              </button>
+
               {/* MOBILE TOGGLE */}
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -102,6 +112,15 @@ export default function Header({ currentModule, onNavigate }) {
                   </button>
                 );
               })}
+              <button
+                onClick={handleLogout}
+                className="col-span-full flex items-center justify-center gap-2
+                          px-4 py-3 bg-latte-red text-white
+                          rounded-lg hover:bg-latte-maroon transition-colors"
+              >
+                <LogOut className="w-4 h-4" />
+                <span>Logout</span>
+              </button>
             </nav>
           </div>
         )}

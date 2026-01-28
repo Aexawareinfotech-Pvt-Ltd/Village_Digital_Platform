@@ -6,7 +6,7 @@ import MarketPlace from "../../models/Marketplace/MarketPlace.js"
 
 export const createItem = async (req, res) => {
   try {
-    if (!req.user || !req.user.userId) {
+    if (!req.user || !req.user.id) {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
@@ -24,7 +24,7 @@ export const createItem = async (req, res) => {
       type: req.body.type,
       category: req.body.category,
       images,
-      owner: req.user.userId, // ✅ THIS MATCHES YOUR TOKEN
+      owner: req.user.id, // ✅ THIS MATCHES YOUR TOKEN
       approvalStatus: "pending",
     });
 
@@ -74,7 +74,7 @@ export const adminListProducts = async (req, res) => {
 /* ---------------- MY PRODUCTS ---------------- */
 export const getMyItems = async (req, res) => {
   const items = await MarketPlace.find({
-    owner: req.user.userId,
+    owner: req.user.id,
     hiddenBySeller: false, // 🔥 KEY LINE
   })
     .populate("buyer", "name email phone")
@@ -97,7 +97,7 @@ export const updateStatus = async (req, res) => {
       return res.status(404).json({ message: "Item not found" });
     }
 
-    if (item.owner.toString() !== req.user.userId) {
+    if (item.owner.toString() !== req.user.id) {
       return res.status(403).json({ message: "Unauthorized" });
     }
 
@@ -115,7 +115,7 @@ export const updateStatus = async (req, res) => {
 /* ---------------- TRACK PRODUCTS ---------------- */
 export const getTrackedItems = async (req, res) => {
   const items = await MarketPlace.find({
-    buyer: req.user.userId,
+    buyer: req.user.id,
     hiddenByBuyer: false, // 🔥 KEY LINE
   })
     .populate("owner", "name email phone")
@@ -132,7 +132,7 @@ export const buyOrRentItem = async (req, res) => {
     return res.status(400).json({ message: "Item not available" });
   }
 
-  item.buyer = req.user.userId;
+  item.buyer = req.user.id;
   item.status = item.type === "rent" ? "rented" : "sold";
 
   await item.save();
@@ -147,7 +147,7 @@ export const deleteItem = async (req, res) => {
     return res.status(404).json({ message: "Product not found" });
   }
 
-  const userId = req.user.userId;
+  const userId = req.user.id;
 
   // 🟢 NOT SOLD → REAL DELETE
   if (item.status === "active") {
@@ -187,7 +187,7 @@ export const updateItem = async (req, res) => {
     const item = await MarketPlace.findById(req.params.id);
 
     if (!item) return res.status(404).json({ message: "Not found" });
-    if (item.owner.toString() !== req.user.userId)
+    if (item.owner.toString() !== req.user.id)
       return res.status(403).json({ message: "Unauthorized" });
 
     Object.assign(item, req.body);

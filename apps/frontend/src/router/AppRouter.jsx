@@ -22,25 +22,28 @@ import AdminDashboard from "../pages/Admin/AdminDashboard/Admin";
 import MarketplaceAdminPage from "../pages/Admin/Marketplace/MarketplaceAdminPage";
 import LocalServicesAdminPage from "../pages/Admin/LocalServices/LocalServicesAdminPage";
 import AgricultureAdminPage from "../pages/Admin/Agriculture/AgrlicultureAdminPage";
+import UserProfile from "../pages/User/Profile/UserProfile";
 import EventAdminPage from "../pages/Admin/Event/EventAdminPage";
 
 const AppRouter = () => {
   return (
     <Routes>
+        <Route path="/VillageLogin" element={<Login />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/VillageRegister" element={<Register />} />
       {/* ================= USER ROUTES (WITH HEADER) ================= */}
       <Route element={<MainLayout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/marketplace" element={<Marketplace />} />
         <Route path="/news" element={<News />} />
-        <Route path="/service" element={<Service />} />
+        <Route path="/Service" element={<Service />} />
         <Route path="/job" element={<Job />} />
         <Route path="/events" element={<Event />} />
         <Route path="/Grievance" element={<Grievance />} />
         <Route path="/Agriculture" element={<Agriculture />} />
-        <Route path="/VillageLogin" element={<Login />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password/:token" element={<ResetPassword />} />
-        <Route path="/VillageRegister" element={<Register />} />
+       
+        <Route path="/UserProfile" element={<UserProfile/>}/>
       </Route>
 
       {/* ================= ADMIN ROUTE (NO HEADER, ONLY SIDEBAR) ================= */}

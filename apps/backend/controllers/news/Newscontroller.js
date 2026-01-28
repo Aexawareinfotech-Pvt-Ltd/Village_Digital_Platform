@@ -25,6 +25,7 @@ export const createNews = async (req, res) => {
       featured: req.body.featured || false,
       attachments,
     });
+    const io = req.app.get("io");
     io.emit("news:count:update");
     res.status(201).json({ success: true, data: news });
   } catch (error) {
@@ -123,6 +124,7 @@ export const deleteNews = async (req, res) => {
     if (!deleted) {
       return res.status(404).json({ success: false, message: "News not found" });
     }
+    const io = req.app.get("io");
     io.emit("news:count:update");
     res.json({ success: true, message: "News deleted successfully" });
   } catch (error) {

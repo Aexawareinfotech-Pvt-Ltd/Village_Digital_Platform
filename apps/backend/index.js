@@ -59,6 +59,7 @@ connectDB();
 
 // ✅ ROUTE IMPORTS (ONLY ONCE)
 import userRoutes from "./routes/User/User.js";
+import userProfileRoutes from "./routes/User/UserProfile.js";
 import adminRoutes from "./routes/Admin/Admin.js";
 import jobRoutes from "./routes/Job/Job.js";
 import jobApplicationRoutes from "./routes/Job/jobApplication.js";
@@ -79,6 +80,7 @@ import { fileURLToPath } from "url";
 
 // Routes usage
 app.use("/api/users", userRoutes);
+app.use("/api/profile", userProfileRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/job-applications", jobApplicationRoutes);

@@ -1,5 +1,5 @@
 import { ArrowLeft, Download, User, Mail, Phone, FileText } from 'lucide-react';
-import jsPDF from 'jspdf';
+import  jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 
 export default function RegistrationDetailsModal({ eventName, registrations, isOpen, onClose }) {

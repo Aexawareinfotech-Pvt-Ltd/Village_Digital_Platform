@@ -90,7 +90,7 @@ export function AddNewsModal({ open, onOpenChange, onSubmit, editingNews }) {
     setLoading(true);
 
     try {
-      const token = localStorage.getItem("tokens");
+      const token = localStorage.getItem("token");
 
       const formDataToSend = new FormData();
       formDataToSend.append('title', formData.title);

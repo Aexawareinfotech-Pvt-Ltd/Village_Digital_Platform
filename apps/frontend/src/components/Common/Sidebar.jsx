@@ -8,10 +8,17 @@ import {
   Store, 
   CalendarDays, 
   Users, 
-  Settings 
+  Settings, 
+  Home
 } from "lucide-react";
 
 const navigationItems = [
+  {
+    name: "Dashboard",
+    icon: Home,
+    color: "#fe640b",
+    path: "/AdminDashboard"
+  },
   {
     name: "News & Announcements",
     icon: Newspaper,

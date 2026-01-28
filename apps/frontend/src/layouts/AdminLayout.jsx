@@ -100,16 +100,93 @@
 
 // export default AdminLayout;
 
+// import { Outlet } from "react-router-dom";
+// import { Sidebar } from "../components/Common/Sidebar";
+
+// export default function AdminLayout() {
+//   return (
+//     <div className="flex h-screen">
+//       <Sidebar />
+//       <main className="flex-1 bg-[#eff1f5] overflow-auto">
+//         <Outlet />
+//       </main>
+//     </div>
+//   );
+// }
+
+
+// import { useState } from "react";
+// import { Sidebar } from "../components/Common/Sidebar";
+
+// import GrievanceAdminModule from "../components/Admin/Grievance/GrievanceAdminModule";
+// import { JobPortalContent } from "../components/Admin/Job/JobPortalContent";
+// import AdminDashboard from "../components/Admin/AdminDashboard/AdminDashboard";
+// import AdminHeader from "../components/Common/AdminHeader";
+
+// export default function AdminLayout() {
+//   const [activeSection, setActiveSection] = useState("Dashboard");
+
+//   const renderSection = () => {
+//     switch (activeSection) {
+//       case "Dashboard":
+//         return <AdminDashboard setActiveSection={setActiveSection}/>;
+
+//       case "Grievance & Feedback":
+//         return <GrievanceAdminModule/>;
+
+//       // case "Users & Roles":
+//       //   return <AdminUsers />;
+
+//       // case "News & Announcements":
+//       //   return <AdminNews />;
+
+//       case "Jobs":
+//         return <JobPortalContent />;
+
+//       // case "Events":
+//       //   return <AdminEvents />;
+
+//       // case "Settings":
+//       //   return <AdminSettings />;
+
+//       default:
+//         return <AdminDashboard setActiveSection={setActiveSection}/>;
+//     }
+//   };
+
+//   return (
+//     <div className="flex h-screen bg-[#f8f9fc]">
+//       <Sidebar
+//         activeSection={activeSection}
+//         onSectionChange={setActiveSection}
+//       />
+
+//       <div className="flex flex-col flex-1">
+//         <AdminHeader/>
+//         <main className="flex-1 overflow-y-auto p-6">
+//           {renderSection()}
+//         </main>
+//       </div>
+//     </div>
+//   );
+// }
+
 import { Outlet } from "react-router-dom";
 import { Sidebar } from "../components/Common/Sidebar";
+import AdminHeader from "../components/Common/AdminHeader";
+
+
 
 export default function AdminLayout() {
   return (
     <div className="flex h-screen">
+      
       <Sidebar />
       <main className="flex-1 bg-[#eff1f5] overflow-auto">
+        <AdminHeader/>
         <Outlet />
       </main>
     </div>
   );
 }
+

@@ -40,6 +40,7 @@ const ResetPassword = () => {
   };
 
   return (
+    <div className="min-h-screen bg-gradient-to-br bg-orange-100 rounded-xl flex items-center justify-center p-8">
     <form
       onSubmit={handleSubmit}
       className="p-6 max-w-md mx-auto bg-white shadow rounded"
@@ -65,6 +66,7 @@ const ResetPassword = () => {
         {loading ? "Resetting..." : "Reset Password"}
       </button>
     </form>
+    </div>
   );
 };
 

@@ -155,9 +155,11 @@ export const deleteItem = async (req, res) => {
       return res.status(403).json({ message: "Unauthorized" });
     }
 
-    await item.deleteOne();
-    return res.json({ success: true, deleted: true });
+    item.hiddenBySeller = true;
+    await item.save();
+    return res.json({ success: true, message: "Product hidden from your view" });
   }
+
 
   // 🔵 SOLD PRODUCT → SOFT DELETE
   if (item.status === "sold" || item.status === "rented") {

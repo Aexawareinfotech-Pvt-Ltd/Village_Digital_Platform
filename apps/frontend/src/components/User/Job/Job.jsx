@@ -276,8 +276,13 @@ export default function Job() {
   }
 
   return (
-    <div className="min-h-screen">
-      <main className="max-w-5xl mx-auto px-4 py-8 mt-8">
+    <div className="max-w-6xl mx-auto mt-12">
+      {/* HEADER */}
+      <div className="mb-6 text-left">
+        <h1 className="text-latte-peach mb-2 text-4xl">Job Opportunities</h1>
+        <p className="text-gray-600">Find local and government job openings in your area</p>
+      </div>
+      <main className="max-w-6xl mx-auto mt-12">
         {/* Post Job Button */}
         <div className="mb-6">
           <button

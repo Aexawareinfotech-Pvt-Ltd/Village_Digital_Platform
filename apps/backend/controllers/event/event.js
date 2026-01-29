@@ -15,6 +15,8 @@ export const createEvent = async (req, res) => {
             maxAttendees: req.body.maxAttendees,
             createdBy: req.user.id, 
         }); 
+        const io = req.app.get("io");
+        io.emit("event:analytics:update");
         res.status(201).json({
             success: true,
             data: event,
@@ -97,6 +99,9 @@ export const deleteEvent = async (req, res) => {
     await Event.findByIdAndDelete(id);
     await EventRegistration.deleteMany({ eventId: id });
     await Ticket.deleteMany({ eventId: id });
+
+    const io = req.app.get("io");
+    io.emit("event:analytics:update");
 
     res.status(200).json({
       success: true,

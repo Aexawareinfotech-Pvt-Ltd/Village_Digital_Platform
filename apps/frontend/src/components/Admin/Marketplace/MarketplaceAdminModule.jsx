@@ -372,7 +372,7 @@ const formatDelivery = (s) =>
                       >
                         <Eye size={16} />
                       </button>
-                      {item.approvalStatus !== "approved" && item.status === "active" && (
+                      {item.approvalStatus !== "approved" && item.status === "active" && item.approvalStatus !== "rejected" && (
                       <button
                         onClick={() => approve(item._id)}
                         className="p-2 text-green-600 hover:bg-green-50 rounded-xl"
@@ -380,13 +380,13 @@ const formatDelivery = (s) =>
                         <CheckCircle size={16} />
                       </button>
                       )}
-                      {item.status === "active" && item.approvalStatus !== "approved" && (
+                      {item.status === "active" && item.approvalStatus !== "approved" && item.approvalStatus !== "rejected"  && (
                      <button
-                      disabled={!rejectReason || rejectReason.trim().length < 5}
                       onClick={() => {
-                        setRejectingProduct(item);
-                        setRejectReason("");
-                      }}
+                      setRejectingProduct(item._id);
+                      setRejectReason("");
+                    }}
+
                       className="p-2 text-red-600 hover:bg-red-50 rounded-xl"
                     >
                       <XCircle size={16} />
@@ -450,7 +450,7 @@ const formatDelivery = (s) =>
                 
                   <button
                     onClick={() => {
-                      setRejectingProduct(item);
+                      setRejectingProduct(selectedProduct._id);
                       setRejectReason("");
                     }}
                     className="px-4 py-2 bg-red-500 text-white rounded-xl"
@@ -495,23 +495,20 @@ const formatDelivery = (s) =>
                     setRejectingProduct(null);
                     setRejectReason("");
                   }}
-                  className="px-4 py-2 rounded-xl bg-gray-200"
+                  className="px-4 py-2 rounded-xl bg-gray-200 hover:bg-gray-300"
                 >
                   Cancel
                 </button>
 
-                {rejectingProduct.status === "active" && rejectingProduct.approvalStatus !== "approved" && (
                 <button
+                  disabled={!rejectReason || rejectReason.trim().length < 5}
                   onClick={() => {
-                    setRejectingProduct(rejectingProduct);
-                    setRejectReason("");
+                    reject(rejectingProduct);
                   }}
-                  className="p-2 text-red-600 hover:bg-red-50 rounded-xl"
+                  className="px-4 py-2 rounded-xl bg-red-500 text-white hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
                 >
-                  
+                  Reject Product
                 </button>
-              )}
-
               </div>
             </div>
           </div>

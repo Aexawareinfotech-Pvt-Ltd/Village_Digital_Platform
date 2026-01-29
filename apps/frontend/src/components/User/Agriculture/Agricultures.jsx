@@ -16,7 +16,12 @@ export default function Agricultures() {
   const [searchQuery, setSearchQuery] = useState("");
 
   return (
-    <div className="p-8 bg-gray-50 min-h-screen">
+    <div className="max-w-6xl mx-auto mt-12">
+      {/* HEADER */}
+      <div className="mb-6 text-left">
+        <h1 className="text-latte-peach mb-2 text-4xl">Agriculture Services</h1>
+        <p className="text-gray-600">Access farming resources, crop guidance, and agricultural updates</p>
+      </div>
       {/* Tabs */}
       <div className="flex gap-22 mb-6 mt-8 flex-wrap">
         <button

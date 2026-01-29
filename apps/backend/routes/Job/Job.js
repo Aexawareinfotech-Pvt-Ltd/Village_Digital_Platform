@@ -7,6 +7,7 @@ import {
   updateJob,
   deleteJob
 } from "../../controllers/job/Jobcontroller.js";
+import { getJobAnalytics } from "../../controllers/job/jobAnalyticsController.js";
 
 import authMiddleware from "../../middlewares/authMiddleware.js";
 import adminMiddleware from "../../middlewares/adminMiddleware.js";
@@ -21,5 +22,7 @@ router.put("/approve/:id", authMiddleware, adminMiddleware, approveJob);
 
 router.put("/update/:id", authMiddleware, updateJob);
 router.delete("/delete/:id", authMiddleware, deleteJob);
+
+router.get("/analytics", authMiddleware, getJobAnalytics);
 
 export default router;

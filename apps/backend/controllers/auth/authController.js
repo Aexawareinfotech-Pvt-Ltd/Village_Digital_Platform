@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import User from "../../models/User/Users.js";
 import crypto from "crypto";
 import sendResetEmail from "../../utils/sendResetEmail.js";
+import { registerSchema,loginSchema, resetPasswordSchema, } from "../../utils/authValidator.js";
 
 dotenv.config();
 
@@ -15,13 +16,25 @@ const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key";
 
 async function registerUser(req, res) {
   try {
-    const { name, phone, email,address , password} = req.body;
+    const { error } = registerSchema.validate(req.body, { abortEarly: false });
 
-   
+    if (error) {
+      return res.status(400).json({
+        message: "Validation failed",
+        errors: error.details.map(err => err.message)
+      });
+    }
 
-    const existingUser = await User.findOne({ $or: [ { email }, { phone } ] });
+    const { name, phone, email, address, password } = req.body;
+
+    const existingUser = await User.findOne({
+      $or: [{ email }, { phone }]
+    });
+
     if (existingUser) {
-      return res.status(400).json({ message: "User with this email or phone already exists" });
+      return res.status(400).json({
+        message: "User with this email or phone already exists"
+      });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -31,9 +44,6 @@ async function registerUser(req, res) {
       email,
       phone,
       address: address || "",
-      village: "",
-      pincode: "",
-      bio: "",
       passwordHash: hashedPassword,
       role: "User",
       lastActive: new Date()
@@ -41,31 +51,36 @@ async function registerUser(req, res) {
 
     await newUser.save();
 
-    // const io = getIO();
-    // io.to("admins").emit("user:new", {
-    //   id: newUser._id,
-    //   name: newUser.name,
-    //   email: newUser.email,
-    // });
+    res.status(201).json({
+      message: "User registered successfully"
+    });
 
-    res.status(201).json({ message: "User registered successfully!" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 }
 
-
 async function loginUser(req, res) {
   try {
+    // ✅ Joi validation
+    const { error } = loginSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json({
+        message: error.details[0].message,
+      });
+    }
+
     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
-    if (!user) return res.status(400).json({ message: "User not found" });
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
 
     const isMatch = await bcrypt.compare(password, user.passwordHash);
-    if (!isMatch) return res.status(400).json({ message: "Invalid credentials" });
-
-   
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
 
     const token = jwt.sign(
       { userId: user._id, role: user.role },
@@ -74,19 +89,18 @@ async function loginUser(req, res) {
     );
 
     res.json({
-    message: "Login successful",
-    token,
-    role: user.role,
+      message: "Login successful",
+      token,
+      role: user.role,
     });
-    
-    // user.lastActive = new Date();
-    // await user.save();
-
-
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({
+      message: "Login failed",
+      error: err.message,
+    });
   }
 }
+
 
 async function logoutUser(req, res) { 
     return res.json({ message: "Logged out successfully" });
@@ -130,6 +144,15 @@ export const forgotPassword = async (req, res) => {
 
 export const resetPassword = async (req, res) => {
   try {
+    const { error } = resetPasswordSchema.validate(req.body, { abortEarly: false });
+
+    if (error) {
+      return res.status(400).json({
+        message: "Password validation failed",
+        errors: error.details.map(err => err.message)
+      });
+    }
+
     const { token } = req.params;
     const { password } = req.body;
 
@@ -140,19 +163,21 @@ export const resetPassword = async (req, res) => {
 
     const user = await User.findOne({
       resetPasswordToken: hashedToken,
-      resetPasswordExpire: { $gt: Date.now() },
+      resetPasswordExpire: { $gt: Date.now() }
     });
 
-   
-    if (!user)
+    if (!user) {
       return res.status(400).json({ message: "Invalid or expired token" });
+    }
 
     user.passwordHash = await bcrypt.hash(password, 10);
     user.resetPasswordToken = undefined;
     user.resetPasswordExpire = undefined;
 
     await user.save();
+
     res.json({ message: "Password reset successful" });
+
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

@@ -68,6 +68,14 @@ export default function Header({ currentModule, onNavigate }) {
 
             {/* ACTIONS */}
             <div className="flex items-center gap-2 sm:gap-3">
+            
+            {/* Profile Button */}
+              <button
+                onClick={() => navigate('/UserProfile')}
+                className="p-2 rounded-full text-gray-700 hover:bg-gray-100"
+              >
+                <User className="w-6 h-6" />
+              </button>
             </div>
           </div>
         </div>

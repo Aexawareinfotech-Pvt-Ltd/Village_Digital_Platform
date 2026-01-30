@@ -52,8 +52,8 @@ const AppRouter = () => {
         <Route element={<MainLayout />}>
         <Route path="/marketplace" element={<Marketplace />} />
         <Route path="/news" element={<News />} />
-        <Route path="/Services" element={<Service />} />
-        <Route path="/jobs" element={<Job />} />
+        <Route path="/Service" element={<Service />} />
+        <Route path="/job" element={<Job />} />
         <Route path="/events" element={<Event />} />
         <Route path="/agriculture" element={<Agriculture />} />
         <Route path="/grievance" element={<Grievance />} />  

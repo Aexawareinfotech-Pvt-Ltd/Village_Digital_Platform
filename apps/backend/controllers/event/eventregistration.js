@@ -48,6 +48,9 @@ export const registerForEvent = async (req, res) => {
 
     await sendEmail(email, event, ticket);
 
+    const io = req.app.get("io");
+    io.emit("event:analytics:update");
+
     res.json({
       message: "Registration successful",
       ticket
@@ -89,6 +92,9 @@ export const cancelRegistration = async (req, res) => {
     await Ticket.findOneAndDelete({
       registrationId: registration._id
     });
+
+    const io = req.app.get("io");
+    io.emit("event:analytics:update");
 
     res.json({ message: "Registration cancelled" });
   } catch (err) {

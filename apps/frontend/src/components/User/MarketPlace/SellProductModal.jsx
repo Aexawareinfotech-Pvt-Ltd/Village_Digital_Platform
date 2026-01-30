@@ -15,8 +15,7 @@ const SellProductModal = ({ categories = {}, onClose, defaultType = "sell", onSu
     category: Object.keys(categories)[0] || "general",
   });
 
-
-
+  const [errors, setErrors] = useState({});
   const [images, setImages] = useState([]);
 
   /* ---------------- Image Upload ---------------- */
@@ -33,6 +32,38 @@ const SellProductModal = ({ categories = {}, onClose, defaultType = "sell", onSu
     setImages((prev) => [...prev, ...previews]);
   };
 
+  /* -------- Validate Price -------- */
+  const validatePrice = (value) => {
+    if (!value) {
+      return null;
+    }
+    
+    // Check if price contains commas or any non-numeric characters
+    if (!/^\d+$/.test(value)) {
+      return "Price must contain only numeric values (e.g., 10000 instead of 10,000)";
+    }
+    
+    return null;
+  };
+
+  /* -------- Handle Input Change -------- */
+  const handleInputChange = (key, value) => {
+    // Clear error when user starts typing
+    if (errors[key]) {
+      setErrors({ ...errors, [key]: null });
+    }
+
+    // Special validation for price
+    if (key === "price") {
+      const error = validatePrice(value);
+      if (error) {
+        setErrors({ ...errors, [key]: error });
+      }
+    }
+
+    setForm({ ...form, [key]: value });
+  };
+
   const removeImage = (index) => {
     setImages((prev) => prev.filter((_, i) => i !== index));
   };
@@ -40,6 +71,13 @@ const SellProductModal = ({ categories = {}, onClose, defaultType = "sell", onSu
   /* ---------------- Submit ---------------- */
     const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Validate price before submit
+    const priceError = validatePrice(form.price);
+    if (priceError) {
+      setErrors({ ...errors, price: priceError });
+      return;
+    }
 
     const token = localStorage.getItem("token");
     if (!token) {
@@ -148,16 +186,24 @@ const SellProductModal = ({ categories = {}, onClose, defaultType = "sell", onSu
             { key: "phone", label: "Phone" },
     
           ].map(({ key, label }) => (
-            <input
-              key={key}
-              placeholder={label}
-              value={form[key]}
-              onChange={(e) =>
-                setForm({ ...form, [key]: e.target.value })
-              }
-              className="w-full px-4 py-2 border border-orange-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500"
-              required
-            />
+            <div key={key}>
+              <input
+                placeholder={label}
+                value={form[key]}
+                onChange={(e) =>
+                  handleInputChange(key, e.target.value)
+                }
+                className={`w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 ${
+                  errors[key]
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-orange-200 focus:ring-orange-500"
+                }`}
+                required
+              />
+              {errors[key] && (
+                <p className="text-red-500 text-sm mt-1">{errors[key]}</p>
+              )}
+            </div>
           ))}
 
 

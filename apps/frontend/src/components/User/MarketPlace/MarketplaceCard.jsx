@@ -7,6 +7,8 @@ import {
   Trash2,
   ImageIcon,
   CreditCard,
+  Trash,
+  Loader2,
 } from "lucide-react";
 import DeliveryAddressModal from "./DeliveryAddressModal";
 import { useState, useEffect } from "react";
@@ -23,6 +25,8 @@ const MarketplaceCard = ({
    const [showAddressModal, setShowAddressModal] = useState(false);
    const [selectedItem, setSelectedItem] = useState(null);
    const [receipt, setReceipt] = useState(null);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
    const COMPLETED_STATUSES = ["sold", "rented"];
 
@@ -317,6 +321,7 @@ const MarketplaceCard = ({
             {item.category}
           </span>
           <div>
+          {item.approvalStatus !== "rejected" && (
           <span
             className={`px-3 py-1 text-xs rounded-full ${
               item.status === "active"
@@ -328,6 +333,8 @@ const MarketplaceCard = ({
           >
             {item.status}
           </span>
+          )}
+          {item.approvalStatus !== "rejected" && (
           <span
             className={`px-3 py-2 text-xs rounded-full  ${
               item.approvalStatus === "pending"
@@ -339,7 +346,8 @@ const MarketplaceCard = ({
           >
             {item.approvalStatus}
           </span>
-          </div>
+          )}
+          
           {item.approvalStatus === "rejected" && item.rejectionReason && (
           <div className="mt-3 p-3 bg-red-50 border border-red-200 rounded-xl text-sm">
             <p className="text-red-600 font-semibold mb-1">
@@ -350,6 +358,8 @@ const MarketplaceCard = ({
             </p>
           </div>
          )}
+         </div>
+         
 
         </div>
 
@@ -445,11 +455,12 @@ const MarketplaceCard = ({
                 )}
                 {canDelete && (
                 <button
-                  onClick={() => onDelete(item._id)}
+                  onClick={() => setShowDeleteDialog(true)}
                   className="px-3 py-2 bg-red-500 text-white rounded-xl text-sm"
                 >
                   <Trash2 className="w-4 h-4 inline" /> Delete
                 </button>
+
                 )}
               </>
             )}
@@ -476,6 +487,62 @@ const MarketplaceCard = ({
           </div>
         </div>
       </div>
+         
+         {showDeleteDialog && (
+            <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-full bg-[#fe640b]/10 flex items-center justify-center">
+                <Trash className="w-6 h-6 text-[#fe640b]" />
+              </div>
+              <div>
+                <h2 className="text-[#4c4f69] text-lg font-semibold">Delete Product?</h2>
+              </div>
+            </div>
+            
+            <p className="text-[#6c6f85] mb-6 text-left">
+              Are you sure you want to delete <strong>"{item.title}"</strong>?
+            </p>
+            
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowDeleteDialog(false)}
+                disabled={isDeleting}
+                className="flex-1 px-4 py-2 border border-[#ccd0da] text-[#4c4f69] rounded-2xl hover:bg-[#e6e9ef] transition-colors font-medium disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={async () => {
+                  try {
+                    setIsDeleting(true);
+                    await onDelete(item._id);
+                  } catch (err) {
+                    console.error("Delete failed:", err);
+                    // keep dialog open so user can retry or cancel
+                  } finally {
+                    setIsDeleting(false);
+                    setShowDeleteDialog(false);
+                  }
+                }}
+                disabled={isDeleting}
+                className="flex-1 px-4 py-2 bg-[#fe640b] hover:bg-[#fe640b]/90 text-white rounded-2xl transition-colors font-medium disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {isDeleting ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Deleting...
+                  </>
+                ) : (
+                  'Delete'
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+          )}
+
+        
         {showAddressModal && (
         <DeliveryAddressModal
           item={selectedItem}

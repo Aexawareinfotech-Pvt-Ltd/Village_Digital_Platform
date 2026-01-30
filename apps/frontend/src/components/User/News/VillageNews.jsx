@@ -121,7 +121,12 @@ export function VillageNews() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto mt-12">
+     <div className="max-w-6xl mx-auto mt-12">
+      {/* HEADER */}
+      <div className="mb-6 text-left">
+        <h1 className="text-latte-peach mb-2 text-4xl">News</h1>
+        <p className="text-gray-600">Stay updated with the latest local news and announcements</p>
+      </div>
       {/* Enable Notifications Button */}
       <div className="mb-6">
         <button className="flex items-center gap-2 px-4 py-2 bg-latte-peach text-white rounded-2xl hover:bg-latte-peach transition-colors">

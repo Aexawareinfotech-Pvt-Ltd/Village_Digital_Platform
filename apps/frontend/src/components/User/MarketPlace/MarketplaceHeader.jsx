@@ -3,7 +3,7 @@ import { Plus } from "lucide-react";
 const MarketplaceHeader = ({ title, subtitle, sellLabel, onSellClick }) => {
   return (
     <div className="mb-6 flex justify-between items-center">
-      <div>
+      <div className="text-left">
         <h1 className="text-latte-peach text-4xl mb-2">{title}</h1>
         <p className="text-gray-600">{subtitle}</p>
       </div>

@@ -14,6 +14,7 @@ import {
   Pencil,
   Trash2,
   Building2,
+  Trash,
 } from "lucide-react";
 
 
@@ -37,6 +38,9 @@ export default function LocalServicesAdminModule() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [serviceToDelete, setServiceToDelete] = useState(null);
+
 
   const [formData, setFormData] = useState({
     name: "",
@@ -128,18 +132,26 @@ export default function LocalServicesAdminModule() {
 };
 
   /* ---------------- DELETE ---------------- */
-  const remove = async (id) => {
-    if (!confirm("Delete this service?")) return;
+ const openDeleteDialog = (service) => {
+  setServiceToDelete(service);
+  setShowDeleteDialog(true);
+};
 
-    await fetch(`${API_BASE_URL}/delete/${id}`, {
-      method: "DELETE",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    });
+const confirmDelete = async () => {
+  if (!serviceToDelete) return;
 
-    loadServices();
-  };
+  await fetch(`${API_BASE_URL}/delete/${serviceToDelete._id}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
+
+  setShowDeleteDialog(false);
+  setServiceToDelete(null);
+  loadServices();
+};
+
 
   const filteredServices = services.filter((s) => {
   const matchesSearch =
@@ -245,11 +257,12 @@ export default function LocalServicesAdminModule() {
                 </button>
 
                 <button
-                  onClick={() => remove(s._id)}
+                  onClick={() => openDeleteDialog(s)}
                   className="p-2 bg-red-100 text-red-600 rounded-xl"
                 >
                   <Trash2 size={16} />
                 </button>
+
               </div>
               
             </div>
@@ -261,6 +274,53 @@ export default function LocalServicesAdminModule() {
       )}
       </div>
   </div>
+
+        {showDeleteDialog && serviceToDelete && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="relative bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-full bg-[#fe640b]/10 flex items-center justify-center">
+                <Trash className="w-6 h-6 text-[#fe640b]" />
+              </div>
+              <div>
+                <h2 className="text-[#4c4f69] text-lg font-semibold">Delete Service?</h2>
+              </div>
+            </div>
+            
+            <p className="text-[#6c6f85] mb-6 text-left">
+              Are you sure you want to delete <strong>"{serviceToDelete.name}"</strong>? This action cannot be undone.
+            </p>
+            
+            <div className="flex gap-3">
+              <button
+                onClick={() => {
+                 setShowDeleteDialog(false);
+                 setServiceToDelete(null);
+                }}
+                disabled={loading}
+                className="flex-1 px-4 py-2 border border-[#ccd0da] text-[#4c4f69] rounded-2xl hover:bg-[#e6e9ef] transition-colors font-medium disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                 onClick={confirmDelete}
+                disabled={loading}
+                className="flex-1 px-4 py-2 bg-[#fe640b] hover:bg-[#fe640b]/90 text-white rounded-2xl transition-colors font-medium disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    Deleting...
+                  </>
+                ) : (
+                  'Delete'
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+        )}
+
       
 
       {/* MODAL */}

@@ -2,7 +2,8 @@ import crypto from "crypto";
 import razorpay from "../../config/razorpay.js";
 import MarketPlace from "../../models/Marketplace/MarketPlace.js";
 import Receipt from "../../models/Marketplace/Receipt.js";
-
+import User from "../../models/User/Users.js";
+import sendPaymentReceiptEmail from "../../utils/sendPaymentReceiptEmail.js";
 
 
 /* ---------------- CREATE ORDER ---------------- */
@@ -75,10 +76,16 @@ export const verifyPayment = async (req, res) => {
       deliveryAddress,
     });
 
+    // 🔥 SEND RECEIPT EMAIL
+    const buyer = await User.findById(req.user.id);
+
+    await sendPaymentReceiptEmail(buyer, receipt, product);
+
     res.status(200).json({
       success: true,
       receiptId: receipt._id,
     });
+
   } catch (err) {
     console.error("Verify error:", err);
     res.status(500).json({ message: "Payment verification failed" });

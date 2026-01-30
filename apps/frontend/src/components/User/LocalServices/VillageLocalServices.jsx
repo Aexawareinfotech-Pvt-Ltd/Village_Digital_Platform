@@ -66,10 +66,10 @@ export default function VillageLocalServices({ language = "en" }) {
 
   /* ---------------- UI ---------------- */
   return (
-    <div className="max-w-5xl mx-auto mt-12">
+    <div className="max-w-6xl mx-auto mt-12">
       {/* HEADER */}
       <div className="mb-6 text-left">
-        <h1 className="text-orange-600 mb-2 text-4xl">{t.title}</h1>
+        <h1 className="text-latte-peach mb-2 text-4xl">{t.title}</h1>
         <p className="text-gray-600">{t.subtitle}</p>
       </div>
 

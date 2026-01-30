@@ -134,7 +134,12 @@ export default function Events({ onSwitchToAdmin }) {
   }
 
   return (
-    <div className="size-full flex bg-gray-50">
+    <div className="max-w-6xl mx-auto mt-12">
+      {/* HEADER */}
+      <div className=" text-left">
+        <h1 className="text-latte-peach mb-2 text-4xl">Events</h1>
+        <p className="text-gray-600">Explore upcoming events, programs, and community activities</p>
+      </div>
       {currentPage === 'user-calendar' ? (
         <CommunityCalendar 
           events={events}

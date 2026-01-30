@@ -1,4 +1,4 @@
-import { Users, MessageSquare, FileText, CheckCircle, Calendar, ShoppingBag } from "lucide-react";
+import { Users, MessageSquare, FileText, CheckCircle, Calendar, ShoppingBag, Briefcase, Landmark } from "lucide-react";
 import { useEffect, useState } from "react";
 import { ArrowRight, Clock, AlertCircle } from "lucide-react";
 import { io } from "socket.io-client";
@@ -6,6 +6,8 @@ import NewsCategoryChart from "../News/NewsCategoryChart";
 import GrievanceCategoryChart from "../Grievance/GrievanceCategoryChart";
 import { useNavigate } from "react-router-dom";
 import Stat from "../../Common/Stat";
+import EventCategoryAnalyticsChart from "../Event/EventCategoryAnalyticsChart";
+import JobCategoryAnalyticsChart from "../Job/JobCategoryAnalyticsChart";
 
 
 
@@ -40,6 +42,64 @@ export default function AdminDashboard({ setActiveSection }) {
 
   const [newsCount, setNewsCount] = useState(0);
   const [Products, setTotalProducts] = useState([]);
+  const [eventAnalytics, setEventAnalytics] = useState({
+    totalEvents: 0,
+    totalRegistrations: 0,
+  });
+  const [jobAnalytics, setJobAnalytics] = useState({
+    totalJobs : 0,
+    pendingJobs : 0,
+    approvedJobs : 0,
+    totalApplications : 0,
+  });
+
+  const fetchJobAnalytics = async () => {
+    const res = await fetch("http://localhost:3000/api/jobs/analytics", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      setJobAnalytics(data.data);
+    }
+  };
+
+  useEffect(() => {
+    fetchJobAnalytics();
+
+    socket.on("job:analytics:update", fetchJobAnalytics);
+
+    return () => {
+      socket.off("job:analytics:update", fetchJobAnalytics);
+    };
+  }, []);
+
+
+  const fetchEventAnalytics = async () => {
+    const res = await fetch("http://localhost:3000/api/events/analytics", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`
+      }
+    });
+
+    const data = await res.json();
+    if (data.success) {
+      setEventAnalytics(data.data);
+    }
+  };
+
+  useEffect(() => {
+    fetchEventAnalytics();
+
+    socket.on("event:analytics:update", fetchEventAnalytics);
+
+    return () => {
+      socket.off("event:analytics:update", fetchEventAnalytics);
+    };
+  }, []);
+
 
   /* ---------------- Fetch Grievance Counts ---------------- */
   const fetchGrievanceCounts = async () => {
@@ -64,6 +124,20 @@ export default function AdminDashboard({ setActiveSection }) {
     socket.on("grievance:count:update", fetchGrievanceCounts);
     return () => socket.off("grievance:count:update", fetchGrievanceCounts);
   }, []);
+
+  const eventCategoryChartData =
+  eventAnalytics?.registrationsByCategory?.map(item => ({
+    category: item._id,
+    registrations: item.totalRegistrations,
+  })) || [];
+
+
+  const jobChartData = jobAnalytics?.applicationsByCategory?.map(item => ({
+  category: item._id,
+  applications: item.applications
+  })) || [];
+
+
 
   /* ---------------- Fetch Marketplace Counts ---------------- */
   const fetchMarketplaceCounts = async () => {
@@ -355,12 +429,33 @@ export default function AdminDashboard({ setActiveSection }) {
         <Stat title="News Articles" value={newsCount} icon={<FileText />} />
         <Stat title="Total Active Products" value={marketCounts.active} icon={<ShoppingBag />} />
         <Stat title="Total Sold/Rented Products" value={marketCounts.sold + marketCounts.rented} icon={<ShoppingBag />} />
+        <Stat
+          title="Total Events"
+          value={eventAnalytics?.totalEvents || 0}
+          icon={<Calendar />}
+        />
+
+        <Stat
+          title="Event Registrations"
+          value={eventAnalytics?.totalRegistrations || 0}
+          icon={<Users />}
+        />
+
+
+         <Stat title="Total Jobs" value={jobAnalytics?.totalJobs + jobAnalytics?.governmentJobs} icon={<Briefcase />} />
+        <Stat title="Pending Jobs" value={jobAnalytics?.pendingJobs} icon={<Clock />} />
+        <Stat title="Approved Jobs" value={jobAnalytics?.approvedJobs} icon={<CheckCircle />} />
+        <Stat title="Applications" value={jobAnalytics?.totalApplications} icon={<Users />} />
+
       </div>
 
       {/* Charts */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         <GrievanceCategoryChart />
         <NewsCategoryChart />
+        <EventCategoryAnalyticsChart data={eventCategoryChartData} />
+        <JobCategoryAnalyticsChart data={jobChartData} />
+
       </div>
 
       {/* Recent Grievances */}

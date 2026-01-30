@@ -55,9 +55,14 @@ const VillageRegister = () => {
 
     }
     catch (err) {
-      setError(
-        err.response?.data?.message || "Registration failed"
-      );
+      // Handle array of errors from backend
+      if (err.response?.data?.errors && Array.isArray(err.response.data.errors)) {
+        setError(err.response.data.errors.join(" | "));
+      } else if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError("Registration failed");
+      }
     } finally {
       setLoading(false);
     }
@@ -91,6 +96,13 @@ const VillageRegister = () => {
 
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-5">
+
+            {/* Error Message */}
+            {error && (
+              <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-red-700 text-sm">
+                {error}
+              </div>
+            )}
 
             <div className="grid md:grid-cols-2 gap-5">
               {/* Full Name */}

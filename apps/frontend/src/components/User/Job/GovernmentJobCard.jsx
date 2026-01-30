@@ -96,13 +96,15 @@ export default function GovernmentJobCard({ job }) {
           </div>
 
           {/* Apply Button - Opens Official Link */}
+          <div className="flex justify-end mt-4">
           <button
             onClick={handleApply}
-            className="flex items-center gap-2 bg-latte-peach text-white px-8 py-2.5 rounded-xl font-semibold shadow-md hover:bg-orange-600 transition-colors"
+            className=" flex items-center gap-2 bg-latte-peach text-white px-8 py-2.5 rounded-xl font-semibold shadow-md hover:bg-orange-600 transition-colors"
           >
             Apply Now
             <ExternalLink className="w-4 h-4" />
           </button>
+          </div>
         </div>
       </div>
     </div>

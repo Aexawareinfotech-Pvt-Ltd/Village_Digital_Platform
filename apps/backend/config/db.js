@@ -4,7 +4,7 @@ const connectDB = async () => {
   const mongoURI = process.env.MONGO_URI;
 
   if (!mongoURI) {
-    console.error("MONGODB_URI is not defined in .env file");
+    console.error("MONGO_URI is not defined in .env file");
     process.exit(1);
   }
 

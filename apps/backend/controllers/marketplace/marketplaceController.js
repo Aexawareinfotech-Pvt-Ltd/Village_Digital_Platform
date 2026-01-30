@@ -6,10 +6,6 @@ import MarketPlace from "../../models/Marketplace/MarketPlace.js"
 
 export const createItem = async (req, res) => {
   try {
-    if (!req.user || !req.user.id) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
-
     const images = (req.files || []).map((file) => ({
       url: file.path,
       publicId: file.filename,
@@ -24,14 +20,10 @@ export const createItem = async (req, res) => {
       type: req.body.type,
       category: req.body.category,
       images,
-      owner: req.user.id, // ✅ THIS MATCHES YOUR TOKEN
+      owner: req.user.id,
       approvalStatus: "pending",
     });
-
-    const populatedItem = await item.populate("owner", "name phone");
-
     const io = req.app.get("io");
-    io.emit("marketplace:count:update");
 
     res.status(201).json({ success: true, data: item });
   } catch (err) {

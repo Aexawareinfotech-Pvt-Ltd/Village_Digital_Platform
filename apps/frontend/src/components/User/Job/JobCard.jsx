@@ -104,10 +104,11 @@ export default function JobCard({ job, isOwnJob = false, onViewApplicants }) {
             </div>
 
             {/* Action Button */}
+            <div className="flex justify-end mt-4">
             {isOwnJob ? (
               <button
                 onClick={onViewApplicants}
-                className="flex items-center gap-2 bg-latte-peach text-white px-6 py-2.5 rounded-xl font-semibold shadow-md"
+                className="flex items-center gap-2 bg-latte-peach text-white px-6 py-2.5 rounded-xl font-semibold shadow-md "
               >
                 <Eye className="w-4 h-4" />
                 View Applicants
@@ -120,6 +121,7 @@ export default function JobCard({ job, isOwnJob = false, onViewApplicants }) {
                 Apply Now
               </button>
             )}
+            </div>
           </div>
         </div>
       </div>

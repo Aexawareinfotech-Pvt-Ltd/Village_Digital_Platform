@@ -64,7 +64,7 @@ export default function Job() {
     setLoading(true);
     setError("");
     try {
-      const token = localStorage.getItem("tokens");
+      const token = localStorage.getItem("token");
       const response = await fetch("http://localhost:3000/api/government-jobs/list", {
         method: "GET",
         headers: {

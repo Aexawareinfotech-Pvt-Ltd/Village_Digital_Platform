@@ -1,5 +1,5 @@
 import { HeroSection } from "./HeroSection";
-import { Header } from "./Header";
+import Header from "../../Common/Header";
 import { NewsSection } from "./NewsSection";
 import { JobPortalSection } from "./JobPortalSection";
 import { MarketplaceSection } from "./MarketplaceSection";

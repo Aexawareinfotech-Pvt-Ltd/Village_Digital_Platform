@@ -96,21 +96,6 @@ export function UserEventsListing({
                     <span className="truncate">{event.venue}</span>
                   </div>
 
-                  {event.registrationRequired && event.maxAttendees && (
-                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                      <Users className="w-4 h-4 text-orange-500" />
-                      <span>
-                        {event.currentAttendees || 0} /{" "}
-                        {event.maxAttendees} seats filled
-                      </span>
-
-                      {isFull(event) && (
-                        <span className="text-xs px-2 py-0.5 bg-red-100 text-red-700 rounded-full border border-red-200">
-                          Full
-                        </span>
-                      )}
-                    </div>
-                  )}
                 </div>
                 {event.registrationRequired && (
                   <button

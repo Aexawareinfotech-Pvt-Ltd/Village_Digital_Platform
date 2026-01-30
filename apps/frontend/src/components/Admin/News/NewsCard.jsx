@@ -172,11 +172,11 @@ export function NewsCard({ news, onEdit, onDelete, onUpdate }) {
                 </div>
               </div>
 
-              <h3 className="text-[#4c4f69] text-lg font-semibold mb-2 text-left">
+              <h3 className="text-[#4c4f69] text-lg font-semibold mb-2 text-left" style={{ wordBreak: "break-word", overflowWrap: "break-word" }}>
                 {news.title}
               </h3>
 
-              <p className="text-[#6c6f85] text-left mb-4 leading-relaxed">
+              <p className="text-[#6c6f85] text-left mb-4 leading-relaxed" style={{ wordBreak: "break-word", overflowWrap: "break-word" }}>
                 {expanded
                   ? news.description
                   : `${news.description.slice(0, 150)}${

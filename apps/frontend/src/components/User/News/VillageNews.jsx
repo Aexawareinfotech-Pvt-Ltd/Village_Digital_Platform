@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Bell, AlertCircle, Megaphone, Search, FileText, Download, Pin } from 'lucide-react';
 import { ImageWithFallback } from '../../Common/ImageWithFallback';
-
 const API_BASE_URL = 'http://localhost:3000/api/news';
 
 export function VillageNews() {
@@ -63,13 +62,13 @@ export function VillageNews() {
   };
 
   const getTypeColor = (category) => {
-    if (category === 'Emergency') return 'news-card-emergency';
-    return 'news-card-default';
+    if (category === 'Emergency') return 'bg-latte-red bg-opacity-10 text-latte-red border-latte-red';
+    return 'bg-latte-peach bg-opacity-10 text-latte-peach border-latte-peach';
   };
 
   const getCategoryColor = (category) => {
-    if (category === 'Emergency') return 'news-category-emergency';
-    return 'news-category-default';
+    if (category === 'Emergency') return 'bg-latte-red text-white';
+    return 'bg-latte-peach text-white';
   };
 
   const formatDate = (dateString) => {
@@ -294,12 +293,12 @@ export function VillageNews() {
                 </div>
 
                 {/* Title */}
-                <h3 className="text-latte-text font-medium mb-2">
+                <h3 className="text-latte-text font-medium mb-2" style={{ wordBreak: "break-word", overflowWrap: "break-word" }}>
                   {item.title}
                 </h3>
 
                 {/* Description */}
-                <p className="text-latte-subtext0 mb-4">
+                <p className="text-latte-subtext0 mb-4" style={{ wordBreak: "break-word", overflowWrap: "break-word" }}>
                   {item.description}
                 </p>
 

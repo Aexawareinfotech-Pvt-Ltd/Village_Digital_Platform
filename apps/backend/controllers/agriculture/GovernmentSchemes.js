@@ -1,4 +1,5 @@
 import GovernmentSchemes from "../../models/Agriculture/GovernmentSchemes.js";
+import Notification from "../../models/Notification/Notification.js";
 
 export const createGovernmentScheme = async (req, res) => {
   try {
@@ -11,6 +12,17 @@ export const createGovernmentScheme = async (req, res) => {
         applySteps: req.body.applySteps,
         createdBy: req.user.id,
     }); 
+
+    const notification = await Notification.create({
+      title: "New Government Scheme Added",
+      message: `Government Scheme ${scheme.schemeName} has been added.`,
+      type: "governmentScheme",
+      path: "/agriculture/",
+    });
+
+    const io = req.app.get("io");
+    io.emit("newNotification", notification);
+
     res.status(201).json({
       success: true,
       data: scheme,

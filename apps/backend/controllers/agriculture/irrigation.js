@@ -1,5 +1,5 @@
-
 import Irrigation from "../../models/Agriculture/Irrigation.js";
+import Notification from "../../models/Notification/Notification.js";
 
 export const createIrrigationGuide = async (req, res) => {
   try {
@@ -10,6 +10,17 @@ export const createIrrigationGuide = async (req, res) => {
         specialAlert: req.body.specialAlert,
         createdBy: req.user.id,
     });
+
+    const notification = await Notification.create({
+      title: "New Irrigation Guide Added",
+      message: `Irrigation Guide for ${guide.cropName} has been added.`,
+      type: "irrigationGuide",
+      path: "/agriculture/",
+    });
+
+    const io = req.app.get("io");
+    io.emit("newNotification", notification);
+
     res.status(201).json({
       success: true,
       data: guide,

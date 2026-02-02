@@ -1,4 +1,5 @@
 import GovernmentJob from "../../models/Job/GovernmentJob.js";
+import Notification from "../../models/Notification/Notification.js";
 
 export const createGovernmentJob = async (req, res) => {
   try {
@@ -16,6 +17,16 @@ export const createGovernmentJob = async (req, res) => {
       isActive: true,
       createdBy: req.user.id,
     });
+
+    const notification = await Notification.create({
+      title: "New Government Job Posted",
+      message: `Government Job ${job.title} has been posted.`,
+      type: "governmentJob",
+      path: "/Job",
+    });
+
+    const io = req.app.get("io");
+    io.emit("newNotification", notification);
 
     res.status(201).json({
       success: true,

@@ -75,6 +75,7 @@ import soilTestingRoutes from "./routes/Agriculture/SoilTesting.js";
 import irrigationRoutes from "./routes/Agriculture/Irrigation.js";
 import eventRoutes from "./routes/Event/event.js";
 import eventRegistrationRoutes from "./routes/Event/registration.js";
+import NotificationRoutes from "./routes/Notification/Notification.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -97,6 +98,7 @@ app.use("/api/agriculture/soil-testing", soilTestingRoutes);
 app.use("/api/agriculture/irrigation", irrigationRoutes);
 app.use("/api/events", eventRoutes);
 app.use("/api/event-registrations", eventRegistrationRoutes);
+app.use("/api/notifications", NotificationRoutes);
 
 
 

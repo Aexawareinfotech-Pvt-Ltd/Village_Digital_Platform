@@ -1,4 +1,5 @@
 import News from "../../models/News/News.js"
+import Notification from "../../models/Notification/Notification.js";
 
 // -----------------------------------------
 // CREATE NEWS
@@ -25,8 +26,18 @@ export const createNews = async (req, res) => {
       featured: req.body.featured || false,
       attachments,
     });
+
+      const notification = await Notification.create({
+      title: "New News Published",
+      message: news.title,
+      type: "news",
+      path: "/news",
+    });
+
     const io = req.app.get("io");
     io.emit("news:count:update");
+    io.emit("notification", notification);
+
     res.status(201).json({ success: true, data: news });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });

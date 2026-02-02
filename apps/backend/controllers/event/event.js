@@ -1,6 +1,7 @@
 import Event from "../../models/Event/Event.js";
 import EventRegistration from "../../models/Event/EventRegistration.js";
 import Ticket from "../../models/Event/Ticket.js";
+import Notification from "../../models/Notification/Notification.js";
 
 export const createEvent = async (req, res) => {            
     try {
@@ -15,8 +16,18 @@ export const createEvent = async (req, res) => {
             maxAttendees: req.body.maxAttendees,
             createdBy: req.user.id, 
         }); 
+
+        const notification = await Notification.create({
+          title: "New Event Created",
+          message: `Event ${event.eventName} has been created.`,
+          type: "event",
+          path: "/events",
+        });
+        
         const io = req.app.get("io");
+        io.emit("newNotification", notification);
         io.emit("event:analytics:update");
+
         res.status(201).json({
             success: true,
             data: event,

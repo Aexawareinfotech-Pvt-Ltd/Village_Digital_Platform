@@ -9,6 +9,17 @@ export const createSoilTestingCenter = async (req, res) => {
         testsOffered: req.body.testsOffered,
         createdBy: req.user.id,
     });
+
+    const notification = await Notification.create({
+      title: "New Soil Testing Center Added",
+      message: `Soil Testing Center ${center.name} has been added.`,
+      type: "soilTestingCenter",
+      path: "/agriculture/",
+    });
+
+    const io = req.app.get("io");
+    io.emit("newNotification", notification);
+    
     res.status(201).json({
       success: true,
       data: center,

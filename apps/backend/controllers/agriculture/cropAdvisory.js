@@ -1,4 +1,5 @@
 import CropAdvisory from "../../models/Agriculture/CropAdvisory.js";
+import Notification from "../../models/Notification/Notification.js";
 
 export const createCropAdvisory = async (req, res) => {
   try {
@@ -16,6 +17,16 @@ export const createCropAdvisory = async (req, res) => {
       isActive: req.body.isActive ?? true,
       createdBy: req.user.id,
     });
+
+    const notification = await Notification.create({
+      title: "New Crop Advisory Added",
+      message: `Crop Advisory for ${advisory.cropName} has been added.`,
+      type: "cropAdvisory", 
+      path: "/agriculture/",
+    });
+
+    const io = req.app.get("io");
+    io.emit("newNotification", notification);
 
     res.status(201).json({
       success: true,

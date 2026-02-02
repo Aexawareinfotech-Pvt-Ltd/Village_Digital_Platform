@@ -23,6 +23,8 @@ export const createItem = async (req, res) => {
       owner: req.user.id,
       approvalStatus: "pending",
     });
+
+    
     const io = req.app.get("io");
 
     res.status(201).json({ success: true, data: item });
@@ -227,7 +229,16 @@ export const approveProduct = async (req, res) => {
   item.approvalStatus = "approved";
   await item.save();
 
+  const notification = await Notification.create({
+    title: "Product Approved",
+    message: `product "${item.title}" has been approved and is now live on the marketplace.`,
+    type: "marketplace",
+    path: "/marketplace",
+  });
+
+
   const io = req.app.get("io");
+  io.emit("newNotification", notification);
   io.emit("marketplace:count:update");
 
   res.json({ success: true, message: "Product approved" });

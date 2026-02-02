@@ -1,4 +1,5 @@
 import LocalService from "../../models/LocalServices/LocalServices.js";
+import Notification from "../../models/Notification/Notification.js"; 
 
 /* =====================================================
    CREATE LOCAL SERVICE (ADMIN)
@@ -14,6 +15,16 @@ export const createLocalService = async (req, res) => {
       category: req.body.category,
       createdBy: req.user.userId,
     });
+
+    const notification = await Notification.create({
+      title: "New Local Service Added",
+      message: `Local Service ${service.name} has been added.`,
+      type: "localService",
+      path: "Service/",
+    });
+
+    const io = req.app.get("io");
+    io.emit("newNotification", notification);
 
     res.status(201).json({
       success: true,

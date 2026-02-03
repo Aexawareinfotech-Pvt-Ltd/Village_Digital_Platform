@@ -1,6 +1,5 @@
-
 import MarketPlace from "../../models/Marketplace/MarketPlace.js"
-
+import Notification from "../../models/Notification/Notification.js";
 
 /* ---------------- CREATE ---------------- */
 

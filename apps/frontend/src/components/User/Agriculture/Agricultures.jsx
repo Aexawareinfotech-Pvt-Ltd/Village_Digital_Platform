@@ -23,7 +23,7 @@ export default function Agricultures() {
         <p className="text-gray-600">Access farming resources, crop guidance, and agricultural updates</p>
       </div>
       {/* Tabs */}
-      <div className="flex gap-22 mb-6 mt-8 flex-wrap">
+      <div className="flex gap-14 mb-6 mt-8 flex-wrap">
         <button
           onClick={() => setActiveTab("mandi")}
           className={`px-4 py-2 rounded-2xl font-medium transition-all ${

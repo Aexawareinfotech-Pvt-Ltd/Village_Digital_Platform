@@ -45,6 +45,7 @@ const AppRouter = () => {
         <Route path="/VillageRegister" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:token" element={<ResetPassword />} />
+        <Route path="/UserProfile" element={<UserProfile/>}/>
       
 
       {/* ================= USER PROTECTED ROUTES ================= */}

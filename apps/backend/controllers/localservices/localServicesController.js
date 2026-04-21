@@ -1,5 +1,129 @@
+// import LocalService from "../../models/LocalServices/LocalServices.js";
+// import Notification from "../../models/Notification/Notification.js"; 
+
+// /* =====================================================
+//    CREATE LOCAL SERVICE (ADMIN)
+// ===================================================== */
+// export const createLocalService = async (req, res) => {
+//   try {
+//     const service = await LocalService.create({
+//       name: req.body.name,
+//       phone: req.body.phone,
+//       address: req.body.address,
+//       hours: req.body.hours,
+//       services: req.body.services,
+//       category: req.body.category,
+//       createdBy: req.user.userId,
+//     });
+
+//     const notification = await Notification.create({
+//       title: "New Local Service Added",
+//       message: `Local Service ${service.name} has been added.`,
+//       type: "localService",
+//       path: "Service/",
+//     });
+
+//     const io = req.app.get("io");
+//     io.emit("newNotification", notification);
+
+//     res.status(201).json({
+//       success: true,
+//       data: service,
+//     });
+//   } catch (err) {
+//     console.error("Create Local Service Error:", err);
+//     res.status(500).json({
+//       success: false,
+//       message: err.message,
+//     });
+//   }
+// };
+
+// /* =====================================================
+//    GET ALL LOCAL SERVICES (PUBLIC)
+// ===================================================== */
+// export const getLocalServices = async (req, res) => {
+//   try {
+//     const services = await LocalService.find()
+//       .sort({ createdAt: -1 });
+
+//     res.json(services);
+//   } catch (err) {
+//     console.error("Fetch Local Services Error:", err);
+//     res.status(500).json({
+//       success: false,
+//       message: err.message,
+//     });
+//   }
+// };
+
+// /* =====================================================
+//    UPDATE LOCAL SERVICE (ADMIN)
+// ===================================================== */
+// export const updateLocalService = async (req, res) => {
+//   try {
+//     const service = await LocalService.findById(req.params.id);
+
+//     if (!service) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Local service not found",
+//       });
+//     }
+
+//     service.name = req.body.name ?? service.name;
+//     service.phone = req.body.phone ?? service.phone;
+//     service.address = req.body.address ?? service.address;
+//     service.hours = req.body.hours ?? service.hours;
+//     service.services = req.body.services ?? service.services;
+//     service.category = req.body.category ?? service.category;
+
+//     await service.save();
+
+//     res.json({
+//       success: true,
+//       data: service,
+//     });
+//   } catch (err) {
+//     console.error("Update Local Service Error:", err);
+//     res.status(500).json({
+//       success: false,
+//       message: err.message,
+//     });
+//   }
+// };
+
+// /* =====================================================
+//    DELETE LOCAL SERVICE (ADMIN)
+// ===================================================== */
+// export const deleteLocalService = async (req, res) => {
+//   try {
+//     const service = await LocalService.findById(req.params.id);
+
+//     if (!service) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Local service not found",
+//       });
+//     }
+
+//     await service.deleteOne();
+
+//     res.json({
+//       success: true,
+//       message: "Local service deleted successfully",
+//     });
+//   } catch (err) {
+//     console.error("Delete Local Service Error:", err);
+//     res.status(500).json({
+//       success: false,
+//       message: err.message,
+//     });
+//   }
+// };
+
 import LocalService from "../../models/LocalServices/LocalServices.js";
-import Notification from "../../models/Notification/Notification.js"; 
+import Notification from "../../models/Notification/Notification.js";
 
 /* =====================================================
    CREATE LOCAL SERVICE (ADMIN)
@@ -13,6 +137,11 @@ export const createLocalService = async (req, res) => {
       hours: req.body.hours,
       services: req.body.services,
       category: req.body.category,
+
+      district: req.user.district,
+      subDistrict: req.user.subDistrict,
+      village: req.user.village,
+
       createdBy: req.user.userId,
     });
 
@@ -21,6 +150,9 @@ export const createLocalService = async (req, res) => {
       message: `Local Service ${service.name} has been added.`,
       type: "localService",
       path: "Service/",
+      district: req.user.district,
+      subDistrict: req.user.subDistrict,
+      village: req.user.village,
     });
 
     const io = req.app.get("io");
@@ -30,6 +162,7 @@ export const createLocalService = async (req, res) => {
       success: true,
       data: service,
     });
+
   } catch (err) {
     console.error("Create Local Service Error:", err);
     res.status(500).json({
@@ -39,15 +172,19 @@ export const createLocalService = async (req, res) => {
   }
 };
 
+
 /* =====================================================
    GET ALL LOCAL SERVICES (PUBLIC)
 ===================================================== */
 export const getLocalServices = async (req, res) => {
   try {
-    const services = await LocalService.find()
-      .sort({ createdAt: -1 });
+
+    const services = await LocalService.find({
+      village: req.user.village
+    }).sort({ createdAt: -1 });
 
     res.json(services);
+
   } catch (err) {
     console.error("Fetch Local Services Error:", err);
     res.status(500).json({
@@ -57,12 +194,17 @@ export const getLocalServices = async (req, res) => {
   }
 };
 
+
 /* =====================================================
    UPDATE LOCAL SERVICE (ADMIN)
 ===================================================== */
 export const updateLocalService = async (req, res) => {
   try {
-    const service = await LocalService.findById(req.params.id);
+
+    const service = await LocalService.findOne({
+      _id: req.params.id,
+      village: req.user.village
+    });
 
     if (!service) {
       return res.status(404).json({
@@ -84,6 +226,7 @@ export const updateLocalService = async (req, res) => {
       success: true,
       data: service,
     });
+
   } catch (err) {
     console.error("Update Local Service Error:", err);
     res.status(500).json({
@@ -93,12 +236,17 @@ export const updateLocalService = async (req, res) => {
   }
 };
 
+
 /* =====================================================
    DELETE LOCAL SERVICE (ADMIN)
 ===================================================== */
 export const deleteLocalService = async (req, res) => {
   try {
-    const service = await LocalService.findById(req.params.id);
+
+    const service = await LocalService.findOne({
+      _id: req.params.id,
+      village: req.user.village
+    });
 
     if (!service) {
       return res.status(404).json({
@@ -113,6 +261,7 @@ export const deleteLocalService = async (req, res) => {
       success: true,
       message: "Local service deleted successfully",
     });
+
   } catch (err) {
     console.error("Delete Local Service Error:", err);
     res.status(500).json({

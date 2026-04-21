@@ -8,6 +8,7 @@ import {
 } from "../../controllers/agriculture/irrigation.js";
 
 import adminMiddleware from "../../middlewares/adminMiddleware.js";
+import authMiddleware from "../../middlewares/authMiddleware.js";
 
 const router = express.Router();    
 
@@ -15,7 +16,7 @@ const router = express.Router();
 router.post("/create", adminMiddleware, createIrrigationGuide);
 
 // GET ALL IRRIGATION GUIDES
-router.get("/list", getAllIrrigationGuides);
+router.get("/list", authMiddleware, getAllIrrigationGuides);
 
 // UPDATE IRRIGATION GUIDE
 router.put("/update/:id", adminMiddleware, updateIrrigationGuide);

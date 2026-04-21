@@ -74,38 +74,36 @@ const VillageMarketPlace = ({ language = "en" }) => {
 
 
   /* ---------------- FETCH DATA ---------------- */
-  const fetchData = async () => {
-    setLoading(true);
+const fetchData = async () => {
+  setLoading(true);
 
-    try {
-      let url = "http://localhost:3000/api/marketplace/list";
+  try {
+    let url = "http://localhost:3000/api/marketplace/list";
 
-      if (view === "my") {
-        url = "http://localhost:3000/api/marketplace/list/my";
-      }
-
-      if (view === "track") {
-        url = "http://localhost:3000/api/marketplace/track";
-      }
-
-      const res = await fetch(url, {
-        headers:
-          view !== "all"
-            ? {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-              }
-            : {},
-      });
-
-      const data = await res.json();
-      setListings(Array.isArray(data) ? data : []);
-    } catch (err) {
-      console.error("Marketplace fetch error:", err);
-      setListings([]);
-    } finally {
-      setLoading(false);
+    if (view === "my") {
+      url = "http://localhost:3000/api/marketplace/list/my";
     }
-  };
+
+    if (view === "track") {
+      url = "http://localhost:3000/api/marketplace/track";
+    }
+
+    const res = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+
+    const data = await res.json();
+    setListings(Array.isArray(data) ? data : []);
+
+  } catch (err) {
+    console.error("Marketplace fetch error:", err);
+    setListings([]);
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
     fetchData();

@@ -38,11 +38,15 @@ const VillageLogin = () => {
       localStorage.setItem("role", role);
 
       // Redirect based on role
-      if (role === "Admin") {
-        window.location.href = "/AdminDashboard";
-      } else {
-        window.location.href = "/";
-      }
+if (role === "VillageAdmin") {
+  window.location.href = "/AdminDashboard";
+} 
+else if (role === "MasterAdmin") {
+  window.location.href = "/MasterAdminDashboard";
+} 
+else {
+  window.location.href = "/";
+}
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
     } finally {

@@ -11,25 +11,36 @@ export function ApprovedJobsTab() {
     fetchApprovedJobs();
   }, []);
 
-  const fetchApprovedJobs = async () => {
-    setLoading(true);
-    setError("");
-    try {
-      const response = await fetch("http://localhost:3000/api/jobs/approved");
-      const data = await response.json();
+const fetchApprovedJobs = async () => {
+  setLoading(true);
+  setError("");
 
-      if (response.ok) {
-        setApprovedJobs(data);
-      } else {
-        setError(data.message || "Failed to fetch approved jobs");
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await fetch("http://localhost:3000/api/jobs/approved", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
       }
-    } catch (error) {
-      console.error("Error fetching approved jobs:", error);
-      setError("Network error. Please try again.");
-    } finally {
-      setLoading(false);
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      setApprovedJobs(data);
+    } else {
+      setError(data.message || "Failed to fetch approved jobs");
     }
-  };
+
+  } catch (error) {
+    console.error("Error fetching approved jobs:", error);
+    setError("Network error. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   const formatDate = (dateString) => {
     if (!dateString) return "";

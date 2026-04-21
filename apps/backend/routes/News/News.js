@@ -3,6 +3,7 @@ import { createNews, getAllNews, getNewsById, updateNews, deleteNews, getCategor
 
 import upload from "../../middlewares/upload.js";
 import adminMiddleware from "../../middlewares/adminMiddleware.js";
+import authMiddleware from "../../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -10,7 +11,7 @@ const router = express.Router();
 router.post("/create",adminMiddleware, upload.array("attachments", 5), createNews);
 
 // GET ALL NEWS
-router.get("/list", getAllNews);
+router.get("/list",authMiddleware, getAllNews);
 
 router.get("/analytics/category", adminMiddleware, getCategoryAnalytics);
 

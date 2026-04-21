@@ -14,25 +14,36 @@ export function VillageNews() {
     fetchNews();
   }, []);
 
-  const fetchNews = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await fetch(`${API_BASE_URL}/list?status=published`);
-      const data = await response.json();
-      
-      if (data.success) {
-        setNews(data.data);
-      } else {
-        setError(data.message);
+const fetchNews = async () => {
+  try {
+    setLoading(true);
+    setError(null);
+
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(`${API_BASE_URL}/list?status=published`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
       }
-    } catch (err) {
-      console.error('Error fetching news:', err);
-      setError('Failed to load news');
-    } finally {
-      setLoading(false);
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      setNews(data.data);
+    } else {
+      setError(data.message);
     }
-  };
+
+  } catch (err) {
+    console.error("Error fetching news:", err);
+    setError("Failed to load news");
+  } finally {
+    setLoading(false);
+  }
+};
 
   const filteredNews = news
     .filter((item) => {

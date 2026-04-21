@@ -1,67 +1,247 @@
+// import Event from "../../models/Event/Event.js";
+// import EventRegistration from "../../models/Event/EventRegistration.js";
+// import Ticket from "../../models/Event/Ticket.js";
+// import Notification from "../../models/Notification/Notification.js";
+
+// export const createEvent = async (req, res) => {            
+//     try {
+//         const event = await Event.create({ 
+//             eventName: req.body.eventName,
+//             category: req.body.category, 
+//             description: req.body.description,  
+//             venue: req.body.venue,
+//             startDate: req.body.startDate,
+//             endDate: req.body.endDate,
+//             isRegistrationRequired: req.body.isRegistrationRequired,
+//             maxAttendees: req.body.maxAttendees,
+//             createdBy: req.user.id, 
+//         }); 
+
+//         const notification = await Notification.create({
+//           title: "New Event Created",
+//           message: `Event ${event.eventName} has been created.`,
+//           type: "event",
+//           path: "/events",
+//         });
+        
+//         const io = req.app.get("io");
+//         io.emit("newNotification", notification);
+//         io.emit("event:analytics:update");
+
+//         res.status(201).json({
+//             success: true,
+//             data: event,
+//         });
+//     } catch (error) {
+//         res.status(500).json({
+//             success: false, 
+//             message: error.message,
+//         });
+//     }
+// };
+
+// export const getAllEvents = async (req, res) => {
+//     try {
+//         const events = await Event.find().sort({ createdAt: -1 });  
+//         res.json({
+//             success: true,
+//             data: events,
+//         });
+//     }   
+//     catch (error) {
+//         res.status(500).json({
+//             success: false,
+//             message: error.message,
+//         });
+//     }
+// };
+
+// export const updateEvent = async (req, res) => {
+//   try {
+//     const event = await Event.findByIdAndUpdate(
+//       req.params.id,
+//       {
+//         eventName: req.body.eventName, 
+//         description: req.body.description,
+//         venue: req.body.venue,
+//         category: req.body.category,
+//         startDate: req.body.startDate,
+//         endDate: req.body.endDate,
+//         isRegistrationRequired: req.body.isRegistrationRequired,
+//         maxAttendees: req.body.maxAttendees,
+//       },
+//       {
+//         new: true,        
+//       }
+//     );
+
+//     if (!event) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Event not found",
+//       });
+//     }
+
+//     res.status(200).json({
+//       success: true,
+//       data: event,
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
+
+// export const deleteEvent = async (req, res) => {
+//   try {
+//     const { id } = req.params;   // ✅ FIX HERE
+
+//     const event = await Event.findById(id);
+
+//     if (!event) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Event not found",
+//       });
+//     }
+
+//     await Event.findByIdAndDelete(id);
+//     await EventRegistration.deleteMany({ eventId: id });
+//     await Ticket.deleteMany({ eventId: id });
+
+//     const io = req.app.get("io");
+//     io.emit("event:analytics:update");
+
+//     res.status(200).json({
+//       success: true,
+//       message: "Event and associated data deleted successfully",
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
+
+
+// // GET ATTENDEES FOR EVENT
+// export const getEventAttendees = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+
+//     const registrations = await EventRegistration.find({ eventId: id });
+
+//     const attendees = await Promise.all(
+//       registrations.map(async (reg) => {
+//         const ticket = await Ticket.findOne({
+//           registrationId: reg._id
+//         });
+
+//         return {
+//           name: reg.name,
+//           email: reg.email,
+//           phone: reg.phone,
+//           ticketId: ticket ? ticket.ticketId : null,
+//           registeredAt: reg.registeredAt
+//         };
+//       })
+//     );
+
+//     res.json({
+//       totalRegistered: attendees.length,
+//       attendees
+//     });
+//   } catch (err) {
+//     res.status(500).json({ message: err.message });
+//   }
+// };
+
 import Event from "../../models/Event/Event.js";
 import EventRegistration from "../../models/Event/EventRegistration.js";
 import Ticket from "../../models/Event/Ticket.js";
 import Notification from "../../models/Notification/Notification.js";
 
-export const createEvent = async (req, res) => {            
-    try {
-        const event = await Event.create({ 
-            eventName: req.body.eventName,
-            category: req.body.category, 
-            description: req.body.description,  
-            venue: req.body.venue,
-            startDate: req.body.startDate,
-            endDate: req.body.endDate,
-            isRegistrationRequired: req.body.isRegistrationRequired,
-            maxAttendees: req.body.maxAttendees,
-            createdBy: req.user.id, 
-        }); 
+export const createEvent = async (req, res) => {
+  try {
+    const event = await Event.create({
+      eventName: req.body.eventName,
+      category: req.body.category,
+      description: req.body.description,
+      venue: req.body.venue,
+      startDate: req.body.startDate,
+      endDate: req.body.endDate,
+      isRegistrationRequired: req.body.isRegistrationRequired,
+      maxAttendees: req.body.maxAttendees,
 
-        const notification = await Notification.create({
-          title: "New Event Created",
-          message: `Event ${event.eventName} has been created.`,
-          type: "event",
-          path: "/events",
-        });
-        
-        const io = req.app.get("io");
-        io.emit("newNotification", notification);
-        io.emit("event:analytics:update");
+      district: req.user.district,
+      subDistrict: req.user.subDistrict,
+      village: req.user.village,
 
-        res.status(201).json({
-            success: true,
-            data: event,
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false, 
-            message: error.message,
-        });
-    }
+      createdBy: req.user.id,
+    });
+
+    const notification = await Notification.create({
+      title: "New Event Created",
+      message: `Event ${event.eventName} has been created.`,
+      type: "event",
+      path: "/events",
+      district: req.user.district,
+      subDistrict: req.user.subDistrict,
+      village: req.user.village,
+    });
+
+    const io = req.app.get("io");
+    io.emit("newNotification", notification);
+    io.emit("event:analytics:update");
+
+    res.status(201).json({
+      success: true,
+      data: event,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
+
 
 export const getAllEvents = async (req, res) => {
-    try {
-        const events = await Event.find().sort({ createdAt: -1 });  
-        res.json({
-            success: true,
-            data: events,
-        });
-    }   
-    catch (error) {
-        res.status(500).json({
-            success: false,
-            message: error.message,
-        });
-    }
+  try {
+
+    const events = await Event.find({
+      village: req.user.village
+    }).sort({ createdAt: -1 });
+
+    res.json({
+      success: true,
+      data: events,
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
+
 
 export const updateEvent = async (req, res) => {
   try {
-    const event = await Event.findByIdAndUpdate(
-      req.params.id,
+
+    const event = await Event.findOneAndUpdate(
       {
-        eventName: req.body.eventName, 
+        _id: req.params.id,
+        village: req.user.village
+      },
+      {
+        eventName: req.body.eventName,
         description: req.body.description,
         venue: req.body.venue,
         category: req.body.category,
@@ -71,7 +251,7 @@ export const updateEvent = async (req, res) => {
         maxAttendees: req.body.maxAttendees,
       },
       {
-        new: true,        
+        new: true,
       }
     );
 
@@ -86,6 +266,7 @@ export const updateEvent = async (req, res) => {
       success: true,
       data: event,
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -94,11 +275,16 @@ export const updateEvent = async (req, res) => {
   }
 };
 
+
 export const deleteEvent = async (req, res) => {
   try {
-    const { id } = req.params;   // ✅ FIX HERE
 
-    const event = await Event.findById(id);
+    const { id } = req.params;
+
+    const event = await Event.findOne({
+      _id: id,
+      village: req.user.village
+    });
 
     if (!event) {
       return res.status(404).json({
@@ -118,6 +304,7 @@ export const deleteEvent = async (req, res) => {
       success: true,
       message: "Event and associated data deleted successfully",
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -130,7 +317,19 @@ export const deleteEvent = async (req, res) => {
 // GET ATTENDEES FOR EVENT
 export const getEventAttendees = async (req, res) => {
   try {
+
     const { id } = req.params;
+
+    const event = await Event.findOne({
+      _id: id,
+      village: req.user.village
+    });
+
+    if (!event) {
+      return res.status(404).json({
+        message: "Event not found",
+      });
+    }
 
     const registrations = await EventRegistration.find({ eventId: id });
 
@@ -154,6 +353,7 @@ export const getEventAttendees = async (req, res) => {
       totalRegistered: attendees.length,
       attendees
     });
+
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

@@ -23,7 +23,7 @@ import {
 const router = express.Router();
 
 /* ---------------- PUBLIC ---------------- */
-router.get("/list", getItems);
+router.get("/list", authMiddleware, getItems);
 
 /* ---------------- USER ---------------- */
 router.post(

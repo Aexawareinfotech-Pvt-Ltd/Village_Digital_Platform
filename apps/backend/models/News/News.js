@@ -22,6 +22,21 @@ const newsSchema = new mongoose.Schema(
       enum: ["draft", "published"],
       default: "published",
     },
+    
+    district: {
+    type: String,
+    default: null,
+    },
+
+    subDistrict: {
+    type: String,
+    default: null,
+    },
+
+    village: {
+    type: String,
+    default: null,
+    },
 
     publishDate: { type: Date, default: Date.now },
     expiryDate: { type: Date },

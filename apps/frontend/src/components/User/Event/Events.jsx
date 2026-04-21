@@ -25,8 +25,13 @@ export default function Events({ onSwitchToAdmin }) {
     setLoading(true);
     setError('');
     try {
+       const token = localStorage.getItem('token');
       const response = await fetch(`${API_BASE_URL}/event-registrations/list`, {
         method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       const data = await response.json();

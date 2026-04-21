@@ -15,7 +15,7 @@ const router = express.Router();
 router.post("/create", adminMiddleware, createEvent);
 router.put("/:id", adminMiddleware, updateEvent);
 router.delete("/:id", adminMiddleware, deleteEvent);
-router.get("/list", getAllEvents);
+router.get("/list",authMiddleware, getAllEvents);
 router.get("/:id/attendees", adminMiddleware, getEventAttendees);
 router.get("/analytics", authMiddleware, getEventAnalytics);
 

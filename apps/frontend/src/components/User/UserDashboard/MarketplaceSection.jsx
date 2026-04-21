@@ -18,19 +18,26 @@ export function MarketplaceSection() {
   const navigate = useNavigate();
   /* ================= FETCH MARKETPLACE ITEMS ================= */
   useEffect(() => {
-    const fetchMarketplace = async () => {
-      try {
-        const res = await fetch(API_URL);
-        const data = await res.json();
-        if (res.ok) {
-          setItems(data.data || data);
-        }
-      } catch (err) {
-        console.error("Marketplace fetch error:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+   const fetchMarketplace = async () => {
+  try {
+    const res = await fetch(API_URL, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      setItems(data.data || data);
+    }
+  } catch (err) {
+    console.error("Marketplace fetch error:", err);
+  } finally {
+    setLoading(false);
+  }
+};
 
     fetchMarketplace();
   }, []);

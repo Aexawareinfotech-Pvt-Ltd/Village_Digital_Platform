@@ -14,24 +14,32 @@ export function NewsSection() {
     fetchNews();
   }, []);
 
-  const fetchNews = async () => {
-    try {
-      setLoading(true);
-      const res = await fetch(`${API_BASE_URL}/list?status=published`);
-      const data = await res.json();
+const fetchNews = async () => {
+  try {
+    setLoading(true);
 
-      if (data.success) {
-        setNews(data.data);
-      } else {
-        setError('Failed to load news');
-      }
-    } catch (err) {
-      console.error(err);
-      setError('Failed to load news');
-    } finally {
-      setLoading(false);
+    const res = await fetch(`${API_BASE_URL}/list?status=published`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      setNews(data.data);
+    } else {
+      setError("Failed to load news");
     }
-  };
+
+  } catch (err) {
+    console.error(err);
+    setError("Failed to load news");
+  } finally {
+    setLoading(false);
+  }
+};
 
   /* ICON LOGIC */
   const getIcon = (category) => {

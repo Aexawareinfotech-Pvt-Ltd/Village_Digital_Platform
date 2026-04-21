@@ -19,25 +19,36 @@ export function NewsAnnouncementsContent() {
   }, []);
 
   // Fetch News from Backend
-  const fetchNews = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await fetch(`${API_BASE_URL}/list`);
-      const data = await response.json();
-      
-      if (data.success) {
-        setNews(data.data);
-      } else {
-        setError(data.message || 'Failed to load news');
+const fetchNews = async () => {
+  try {
+    setLoading(true);
+    setError(null);
+
+    const token = localStorage.getItem("token");
+
+    const response = await fetch(`${API_BASE_URL}/list`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
       }
-    } catch (error) {
-      console.error('Error fetching news:', error);
-      setError('Failed to load news. Please check your connection.');
-    } finally {
-      setLoading(false);
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      setNews(data.data);
+    } else {
+      setError(data.message || "Failed to load news");
     }
-  };
+
+  } catch (error) {
+    console.error("Error fetching news:", error);
+    setError("Failed to load news. Please check your connection.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   // Filter and sort published news
   const publishedNews = news

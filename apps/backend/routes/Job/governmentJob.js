@@ -9,11 +9,12 @@ import {
 
 
 import adminMiddleware from "../../middlewares/adminMiddleware.js";
+import authMiddleware from "../../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
 router.post("/create", adminMiddleware, createGovernmentJob);
-router.get("/list", getAllGovernmentJobs);
+router.get("/list",authMiddleware, getAllGovernmentJobs);
 router.get("/:id", getGovernmentJobById);
 router.put("/update/:id", adminMiddleware, updateGovernmentJob);
 router.delete("/delete/:id", adminMiddleware, deleteGovernmentJob);

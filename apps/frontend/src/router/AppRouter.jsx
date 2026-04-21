@@ -2,6 +2,7 @@ import { Routes, Route } from "react-router-dom";
 
 import MainLayout from "../layouts/Mainlayout";
 import AdminLayout from "../layouts/AdminLayout";
+import MasterAdminLayout from "../layouts/MasterAdminlayout";
 import ProtectedRoute from "./ProtectedRoute";
 
 /* USER PAGES */
@@ -19,7 +20,7 @@ import Event from "../pages/User/Events/Event";
 import Grievance from "../pages/User/Grievance/Grievance";
 import Agriculture from "../pages/User/Agriculture/Agriculture";
 
-/* ADMIN PAGES */
+/*Village ADMIN PAGES */
 import AdminDashboard from "../pages/Admin/AdminDashboard/Admin";
 import JobAdminPage from "../pages/Admin/Job/JobAdminPage";
 import NewsAdminPage from "../pages/Admin/News/NewsAdminPage";
@@ -29,6 +30,9 @@ import LocalServicesAdminPage from "../pages/Admin/LocalServices/LocalServicesAd
 import AgricultureAdminPage from "../pages/Admin/Agriculture/AgrlicultureAdminPage";
 import UserProfile from "../pages/User/Profile/UserProfile";
 import EventAdminPage from "../pages/Admin/Event/EventAdminPage";
+
+/*MASTER ADMIN PAGES */
+import MasterAdminDashboard from "../pages/MasterAdmin/MasterAdminDashboard/Admin";
 
 const AppRouter = () => {
   return (
@@ -61,8 +65,8 @@ const AppRouter = () => {
         </Route>
       </Route>
       
-      {/* ================= ADMIN PROTECTED ROUTES ================= */}
-      <Route element={<ProtectedRoute role="Admin" />}>
+      {/* =================  VILLAGE ADMIN PROTECTED ROUTES ================= */}
+      <Route element={<ProtectedRoute role="VillageAdmin" />}>
         <Route element={<AdminLayout />}>
           <Route path="/AdminDashboard" element={<AdminDashboard />} />
           <Route path="/AdminDashboard/JobManagement" element={<JobAdminPage />} />
@@ -72,6 +76,13 @@ const AppRouter = () => {
           <Route path="/AdminDashboard/ServiceManagement" element={<LocalServicesAdminPage />} />
           <Route path="/AdminDashboard/AgricultureManagement" element={<AgricultureAdminPage />} />
           <Route path="/AdminDashboard/EventManagement" element={<EventAdminPage />} />
+        </Route>
+      </Route>
+
+      {/* ================= MASTER ADMIN PROTECTED ROUTES ================= */}
+      <Route element={<ProtectedRoute role="MasterAdmin" />}>
+        <Route element={<MasterAdminLayout />}>
+        <Route path="/MasterAdminDashboard" element={<MasterAdminDashboard />} />
         </Route>
       </Route>
 

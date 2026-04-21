@@ -52,12 +52,20 @@ export default function LocalServicesAdminModule() {
   });
 
   /* ---------------- FETCH SERVICES ---------------- */
-  const loadServices = async () => {
+const loadServices = async () => {
   try {
     setLoading(true);
-    const res = await fetch(API_BASE_URL);
+
+    const res = await fetch(API_BASE_URL, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    });
+
     const data = await res.json();
+
     setServices(Array.isArray(data) ? data : []);
+
   } catch (err) {
     console.error("Failed to load services", err);
   } finally {

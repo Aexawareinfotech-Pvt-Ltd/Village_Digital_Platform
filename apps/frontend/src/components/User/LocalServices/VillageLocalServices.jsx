@@ -48,21 +48,28 @@ export default function VillageLocalServices({ language = "en" }) {
  
 
   /* ---------------- FETCH SERVICES ---------------- */
-  useEffect(() => {
-    const loadServices = async () => {
-      try {
-        const res = await fetch("http://localhost:3000/api/local-services");
-        const data = await res.json();
-        setServices(Array.isArray(data) ? data : []);
-      } catch (err) {
-        console.error("Failed to load services", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+useEffect(() => {
+  const loadServices = async () => {
+    try {
+      const token = localStorage.getItem("token");
 
-    loadServices();
-  }, []);
+      const res = await fetch("http://localhost:3000/api/local-services", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const data = await res.json();
+      setServices(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error("Failed to load services", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  loadServices();
+}, []);
 
   /* ---------------- UI ---------------- */
   return (

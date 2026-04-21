@@ -29,6 +29,22 @@ const jobApplicationSchema = new mongoose.Schema(
       required: true
     },
 
+  district: {
+    type: String,
+    default: null,
+  },
+
+  subDistrict: {
+    type: String,
+    default: null,
+  },
+
+  village: {
+    type: String,
+    default: null,
+  },
+
+
   },
   { timestamps: true }
 );

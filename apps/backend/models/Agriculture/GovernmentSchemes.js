@@ -27,6 +27,20 @@ const schemeSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+      district: {
+    type: String,
+    default: null,
+  },
+
+  subDistrict: {
+    type: String,
+    default: null,
+  },
+
+  village: {
+    type: String,
+    default: null,
+  },  
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User"

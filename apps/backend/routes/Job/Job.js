@@ -15,7 +15,7 @@ import adminMiddleware from "../../middlewares/adminMiddleware.js";
 const router = express.Router();
 
 router.post("/create", authMiddleware, createJob);
-router.get("/approved", getApprovedJobs);
+router.get("/approved",authMiddleware, getApprovedJobs);
 
 router.get("/pending", authMiddleware, adminMiddleware, getPendingJobs);
 router.put("/approve/:id", authMiddleware, adminMiddleware, approveJob);

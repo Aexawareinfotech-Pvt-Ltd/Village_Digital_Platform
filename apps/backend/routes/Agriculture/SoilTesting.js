@@ -8,6 +8,7 @@ import {
 } from "../../controllers/agriculture/soilTesting.js";
 
 import adminMiddleware from "../../middlewares/adminMiddleware.js";
+import authMiddleware from "../../middlewares/authMiddleware.js";
 
 const router = express.Router();        
 
@@ -15,7 +16,7 @@ const router = express.Router();
 router.post("/create", adminMiddleware, createSoilTestingCenter);
 
 // GET ALL SOIL TESTING CENTERS
-router.get("/list", getAllSoilTestingCenters);  
+router.get("/list",  authMiddleware, getAllSoilTestingCenters);  
 
 // UPDATE SOIL TESTING CENTER
 router.put("/update/:id", adminMiddleware, updateSoilTestingCenter);    

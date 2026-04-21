@@ -1,5 +1,5 @@
 import express from "express";
-import { registerUser, loginUser,logoutUser, forgotPassword, resetPassword , getMe} from "../../controllers/auth/authController.js";
+import { registerUser, loginUser,logoutUser, forgotPassword, resetPassword , getMe , getDistricts , getTalukas , getVillages} from "../../controllers/auth/authController.js";
 import authMiddleware from "../../middlewares/authMiddleware.js";
 
 const router = express.Router();
@@ -14,6 +14,10 @@ router.post("/forgot-password", forgotPassword);
 router.post("/reset-password/:token", resetPassword);
 
 router.post("/me", authMiddleware, getMe);
+
+router.get("/districts", getDistricts);
+router.get("/talukas",   getTalukas);
+router.get("/villages",  getVillages);
 export default router;
 
 

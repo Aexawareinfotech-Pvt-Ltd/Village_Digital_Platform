@@ -13,6 +13,6 @@ const router = express.Router();
 router.post("/:eventId", authMiddleware, registerForEvent);
 router.get("/user/:userId", authMiddleware, getUserRegistrations);
 router.delete("/:eventId/user/:userId", authMiddleware, cancelRegistration);
-router.get("/list", getAllEvents);
+router.get("/list", authMiddleware , getAllEvents);
 
 export default router;

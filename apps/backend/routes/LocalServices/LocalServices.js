@@ -16,7 +16,7 @@ const router = express.Router();
 ================================ */
 
 // Get all local services (for users)
-router.get("/", getLocalServices);
+router.get("/", authMiddleware, getLocalServices);
 
 /* ===============================
    ADMIN ROUTES (PROTECTED)

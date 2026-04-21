@@ -15,26 +15,37 @@ export default function Job() {
   const [error, setError] = useState("");
   const [selectedJobForApplicants, setSelectedJobForApplicants] = useState(null);
 
-  const fetchApprovedJobs = async () => {
-    setLoading(true);
-    setError("");
-    try {
-      const response = await fetch("http://localhost:3000/api/jobs/approved");
-      const data = await response.json();
+  
+const fetchApprovedJobs = async () => {
+  setLoading(true);
+  setError("");
 
-      if (response.ok) {
-        setApprovedJobs(data);
-      } else {
-        setError(data.message || "Failed to fetch jobs");
+  try {
+    const token = localStorage.getItem("token");
+
+    const response = await fetch("http://localhost:3000/api/jobs/approved", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
       }
-    } catch (error) {
-      console.error("Error fetching jobs:", error);
-      setError("Network error. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
+    });
 
+    const data = await response.json();
+
+    if (response.ok) {
+      setApprovedJobs(data);
+    } else {
+      setError(data.message || "Failed to fetch jobs");
+    }
+
+  } catch (error) {
+    console.error("Error fetching jobs:", error);
+    setError("Network error. Please try again.");
+  } finally {
+    setLoading(false);
+  }
+};
   const fetchMyJobs = async () => {
     setLoading(true);
     setError("");

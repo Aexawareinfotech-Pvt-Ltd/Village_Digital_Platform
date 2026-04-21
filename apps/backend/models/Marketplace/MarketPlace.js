@@ -51,6 +51,20 @@ const marketplaceSchema = new mongoose.Schema(
       default: "",
     },
 
+    district: {
+    type: String,
+    default: null,
+    },
+
+    subDistrict: {
+    type: String,
+    default: null,
+    },
+
+    village: {
+    type: String,
+    default: null,
+    },
 
 
 

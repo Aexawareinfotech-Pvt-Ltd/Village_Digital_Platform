@@ -16,18 +16,24 @@ export function JobPortalSection() {
 
   /* ================= FETCH APPROVED JOBS ================= */
   useEffect(() => {
-    const fetchApprovedJobs = async () => {
-      try {
-        const res = await fetch('http://localhost:3000/api/jobs/approved');
-        const data = await res.json();
+const fetchApprovedJobs = async () => {
+  try {
+    const res = await fetch("http://localhost:3000/api/jobs/approved", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    });
 
-        if (res.ok) {
-          setLocalJobs(data);
-        }
-      } catch (err) {
-        console.error('Error fetching approved jobs', err);
-      }
-    };
+    const data = await res.json();
+
+    if (res.ok) {
+      setLocalJobs(data);
+    }
+  } catch (err) {
+    console.error("Error fetching approved jobs", err);
+  }
+};
 
     fetchApprovedJobs();
   }, []);

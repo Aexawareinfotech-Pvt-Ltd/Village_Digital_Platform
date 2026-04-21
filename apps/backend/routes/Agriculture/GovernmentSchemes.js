@@ -7,6 +7,7 @@ import {
 } from "../../controllers/agriculture/GovernmentSchemes.js";
 
 import adminMiddleware from "../../middlewares/adminMiddleware.js";
+import authMiddleware from "../../middlewares/authMiddleware.js";
 
 const router = express.Router();        
 
@@ -14,7 +15,7 @@ const router = express.Router();
 router.post("/create", adminMiddleware, createGovernmentScheme);
 
 // GET ALL GOVERNMENT SCHEMES
-router.get("/list", getAllGovernmentSchemes);
+router.get("/list", authMiddleware, getAllGovernmentSchemes);
 
 // UPDATE GOVERNMENT SCHEME
 router.put("/update/:id", adminMiddleware, updateGovernmentScheme);

@@ -11,40 +11,47 @@ export function EventsSection() {
 
   /* ================= FETCH EVENTS FROM BACKEND ================= */
   useEffect(() => {
-    const fetchEvents = async () => {
-      try {
-        const res = await fetch(`${API_BASE_URL}/event-registrations/list`);
-        const data = await res.json();
+const fetchEvents = async () => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/event-registrations/list`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+        "Content-Type": "application/json",
+      },
+    });
 
-        if (res.ok) {
-          const transformedEvents = (data.data || []).map((event) => {
-            const startDate = new Date(event.startDate);
-            return {
-              id: event._id,
-              title: event.eventName,
-              startDate: event.startDate, // ✅ keep original date for sorting
-              date: startDate.toDateString(),
-              time: startDate.toLocaleTimeString([], {
-                hour: '2-digit',
-                minute: '2-digit',
-              }),
-              location: event.venue,
-              category: event.category,
-              attendees: event.maxAttendees
-                ? `${event.maxAttendees} seats`
-                : 'Open to all',
-              color: 'bg-orange-500',
-            };
-          });
+    const data = await res.json();
 
-          setEvents(transformedEvents);
-        }
-      } catch (error) {
-        console.error('Error fetching events:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (res.ok) {
+      const transformedEvents = (data.data || []).map((event) => {
+        const startDate = new Date(event.startDate);
+
+        return {
+          id: event._id,
+          title: event.eventName,
+          startDate: event.startDate,
+          date: startDate.toDateString(),
+          time: startDate.toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+          location: event.venue,
+          category: event.category,
+          attendees: event.maxAttendees
+            ? `${event.maxAttendees} seats`
+            : "Open to all",
+          color: "bg-orange-500",
+        };
+      });
+
+      setEvents(transformedEvents);
+    }
+  } catch (error) {
+    console.error("Error fetching events:", error);
+  } finally {
+    setLoading(false);
+  }
+};
 
     fetchEvents();
   }, []);

@@ -1,9 +1,145 @@
+// import GovernmentJob from "../../models/Job/GovernmentJob.js";
+// import Notification from "../../models/Notification/Notification.js";
+
+// export const createGovernmentJob = async (req, res) => {
+//   try {
+    
+//     const job = await GovernmentJob.create({
+//       title: req.body.title,
+//       applicationLink: req.body.applicationLink,
+//       description: req.body.description,
+//       category: req.body.category,
+//       jobType: req.body.jobType,
+//       location: req.body.location,
+//       salary: req.body.salary,
+//       experience: req.body.experience,
+//       deadlineDate: req.body.deadlineDate,
+//       isActive: true,
+//       createdBy: req.user.id,
+//     });
+
+//     const notification = await Notification.create({
+//       title: "New Government Job Posted",
+//       message: `Government Job ${job.title} has been posted.`,
+//       type: "governmentJob",
+//       path: "/Job",
+//     });
+
+//     const io = req.app.get("io");
+//     io.emit("newNotification", notification);
+
+//     res.status(201).json({
+//       success: true,
+//       data: job,
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
+
+
+// export const getAllGovernmentJobs = async (req, res) => {
+//   try {
+//     const jobs = await GovernmentJob.find()
+//       .sort({ createdAt: -1 });
+
+//     res.json({
+//       success: true,
+//       data: jobs,
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
+
+
+// export const getGovernmentJobById = async (req, res) => {
+//   try {
+//     const job = await GovernmentJob.findById(req.params.id);
+
+//     if (!job) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Government job not found",
+//       });
+//     }
+
+//     res.json({
+//       success: true,
+//       data: job,
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
+
+
+// export const updateGovernmentJob = async (req, res) => {
+//   try {
+//     const job = await GovernmentJob.findByIdAndUpdate(
+//       req.params.id,
+//       req.body,
+//       { new: true }
+//     );
+
+//     if (!job) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Government job not found",
+//       });
+//     }
+
+//     res.json({
+//       success: true,
+//       data: job,
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
+
+
+// export const deleteGovernmentJob = async (req, res) => {
+//   try {
+//     const job = await GovernmentJob.findByIdAndDelete(req.params.id);
+
+//     if (!job) {
+//       return res.status(404).json({
+//         success: false,
+//         message: "Government job not found",
+//       });
+//     }
+
+//     res.json({
+//       success: true,
+//       message: "Government job deleted successfully",
+//     });
+//   } catch (error) {
+//     res.status(500).json({
+//       success: false,
+//       message: error.message,
+//     });
+//   }
+// };
+
 import GovernmentJob from "../../models/Job/GovernmentJob.js";
 import Notification from "../../models/Notification/Notification.js";
 
 export const createGovernmentJob = async (req, res) => {
   try {
-    
+
     const job = await GovernmentJob.create({
       title: req.body.title,
       applicationLink: req.body.applicationLink,
@@ -14,6 +150,11 @@ export const createGovernmentJob = async (req, res) => {
       salary: req.body.salary,
       experience: req.body.experience,
       deadlineDate: req.body.deadlineDate,
+
+      district: req.user.district,
+      subDistrict: req.user.subDistrict,
+      village: req.user.village,
+
       isActive: true,
       createdBy: req.user.id,
     });
@@ -23,6 +164,9 @@ export const createGovernmentJob = async (req, res) => {
       message: `Government Job ${job.title} has been posted.`,
       type: "governmentJob",
       path: "/Job",
+      district: req.user.district,
+      subDistrict: req.user.subDistrict,
+      village: req.user.village,
     });
 
     const io = req.app.get("io");
@@ -32,6 +176,7 @@ export const createGovernmentJob = async (req, res) => {
       success: true,
       data: job,
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -43,13 +188,16 @@ export const createGovernmentJob = async (req, res) => {
 
 export const getAllGovernmentJobs = async (req, res) => {
   try {
-    const jobs = await GovernmentJob.find()
-      .sort({ createdAt: -1 });
+
+    const jobs = await GovernmentJob.find({
+      village: req.user.village
+    }).sort({ createdAt: -1 });
 
     res.json({
       success: true,
       data: jobs,
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -61,7 +209,11 @@ export const getAllGovernmentJobs = async (req, res) => {
 
 export const getGovernmentJobById = async (req, res) => {
   try {
-    const job = await GovernmentJob.findById(req.params.id);
+
+    const job = await GovernmentJob.findOne({
+      _id: req.params.id,
+      village: req.user.village
+    });
 
     if (!job) {
       return res.status(404).json({
@@ -74,6 +226,7 @@ export const getGovernmentJobById = async (req, res) => {
       success: true,
       data: job,
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -85,8 +238,12 @@ export const getGovernmentJobById = async (req, res) => {
 
 export const updateGovernmentJob = async (req, res) => {
   try {
-    const job = await GovernmentJob.findByIdAndUpdate(
-      req.params.id,
+
+    const job = await GovernmentJob.findOneAndUpdate(
+      {
+        _id: req.params.id,
+        village: req.user.village
+      },
       req.body,
       { new: true }
     );
@@ -102,6 +259,7 @@ export const updateGovernmentJob = async (req, res) => {
       success: true,
       data: job,
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,
@@ -113,7 +271,11 @@ export const updateGovernmentJob = async (req, res) => {
 
 export const deleteGovernmentJob = async (req, res) => {
   try {
-    const job = await GovernmentJob.findByIdAndDelete(req.params.id);
+
+    const job = await GovernmentJob.findOneAndDelete({
+      _id: req.params.id,
+      village: req.user.village
+    });
 
     if (!job) {
       return res.status(404).json({
@@ -126,6 +288,7 @@ export const deleteGovernmentJob = async (req, res) => {
       success: true,
       message: "Government job deleted successfully",
     });
+
   } catch (error) {
     res.status(500).json({
       success: false,

@@ -8,6 +8,7 @@ import {
 } from "../../controllers/agriculture/cropAdvisory.js";
 
 import adminMiddleware from "../../middlewares/adminMiddleware.js";     
+import authMiddleware from "../../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
@@ -15,7 +16,7 @@ const router = express.Router();
 router.post("/create", adminMiddleware, createCropAdvisory);    
 
 // GET ALL CROP ADVISORIES
-router.get("/list", getAllCropAdvisories);
+router.get("/list",authMiddleware, getAllCropAdvisories);
 
 // GET SINGLE CROP ADVISORY
 router.get("/:id", getCropAdvisoryById);

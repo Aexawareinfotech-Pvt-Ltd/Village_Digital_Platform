@@ -13,6 +13,20 @@ const notificationSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+    district: {
+    type: String,
+    default: null,
+  },
+
+  subDistrict: {
+    type: String,
+    default: null,
+  },
+
+  village: {
+    type: String,
+    default: null,
+  },
 });
 
 export default mongoose.model("Notification", notificationSchema);

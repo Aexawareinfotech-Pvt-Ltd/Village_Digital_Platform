@@ -13,6 +13,21 @@ const jobSchema = new mongoose.Schema({
   postedDate: { type: Date, default: Date.now },
   deadlineDate: Date,
 
+  district: {
+    type: String,
+    default: null,
+  },
+
+  subDistrict: {
+    type: String,
+    default: null,
+  },
+
+  village: {
+    type: String,
+    default: null,
+  },
+
   createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"

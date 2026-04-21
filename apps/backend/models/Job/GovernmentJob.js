@@ -18,6 +18,23 @@ const governmentJobSchema = new mongoose.Schema(
       required: true,
     },
 
+    
+  district: {
+    type: String,
+    default: null,
+  },
+
+  subDistrict: {
+    type: String,
+    default: null,
+  },
+
+  village: {
+    type: String,
+    default: null,
+  },
+
+
     category: {
       type: String,
       required: true,

@@ -18,6 +18,20 @@ const irrigationSchema = new mongoose.Schema(
     specialAlert: {
       type: String,
     },
+  district: {
+    type: String,
+    default: null,
+  },
+
+  subDistrict: {
+    type: String,
+    default: null,
+  },
+
+  village: {
+    type: String,
+    default: null,
+  },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
